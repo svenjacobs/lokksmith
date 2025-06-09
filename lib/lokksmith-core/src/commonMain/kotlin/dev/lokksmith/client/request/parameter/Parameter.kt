@@ -1,0 +1,29 @@
+package dev.lokksmith.client.request.parameter
+
+/**
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication Request</a>
+ */
+public object Parameter {
+
+    // Request & response
+    public const val CLIENT_ID: String = "client_id"
+    public const val CODE_CHALLENGE: String = "code_challenge"
+    public const val CODE_CHALLENGE_METHOD: String = "code_challenge_method"
+    public const val CODE_VERIFIER: String = "code_verifier"
+    public const val GRANT_TYPE: String = "grant_type"
+    public const val ID_TOKEN_HINT: String = "id_token_hint"
+    public const val NONCE: String = "nonce"
+    public const val POST_LOGOUT_REDIRECT_URI: String = "post_logout_redirect_uri"
+    public const val PROMPT: String = "prompt"
+    public const val REDIRECT_URI: String = "redirect_uri"
+    public const val REFRESH_TOKEN: String = "refresh_token"
+    public const val RESPONSE_TYPE: String = "response_type"
+    public const val SCOPE: String = "scope"
+    public const val STATE: String = "state"
+
+    // Response
+    public const val CODE: String = "code"
+    public const val ERROR: String = "error"
+    public const val ERROR_DESCRIPTION: String = "error_description"
+    public const val ERROR_URI: String = "error_uri"
+}
