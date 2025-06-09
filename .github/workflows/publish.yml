@@ -17,10 +17,11 @@ jobs:
         env:
           VERSION: ${{ github.event.release.tag_name }}
       - name: Publish release
+        run: ./gradlew publishAndReleaseToMavenCentral -PVERSION_NAME="$VERSION" --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_KEY_CONTENTS }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.GPG_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_KEY_PASSWORD }}
-        run: ./gradlew publishAndReleaseToMavenCentral -PVERSION_NAME="$VERSION" --no-configuration-cache
+        working-directory: ./lib
