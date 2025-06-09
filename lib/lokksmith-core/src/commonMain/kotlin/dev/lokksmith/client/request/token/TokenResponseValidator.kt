@@ -1,0 +1,86 @@
+package dev.lokksmith.client.request.token
+
+import dev.lokksmith.client.Client.Tokens
+import dev.lokksmith.client.Client.Tokens.IdToken
+import dev.lokksmith.client.InternalClient
+import dev.lokksmith.client.jwt.JwtDecoder
+import dev.lokksmith.client.token.JwtToIdTokenMapper
+import kotlinx.serialization.json.Json
+
+public abstract class TokenResponseValidator<T : IdToken?>(
+    serializer: Json,
+    protected val client: InternalClient,
+    private val jwtDecoder: JwtDecoder = JwtDecoder(serializer),
+    private val jwtToIdTokenMapper: JwtToIdTokenMapper = JwtToIdTokenMapper(),
+) {
+
+    public data class Result<T : IdToken?>(
+        val accessToken: Tokens.AccessToken,
+        val refreshToken: Tokens.RefreshToken?,
+        val idToken: T,
+    )
+
+    public fun validate(
+        response: TokenResponse,
+        previousIdToken: IdToken? = null,
+    ): Result<T> {
+        val idToken = getIdToken(response)
+
+        // If a previous ID token exists it must be validated against the new token
+        if (idToken != null && previousIdToken != null) {
+            require(idToken.issuer == previousIdToken.issuer) { "iss mismatch with previous token" }
+            require(idToken.subject == previousIdToken.subject) { "sub mismatch with previous token" }
+            require(idToken.issuedAt > previousIdToken.issuedAt) { "iat not greater than previous token" }
+            require(idToken.audiences.sorted() == previousIdToken.audiences.sorted()) { "aud mismatch with previous token" }
+        }
+
+        if (idToken != null) {
+            validateIdToken(idToken)
+        }
+
+        return Result<T>(
+            accessToken = Tokens.AccessToken(
+                token = response.accessToken,
+                expiresAt = response.expiresIn?.let { it + client.provider.instantProvider() },
+            ),
+            refreshToken = response.refreshToken?.let {
+                Tokens.RefreshToken(
+                    token = it,
+                    expiresAt = response.refreshExpiresIn?.let { it + client.provider.instantProvider() },
+                )
+            },
+            idToken = idToken,
+        )
+    }
+
+    protected fun decodeIdToken(rawIdToken: String): IdToken {
+        val jwt = jwtDecoder.decode(rawIdToken)
+        return jwtToIdTokenMapper(jwt, rawIdToken)
+    }
+
+    protected abstract fun getIdToken(response: TokenResponse): T
+
+    protected abstract fun validateIdTokenNonce(idToken: IdToken)
+
+    /**
+     * TODO: throw a more specific exception for time-based validation so that we can propagate it to the user
+     *
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a>
+     */
+    private fun validateIdToken(idToken: IdToken) {
+        val now = client.provider.instantProvider()
+
+        require(idToken.issuer == client.metadata.issuer) { "iss mismatch" }
+        require(idToken.audiences.contains(client.id.value)) { "client_id missing in aud" }
+        require(now - client.options.leewaySeconds < idToken.expiration) { "exp before current time" }
+
+        idToken.notBefore?.let { nbf ->
+            require(now + client.options.leewaySeconds >= nbf) { "Token not yet valid (nbf)" }
+        }
+
+        validateIdTokenNonce(idToken)
+
+        // TODO check iat?
+        // TODO check auth_time?
+    }
+}

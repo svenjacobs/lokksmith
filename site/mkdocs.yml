@@ -1,0 +1,85 @@
+site_name: Lokksmith
+site_url: https://lokksmith.dev
+site_description: A Kotlin Multiplatform OpenID Connect client library for Android and iOS
+site_author: Sven Jacobs
+repo_url: https://github.com/svenjacobs/lokksmith
+repo_name: Lokksmith
+edit_uri: edit/main/site/docs/
+nav:
+  - About: index.md
+  - Getting Started:
+    - getting-started/index.md
+    - Installation: getting-started/installation.md
+    - Usage: getting-started/usage.md
+    - Demo: getting-started/demo.md
+  - Migration: migration.md
+  - Resources: resources.md
+theme:
+  name: material
+  features:
+    - content.action.edit
+    - content.action.view
+    - content.code.copy
+    - content.code.annotate
+    - content.tooltips
+    - navigation.expand
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+  font:
+    text: Roboto Flex
+    code: JetBrains Mono
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: lime
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: lime
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  icon:
+    logo: material/lock-outline
+    repo: fontawesome/brands/github
+copyright: Copyright &copy; 2025 Sven Jacobs
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/svenjacobs
+    - icon: fontawesome/brands/mastodon
+      link: https://androiddev.social/@svenjacobs
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/svenjacobs81/
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - footnotes
+  - md_in_html
+  - pymdownx.snippets
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+plugins:
+  - search
+  - minify:
+      minify_html: true
+hooks:
+  - hooks/fonts.py

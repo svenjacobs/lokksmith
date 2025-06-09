@@ -1,0 +1,81 @@
+package dev.lokksmith.client
+
+import dev.lokksmith.Lokksmith
+import dev.lokksmith.client.Client.Tokens
+import dev.lokksmith.client.jwt.JwtDecoder
+import dev.lokksmith.client.token.JwtToIdTokenMapper
+import kotlinx.serialization.json.Json
+
+/**
+ * Utility class for migrating existing authentication tokens from another library into a
+ * Lokksmith [Client] instance, enabling seamless user migration without requiring
+ * re-authentication.
+ *
+ * This class is intended for one-time use per [Client] during migration scenarios, such as
+ * switching from a different authentication library to Lokksmith. It should not be used for
+ * regular token management or refresh operations.
+ *
+ * @see setTokens
+ * @see Lokksmith.migration
+ */
+public class Migration internal constructor(
+    serializer: Json,
+    private val jwtDecoder: JwtDecoder = JwtDecoder(serializer),
+    private val jwtToIdTokenMapper: JwtToIdTokenMapper = JwtToIdTokenMapper(),
+) {
+
+    /**
+     * Injects externally obtained authentication tokens into the specified [client] for migration
+     * purposes.
+     *
+     * All tokens must be provided together; any existing tokens in the client will be overwritten.
+     *
+     * After calling this method, the [client] will use the provided tokens for authentication and
+     * authorization. This operation is intended for one-time use during migration and should not be
+     * used for regular token updates or refreshes.
+     *
+     * @param client The [Client] instance to receive the migrated tokens.
+     * @param accessToken The access token string to set.
+     * @param accessTokenExpiresAt The expiration timestamp (epoch seconds) for the access token, or `null` if not applicable.
+     * @param refreshToken The refresh token string to set, or `null` if not available.
+     * @param refreshTokenExpiresAt The expiration timestamp (epoch seconds) for the refresh token, or `null` if not applicable.
+     * @param idToken The ID token string to set (JWT-encoded).
+     *
+     * @throws IllegalArgumentException if the ID token cannot be decoded or mapped.
+     */
+    public suspend fun setTokens(
+        client: Client,
+        accessToken: String,
+        accessTokenExpiresAt: Long?,
+        refreshToken: String?,
+        refreshTokenExpiresAt: Long?,
+        idToken: String,
+    ) {
+        val jwt = jwtDecoder.decode(idToken)
+        val idToken = jwtToIdTokenMapper(jwt, idToken)
+
+        (client as InternalClient).updateSnapshot {
+            copy(
+                tokens = Tokens(
+                    accessToken = Tokens.AccessToken(
+                        token = accessToken,
+                        expiresAt = accessTokenExpiresAt,
+                    ),
+                    refreshToken = refreshToken?.let {
+                        Tokens.RefreshToken(
+                            token = refreshToken,
+                            expiresAt = refreshTokenExpiresAt,
+                        )
+                    },
+                    idToken = idToken,
+                )
+            )
+        }
+    }
+}
+
+/**
+ * Provides an instance of [Migration].
+ */
+public val Lokksmith.migration: Migration
+    get() = Migration(container.serializer)

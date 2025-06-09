@@ -1,0 +1,20 @@
+name: Deploy Site
+permissions:
+  contents: write
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'site/**'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install mkdocs-material[recommended]
+      - run: mkdocs gh-deploy --force
+        working-directory: ./site
