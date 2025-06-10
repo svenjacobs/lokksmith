@@ -10,12 +10,14 @@ internal class SnapshotStoreSpy(
     data class ObserveCall(val key: Key)
     data class GetForStateCall(val state: String)
     data class SetCall(val key: Key, val snapshot: Snapshot)
+    data class InternalSetCall(val key: Key, val snapshot: Snapshot)
     data class DeleteCall(val key: Key)
     data class ExistsCall(val key: Key)
 
     val observeCalls = mutableListOf<ObserveCall>()
     val getForStateCalls = mutableListOf<GetForStateCall>()
     val setCalls = mutableListOf<SetCall>()
+    val internalSetCalls = mutableListOf<InternalSetCall>()
     val deleteCalls = mutableListOf<DeleteCall>()
     val existsCalls = mutableListOf<ExistsCall>()
 
@@ -35,6 +37,14 @@ internal class SnapshotStoreSpy(
     ): Snapshot {
         setCalls.add(SetCall(key, snapshot))
         return subject.set(key, snapshot)
+    }
+
+    override suspend fun internalSet(
+        key: Key,
+        snapshot: Snapshot
+    ): Snapshot {
+        internalSetCalls.add(InternalSetCall(key, snapshot))
+        return subject.internalSet(key, snapshot)
     }
 
     override suspend fun delete(key: Key): Boolean {

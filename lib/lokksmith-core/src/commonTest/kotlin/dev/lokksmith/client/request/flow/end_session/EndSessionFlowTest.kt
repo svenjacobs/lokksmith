@@ -10,6 +10,7 @@ import dev.lokksmith.client.createTestClient
 import dev.lokksmith.client.request.OAuthError
 import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.parameter.Parameter
+import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.Snapshot.EphemeralEndSessionFlowState
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult
 import io.ktor.http.Url
@@ -31,13 +32,10 @@ class EndSessionFlowTest {
 
     @Test
     fun `prepare should prepare End Session Flow`() = runTest {
-        val (flow, client) = createFlow()
-
-        client.updateSnapshot {
+        val (flow, client) = createFlow {
             copy(tokens = SAMPLE_TOKENS)
         }
 
-        runCurrent()
         val initiation = flow.prepare()
 
         runCurrent()
@@ -64,13 +62,10 @@ class EndSessionFlowTest {
 
     @Test
     fun `onResponse should handle successful response`() = runTest {
-        val (flow, client) = createFlow()
-
-        client.updateSnapshot {
+        val (flow, client) = createFlow {
             copy(tokens = SAMPLE_TOKENS)
         }
 
-        runCurrent()
         assertNotNull(client.tokens.value)
 
         flow.prepare()
@@ -153,10 +148,12 @@ private suspend fun TestScope.createFlow(
     request: EndSessionFlow.Request = EndSessionFlow.Request(
         redirectUri = "https://example.com/app/redirect",
     ),
+    initialSnapshot: Snapshot.() -> Snapshot = { this },
 ): Pair<EndSessionFlow, InternalClient> {
     val client = createTestClient(
         key = key,
         id = id,
+        initialSnapshot = initialSnapshot,
     )
 
     return Pair(

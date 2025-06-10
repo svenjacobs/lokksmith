@@ -8,7 +8,7 @@ import kotlin.io.encoding.Base64.PaddingOption
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 internal class JwtEncoder(
-    private val json: Json,
+    private val serializer: Json,
 ) {
 
     /**
@@ -16,7 +16,7 @@ internal class JwtEncoder(
      */
     @OptIn(ExperimentalEncodingApi::class)
     fun encode(jwt: Jwt): String {
-        val headerJson = json.encodeToString(jwt.header)
+        val headerJson = serializer.encodeToString(jwt.header)
         val header = Base64.UrlSafe.withPadding(PaddingOption.ABSENT).encode(
             headerJson.encodeToByteArray()
         )
@@ -27,11 +27,11 @@ internal class JwtEncoder(
          *
          * @see JwtPayloadExtraTransformingSerializer
          */
-        val intermediatePayload = json.encodeToJsonElement(
+        val intermediatePayload = serializer.encodeToJsonElement(
             JwtPayloadExtraTransformingSerializer(),
-            json.encodeToJsonElement(jwt.payload) as JsonObject
+            serializer.encodeToJsonElement(jwt.payload) as JsonObject
         )
-        val payloadJson = json.encodeToString(intermediatePayload)
+        val payloadJson = serializer.encodeToString(intermediatePayload)
         val payload = Base64.UrlSafe.withPadding(PaddingOption.ABSENT).encode(
             payloadJson.encodeToByteArray()
         )

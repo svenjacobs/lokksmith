@@ -5,12 +5,14 @@ import dev.lokksmith.client.Id
 import dev.lokksmith.client.Key
 import kotlinx.serialization.Serializable
 
+internal const val CURRENT_SCHEMA_VERSION = 2
+
 /**
  * A [Snapshot] represents the persistable state of a [Client].
  */
 @Serializable
 public data class Snapshot(
-    val schemaVersion: Int = 1,
+    val schemaVersion: Int = CURRENT_SCHEMA_VERSION,
     val key: Key,
     val id: Id,
     val metadata: Client.Metadata,
@@ -39,6 +41,11 @@ public data class Snapshot(
      * Holds temporary data that is required to fulfill an auth request.
      */
     val ephemeralFlowState: EphemeralFlowState? = null,
+
+    /**
+     * Flag that denotes if the client was migrated via [dev.lokksmith.client.Migration].
+     */
+    val migrated: Boolean = false,
 ) {
 
     @Serializable

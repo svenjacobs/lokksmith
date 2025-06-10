@@ -547,7 +547,7 @@ internal class ClientImpl private constructor(
             coroutineScope: CoroutineScope,
             snapshotStore: SnapshotStore,
             provider: Provider,
-        ): Client {
+        ): InternalClient {
             // Create a "child" CoroutineScope that can be cancelled individually per client
             val clientCoroutineScope = CoroutineScope(
                 coroutineScope.coroutineContext
