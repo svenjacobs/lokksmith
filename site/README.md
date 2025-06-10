@@ -5,5 +5,5 @@ managed via [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/).
 virtual environment (`setup_venv.sh`) or via
 
 ```
-pipx install mkdocs-material[recommended] --include-deps
+pipx install mkdocs-material[recommended] mkdocs-macros-plugin --include-deps
 ```

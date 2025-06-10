@@ -9,13 +9,11 @@ Add the current version of Lokksmith to your `gradle/libs.versions.toml`:
 
 ```toml title="gradle/libs.versions.toml"
 [versions]
-lokksmith = "0.1.0" # (1)!
+lokksmith = "{{ version }}"
 
 [libraries]
 lokksmith-core = { module = "dev.lokksmith:lokksmith-core", version.ref = "lokksmith" }
 ```
-
-1. Replace with the latest version if available
 
 ## Add Lokksmith to Project Dependencies
 
