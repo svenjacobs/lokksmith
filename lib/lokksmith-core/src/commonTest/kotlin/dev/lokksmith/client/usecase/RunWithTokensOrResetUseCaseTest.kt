@@ -22,7 +22,7 @@ import kotlin.test.assertTrue
 class RunWithTokensOrResetUseCaseTest {
 
     @Test
-    fun `invoke() should reset tokens on expected error when refreshing`() = runTest {
+    fun `invoke should reset tokens on expected error when refreshing`() = runTest {
         val client = createTestClient(
             provider = TestProvider(
                 refreshTokenRequest = {
@@ -49,7 +49,7 @@ class RunWithTokensOrResetUseCaseTest {
     }
 
     @Test
-    fun `invoke() should rethrow exception on unexpected error when refreshing`() = runTest {
+    fun `invoke should rethrow exception on unexpected error when refreshing`() = runTest {
         val client = createTestClient(
             provider = TestProvider(
                 refreshTokenRequest = {
@@ -77,7 +77,7 @@ class RunWithTokensOrResetUseCaseTest {
     }
 
     @Test
-    fun `invoke() should reset tokens when ResetClientStateException is thrown`() = runTest {
+    fun `invoke should reset tokens when ResetClientStateException is thrown`() = runTest {
         val client = createTestClient(
             initialSnapshot = {
                 copy(tokens = SAMPLE_TOKENS)
@@ -95,7 +95,7 @@ class RunWithTokensOrResetUseCaseTest {
     }
 
     @Test
-    fun `invoke() should run lambda when tokens are valid`() = runTest {
+    fun `invoke should run lambda when tokens are valid`() = runTest {
         val client = createTestClient(
             initialSnapshot = {
                 copy(tokens = SAMPLE_TOKENS)
@@ -115,7 +115,7 @@ class RunWithTokensOrResetUseCaseTest {
     }
 
     @Test
-    fun `invoke() should run lambda with refreshed tokens`() = runTest {
+    fun `invoke should run lambda with refreshed tokens`() = runTest {
         val client = createTestClient(
             provider = TestProvider(
                 refreshTokenRequest = {

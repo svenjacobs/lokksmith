@@ -30,7 +30,7 @@ import kotlin.test.assertNull
 class EndSessionFlowTest {
 
     @Test
-    fun `prepare() should prepare End Session Flow`() = runTest {
+    fun `prepare should prepare End Session Flow`() = runTest {
         val (flow, client) = createFlow()
 
         client.updateSnapshot {
@@ -61,7 +61,7 @@ class EndSessionFlowTest {
     }
 
     @Test
-    fun `onResponse() should handle successful response`() = runTest {
+    fun `onResponse should handle successful response`() = runTest {
         val (flow, client) = createFlow()
 
         client.updateSnapshot {
@@ -87,7 +87,7 @@ class EndSessionFlowTest {
     }
 
     @Test
-    fun `onResponse() should handle error in response`() = runTest {
+    fun `onResponse should handle error in response`() = runTest {
         val (flow, client) = createFlow()
 
         flow.prepare()
@@ -122,7 +122,7 @@ class EndSessionFlowTest {
     }
 
     @Test
-    fun `cancel() should cancel flow`() = runTest {
+    fun `cancel should cancel flow`() = runTest {
         val (flow, client) = createFlow()
 
         flow.prepare()

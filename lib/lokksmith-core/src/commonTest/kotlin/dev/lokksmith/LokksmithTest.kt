@@ -38,7 +38,7 @@ import kotlin.test.assertTrue
 class LokksmithTest {
 
     @Test
-    fun `get() should return existing client`() = runTest {
+    fun `get should return existing client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -65,7 +65,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `get() should return null if client does not exist`() = runTest {
+    fun `get should return null if client does not exist`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         assertNull(lokksmith.get("key"))
@@ -73,7 +73,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `getOrCreate() should return existing client`() = runTest {
+    fun `getOrCreate should return existing client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -111,7 +111,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `getOrCreate() should create new client`() = runTest {
+    fun `getOrCreate should create new client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -151,7 +151,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `exists() should return true for existing client`() = runTest {
+    fun `exists should return true for existing client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -176,7 +176,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `exists() should return false for non-existing client`() = runTest {
+    fun `exists should return false for non-existing client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -191,7 +191,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `create() should create new client`() = runTest {
+    fun `create should create new client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -240,7 +240,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `create() should throw exception for existing client`() = runTest {
+    fun `create should throw exception for existing client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -269,7 +269,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `delete() should delete existing client`() = runTest {
+    fun `delete should delete existing client`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -294,7 +294,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `delete() should return false when client does not exist`() = runTest {
+    fun `delete should return false when client does not exist`() = runTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
@@ -308,7 +308,7 @@ class LokksmithTest {
     }
 
     @Test
-    fun `dispose() should dispose instance`() = runTest {
+    fun `dispose should dispose instance`() = runTest {
         val (lokksmith) = createTestLokksmith()
 
         lokksmith.dispose()

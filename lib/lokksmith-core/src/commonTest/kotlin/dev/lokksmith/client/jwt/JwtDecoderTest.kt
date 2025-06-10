@@ -12,7 +12,7 @@ class JwtDecoderTest {
     private val decoder = JwtDecoder(Json)
 
     @Test
-    fun `decode() should decode encoded raw string into JWT`() {
+    fun `decode should decode encoded raw string into JWT`() {
         val jwt =
             decoder.decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
 
@@ -27,7 +27,7 @@ class JwtDecoderTest {
     }
 
     @Test
-    fun `decode() should decode an unsecured JWT`() {
+    fun `decode should decode an unsecured JWT`() {
         val jwt =
             decoder.decode("eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTczNjI5MjEyNH0.")
 
@@ -42,7 +42,7 @@ class JwtDecoderTest {
     }
 
     @Test
-    fun `decode() should decode a JWT with a single 'aud' value`() {
+    fun `decode should decode a JWT with a single 'aud' value`() {
         val jwt =
             decoder.decode("eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjoiYXVkMSJ9.")
 
@@ -50,7 +50,7 @@ class JwtDecoderTest {
     }
 
     @Test
-    fun `decode() should decode a JWT with multiple 'aud' values`() {
+    fun `decode should decode a JWT with multiple 'aud' values`() {
         val jwt =
             decoder.decode("eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjpbImF1ZDEiLCJhdWQyIl19.")
 
@@ -58,7 +58,7 @@ class JwtDecoderTest {
     }
 
     @Test
-    fun `decode() should throw exception for invalid JWT format`() {
+    fun `decode should throw exception for invalid JWT format`() {
         assertFailsWith<IllegalArgumentException> { decoder.decode("a.b") }
     }
 }
