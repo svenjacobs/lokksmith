@@ -1,4 +1,7 @@
 name: Publish
+permissions:
+  contents: write
+  pull-requests: write
 on:
   release:
     types: [ published ]
@@ -25,3 +28,24 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.GPG_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_KEY_PASSWORD }}
         working-directory: ./lib
+
+  documentation:
+    needs: deploy
+    timeout-minutes: 15
+    runs-un: ubuntu-latest
+    steps:
+      - name: Strip leading v from VERSION
+        run: echo "VERSION=${VERSION#v}" >> $GITHUB_ENV
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+      - name: Update documentation
+        run: yq -i ".extra.version = \"$VERSION\"" ./site/mkdocs.yml
+      - name: Create PR for documentation
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: update site documentation (${{ github.event.release.tag_name }})
+          title: Update site documentation (${{ github.event.release.tag_name }})
+          body: Update `extra.version` in `site/mkdocs.yml` to reflect the new release
+          branch: chore/update-documentation
+          base: main
+          labels: documentation

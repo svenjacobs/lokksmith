@@ -9,12 +9,13 @@ on:
       - 'site/**'
 jobs:
   deploy:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - run: pip install mkdocs-material[recommended]
+      - run: pip install mkdocs-material[recommended] mkdocs-macros-plugin
       - run: mkdocs gh-deploy --force
         working-directory: ./site
