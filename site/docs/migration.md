@@ -4,8 +4,8 @@ Lokksmith provides the `Migration` utility class for migrating tokens from anoth
 enabling seamless user migration without requiring re-authentication.
 
 !!! warning
-    The migration process should only performed **once** for every client. It should not be used for 
-    regular token management or refresh operations.
+    The migration process should only be performed **once** for every client. It should not be used 
+    for regular token management or refresh operations.
 
 ```kotlin
 val lokksmith = createLokksmith()
