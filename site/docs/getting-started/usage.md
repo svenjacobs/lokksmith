@@ -84,7 +84,7 @@ from your Composable. For example:
 val uiState by viewModel.uiState.collectAsStateWithLifecycle() // (1)!
 val authFlowLauncher = rememberAuthFlowLauncher()
 
-LaunchedEffecte(uiState.initiation) {
+LaunchedEffect(uiState.initiation) {
     uiState.initiation?.let { initiation ->
         authFlowLauncher.launch(initiation)    
     }
