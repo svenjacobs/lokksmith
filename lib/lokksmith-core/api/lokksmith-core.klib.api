@@ -617,7 +617,7 @@ abstract class <#A: dev.lokksmith.client/Client.Tokens.IdToken?> dev.lokksmith.c
         final fun <get-client>(): dev.lokksmith.client/InternalClient // dev.lokksmith.client.request.token/TokenResponseValidator.client.<get-client>|<get-client>(){}[0]
 
     abstract fun getIdToken(dev.lokksmith.client.request.token/TokenResponse): #A // dev.lokksmith.client.request.token/TokenResponseValidator.getIdToken|getIdToken(dev.lokksmith.client.request.token.TokenResponse){}[0]
-    abstract suspend fun validateIdTokenNonce(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.request.token/TokenResponseValidator.validateIdTokenNonce|validateIdTokenNonce(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+    abstract fun validateIdTokenNonce(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.request.token/TokenResponseValidator.validateIdTokenNonce|validateIdTokenNonce(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
     final fun decodeIdToken(kotlin/String): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client.request.token/TokenResponseValidator.decodeIdToken|decodeIdToken(kotlin.String){}[0]
     final suspend fun validate(dev.lokksmith.client.request.token/TokenResponse, dev.lokksmith.client/Client.Tokens.IdToken? = ...): dev.lokksmith.client.request.token/TokenResponseValidator.Result<#A> // dev.lokksmith.client.request.token/TokenResponseValidator.validate|validate(dev.lokksmith.client.request.token.TokenResponse;dev.lokksmith.client.Client.Tokens.IdToken?){}[0]
     open suspend fun validateAuthTime(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.request.token/TokenResponseValidator.validateAuthTime|validateAuthTime(dev.lokksmith.client.Client.Tokens.IdToken){}[0]

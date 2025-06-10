@@ -26,7 +26,7 @@ internal class RefreshTokenResponseValidator(serializer: Json, client: InternalC
 
     override fun getIdToken(response: TokenResponse) = response.idToken?.let(::decodeIdToken)
 
-    override suspend fun validateIdTokenNonce(idToken: IdToken) {
+    override fun validateIdTokenNonce(idToken: IdToken) {
         // nonce is optional for a refresh response but if it's present it must be validated
         idToken.nonce?.let {
             require(idToken.nonce == client.snapshots.value.nonce) { "nonce mismatch" }

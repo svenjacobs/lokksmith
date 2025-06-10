@@ -86,7 +86,7 @@ public abstract class TokenResponseValidator<T : IdToken?>(
 
     protected abstract fun getIdToken(response: TokenResponse): T
 
-    protected abstract suspend fun validateIdTokenNonce(idToken: IdToken)
+    protected abstract fun validateIdTokenNonce(idToken: IdToken)
 
     /**
      * This method is empty because the "auth_time" validation is only relevant for the
