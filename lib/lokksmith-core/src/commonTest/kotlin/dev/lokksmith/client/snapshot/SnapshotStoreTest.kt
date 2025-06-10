@@ -33,7 +33,7 @@ class SnapshotStoreTest {
     }
 
     @Test
-    fun `observe() should observe key for changes`() = runTest {
+    fun `observe should observe key for changes`() = runTest {
         val key = "key".asKey()
 
         assertEquals(null, store.observe(key).firstOrNull())
@@ -45,7 +45,7 @@ class SnapshotStoreTest {
     }
 
     @Test
-    fun `get() should get Snapshot for key`() = runTest {
+    fun `get should get Snapshot for key`() = runTest {
         val key = "key".asKey()
 
         assertEquals(null, store.observe(key).firstOrNull())
@@ -59,7 +59,7 @@ class SnapshotStoreTest {
     }
 
     @Test
-    fun `getForState() should get Snapshot for state`() = runTest {
+    fun `getForState should get Snapshot for state`() = runTest {
         val key = "key".asKey()
         val state = "Ly5GJLkj"
 
@@ -74,7 +74,7 @@ class SnapshotStoreTest {
     }
 
     @Test
-    fun `set() should set Snapshot for key`() = runTest {
+    fun `set should set Snapshot for key`() = runTest {
         val key = "key".asKey()
 
         assertEquals(null, store.observe(key).firstOrNull())
@@ -86,7 +86,7 @@ class SnapshotStoreTest {
     }
 
     @Test
-    fun `delete() should delete Snapshot for key`() = runTest {
+    fun `delete should delete Snapshot for key`() = runTest {
         val key = "key".asKey()
 
         val snapshot = newSnapshot(key)
@@ -100,7 +100,7 @@ class SnapshotStoreTest {
     }
 
     @Test
-    fun `exists() should check for existence`() = runTest {
+    fun `exists should check for existence`() = runTest {
         val key = "key".asKey()
 
         assertFalse(store.exists(key))

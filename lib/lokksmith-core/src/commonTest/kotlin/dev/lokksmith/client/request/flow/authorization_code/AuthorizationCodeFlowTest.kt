@@ -54,7 +54,7 @@ class AuthorizationCodeFlowTest {
     private val httpJson = Json { prettyPrint = true }
 
     @Test
-    fun `prepare() should prepare Authorization Code Flow`() = runTest {
+    fun `prepare should prepare Authorization Code Flow`() = runTest {
         val (flow, client) = createFlow(
             request = AuthorizationCodeFlow.Request(
                 redirectUri = "https://example.com/app/redirect",
@@ -98,7 +98,7 @@ class AuthorizationCodeFlowTest {
     }
 
     @Test
-    fun `prepare() should prepare Authorization Code Flow without PKCE`() = runTest {
+    fun `prepare should prepare Authorization Code Flow without PKCE`() = runTest {
         val (flow, client) = createFlow(
             request = AuthorizationCodeFlow.Request(
                 redirectUri = "https://example.com/app/redirect",
@@ -122,7 +122,7 @@ class AuthorizationCodeFlowTest {
     }
 
     @Test
-    fun `onResponse() should handle successful response`() = runTest {
+    fun `onResponse should handle successful response`() = runTest {
         val jwtEncoder = JwtEncoder(Json)
 
         val (flow, client, testState) = createFlow { testState ->
@@ -227,7 +227,7 @@ class AuthorizationCodeFlowTest {
     }
 
     @Test
-    fun `onResponse() should handle error in code response`() = runTest {
+    fun `onResponse should handle error in code response`() = runTest {
         val (flow, client) = createFlow()
 
         flow.prepare()
@@ -262,7 +262,7 @@ class AuthorizationCodeFlowTest {
     }
 
     @Test
-    fun `onResponse() should handle error in token response`() = runTest {
+    fun `onResponse should handle error in token response`() = runTest {
         val (flow, client) = createFlow { testState ->
             {
                 val response = httpJson.encodeToString(
@@ -311,7 +311,7 @@ class AuthorizationCodeFlowTest {
     }
 
     @Test
-    fun `cancel() should cancel flow`() = runTest {
+    fun `cancel should cancel flow`() = runTest {
         val (flow, client) = createFlow { testState ->
             {
                 respond(

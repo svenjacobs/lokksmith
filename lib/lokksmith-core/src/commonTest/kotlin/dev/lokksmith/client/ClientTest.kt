@@ -51,7 +51,7 @@ class ClientTest {
     private val httpJson = Json { prettyPrint = true }
 
     @Test
-    fun `refresh() should refresh tokens`() = runTest {
+    fun `refresh should refresh tokens`() = runTest {
         val jwtEncoder = JwtEncoder(Json)
         val engine = MockEngine { request ->
             when (request.url.toString()) {
@@ -130,7 +130,7 @@ class ClientTest {
     }
 
     @Test
-    fun `refresh() should throw exception on OAuth error`() = runTest {
+    fun `refresh should throw exception on OAuth error`() = runTest {
         val engine = MockEngine { request ->
             when (request.url.toString()) {
                 "https://example.com/tokenEndpoint" -> {
@@ -180,7 +180,7 @@ class ClientTest {
     }
 
     @Test
-    fun `resetTokens() should reset tokens`() = runTest {
+    fun `resetTokens should reset tokens`() = runTest {
         val client = createTestClient(
             initialSnapshot = {
                 copy(
@@ -204,7 +204,7 @@ class ClientTest {
     }
 
     @Test
-    fun `runWithTokens() should run lambda with current tokens`() = runTest {
+    fun `runWithTokens should run lambda with current tokens`() = runTest {
         val client = createTestClient(
             provider = TestProvider(
                 refreshTokenRequest = {
@@ -229,7 +229,7 @@ class ClientTest {
     }
 
     @Test
-    fun `runWithTokens() should run lambda with refreshed tokens`() = runTest {
+    fun `runWithTokens should run lambda with refreshed tokens`() = runTest {
         var refreshTokenCalled = false
         val client = createTestClient(
             provider = TestProvider(
@@ -275,7 +275,7 @@ class ClientTest {
     }
 
     @Test
-    fun `isExpired() should return true for expired token`() = runTest {
+    fun `isExpired should return true for expired token`() = runTest {
         val client = createTestClient()
 
         assertTrue {
@@ -297,7 +297,7 @@ class ClientTest {
     }
 
     @Test
-    fun `isExpired() should return false for valid token`() = runTest {
+    fun `isExpired should return false for valid token`() = runTest {
         val client = createTestClient()
 
         assertFalse {
@@ -319,7 +319,7 @@ class ClientTest {
     }
 
     @Test
-    fun `dispose() should cancel coroutine`() = runTest {
+    fun `dispose should cancel coroutine`() = runTest {
         val client = createTestClient()
         client.dispose()
         assertFalse((client as ClientImpl).coroutineScope.isActive)
