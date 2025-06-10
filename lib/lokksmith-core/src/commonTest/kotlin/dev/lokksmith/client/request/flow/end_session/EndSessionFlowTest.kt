@@ -37,7 +37,9 @@ class EndSessionFlowTest {
             copy(tokens = SAMPLE_TOKENS)
         }
 
+        runCurrent()
         val initiation = flow.prepare()
+
         runCurrent()
         val requestUrl = Url(initiation.requestUrl)
 
