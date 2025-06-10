@@ -16,6 +16,8 @@ import kotlinx.serialization.json.Json
  * regular token management or refresh operations.
  *
  * @see setTokens
+ * @see isMigrated
+ * @see setMigrated
  * @see Lokksmith.migration
  */
 public class Migration internal constructor(
@@ -40,7 +42,9 @@ public class Migration internal constructor(
      * @param refreshToken The refresh token string to set, or `null` if not available.
      * @param refreshTokenExpiresAt The expiration timestamp (epoch seconds) for the refresh token, or `null` if not applicable.
      * @param idToken The ID token string to set (JWT-encoded).
+     * @param setMigratedFlag Sets the migrated flag on this client instance. Any further migration attempt will throw an exception.
      *
+     * @throws IllegalStateException if the client was already migrated
      * @throws IllegalArgumentException if the ID token cannot be decoded or mapped.
      */
     public suspend fun setTokens(
@@ -50,11 +54,17 @@ public class Migration internal constructor(
         refreshToken: String?,
         refreshTokenExpiresAt: Long?,
         idToken: String,
+        setMigratedFlag: Boolean = true,
     ) {
         val jwt = jwtDecoder.decode(idToken)
         val idToken = jwtToIdTokenMapper(jwt, idToken)
+        val client = (client as InternalClient)
 
-        (client as InternalClient).updateSnapshot {
+        if (client.snapshots.value.migrated) {
+            throw IllegalStateException("Client was already migrated")
+        }
+
+        client.updateSnapshot {
             copy(
                 tokens = Tokens(
                     accessToken = Tokens.AccessToken(
@@ -70,6 +80,30 @@ public class Migration internal constructor(
                     idToken = idToken,
                 )
             )
+        }
+
+        if (setMigratedFlag) {
+            setMigrated(client)
+        }
+    }
+
+    /**
+     * Returns `true` if this client was already migrated.
+     * Calling [setTokens] on a migrated client will throw an exception.
+     */
+    public fun isMigrated(client: Client): Boolean =
+        (client as InternalClient).snapshots.value.migrated
+
+    /**
+     * Applies the migrated flag to the client.
+     * This is usually done automatically by [setTokens] unless `setMigratedFlag` was set to `false`.
+     */
+    public suspend fun setMigrated(
+        client: Client,
+        migrated: Boolean = true,
+    ) {
+        (client as InternalClient).updateSnapshot {
+            copy(migrated = migrated)
         }
     }
 }

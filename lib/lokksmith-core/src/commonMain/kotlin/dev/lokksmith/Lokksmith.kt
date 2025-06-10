@@ -8,6 +8,7 @@ import dev.lokksmith.client.ClientImpl
 import dev.lokksmith.client.asId
 import dev.lokksmith.client.asKey
 import dev.lokksmith.client.snapshot.Snapshot
+import dev.lokksmith.client.snapshot.migrate
 import io.ktor.client.engine.HttpClientEngine
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -108,7 +109,7 @@ public class Lokksmith internal constructor(
             coroutineScope = container.coroutineScope,
             snapshotStore = container.snapshotStore,
             provider = container.clientProviderFactory(),
-        )
+        ).migrate()
     }
 
     /**
