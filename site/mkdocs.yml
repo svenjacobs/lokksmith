@@ -69,6 +69,8 @@ markdown_extensions:
   - attr_list
   - footnotes
   - md_in_html
+  - toc:
+      permalink: true
   - pymdownx.snippets
   - pymdownx.highlight:
       anchor_linenums: true
