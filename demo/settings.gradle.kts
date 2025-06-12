@@ -17,6 +17,10 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        maven {
+            setUrl("https://central.sonatype.com/repository/maven-snapshots/")
+            content { includeGroup("dev.lokksmith") }
+        }
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")

@@ -15,6 +15,22 @@ lokksmith = "{{ version }}"
 lokksmith-core = { module = "dev.lokksmith:lokksmith-core", version.ref = "lokksmith" }
 ```
 
+### Snapshot version
+
+If you want to use a [snapshot version](https://maven.apache.org/guides/getting-started/#What_is_a_SNAPSHOT_version.3F)
+of Lokksmith, add the following configuration to the `dependencyResolutionManagement.repositories`
+node in your root `settings.gradle.kts` or `repositories` in the module's `build.gradle.kts`:
+
+```kotlin
+maven {
+    setUrl("https://central.sonatype.com/repository/maven-snapshots/")
+    content { includeGroup("dev.lokksmith") }
+}
+```
+
+!!! info
+    You'll find the newest snapshot version [here](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/dev/lokksmith/).
+
 ## Add Lokksmith to Project Dependencies
 
 In your `build.gradle.kts`, add Lokksmith to the appropriate source set:
