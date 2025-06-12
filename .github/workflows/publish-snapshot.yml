@@ -20,7 +20,7 @@ jobs:
           distribution: temurin
           java-version: 21
       - name: Create snapshot VERSION
-        run: echo "VERSION=$(date -u +%Y%m%d%H%M%S)-SNAPSHOT" >> $GITHUB_ENV
+        run: echo "VERSION=$(date -u +%Y%m%d%H%M)-SNAPSHOT" >> $GITHUB_ENV
       - name: Publish snapshot release
         run: ./gradlew publishAllPublicationsToMavenCentralRepository -PVERSION_NAME="$VERSION" --no-configuration-cache
         env:
