@@ -1,5 +1,7 @@
 name: Check Pull Request
 on: [ pull_request, workflow_dispatch ]
+permissions:
+  contents: read
 jobs:
   check-lib:
     timeout-minutes: 30
