@@ -6,7 +6,7 @@ on:
   release:
     types: [ published ]
 jobs:
-  deploy:
+  publish:
     timeout-minutes: 30
     runs-on: macos-latest
     steps:
