@@ -16,5 +16,15 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: 'gradle'
+          cache-dependency-path: |
+            demo/**/*.gradle*
+            demo/**/gradle-wrapper.properties
+            demo/gradle/*.versions.toml
+      - name: Cache konan
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('demo/**/*.gradle*', 'demo/gradle/*.versions.toml') }}
       - run: ./gradlew check
         working-directory: ./demo
