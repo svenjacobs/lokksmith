@@ -1,7 +1,6 @@
 name: Publish Snapshot
 permissions:
   contents: read
-  packages: write
 on:
   push:
     branches:
