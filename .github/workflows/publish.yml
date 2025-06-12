@@ -15,6 +15,16 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+          cache: 'gradle'
+          cache-dependency-path: |
+            lib/**/*.gradle*
+            lib/**/gradle-wrapper.properties
+            lib/gradle/*.versions.toml
+      - name: Cache konan
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
       - name: Strip leading v from VERSION
         run: echo "VERSION=${VERSION#v}" >> $GITHUB_ENV
         env:
