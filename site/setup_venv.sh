@@ -8,7 +8,7 @@ fi
 if [ ! -f .venv/bin/mkdocs ]; then
   echo "Installing mkdocs-material…"
   source .venv/bin/activate
-  pip install mkdocs-material[recommended] mkdocs-macros-plugin
+  pip install -r requirements.txt
 fi
 
 echo "Done!"
