@@ -28,7 +28,7 @@ maven {
 }
 ```
 
-!!! info
+!!! tip
     You'll find the newest snapshot version [here](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/dev/lokksmith/).
 
 ## Add Lokksmith to Project Dependencies
