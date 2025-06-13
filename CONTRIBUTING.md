@@ -113,7 +113,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/svenja
 ### Commit Messages
 
 - Commit messages must be structured in adherence to the [Conventional Commits](https://www.conventionalcommits.org/) specification.
-- Commit messages must be written in present tense, imperative style, e.g. `feat: add abc to xzy`
+- Commit messages must be written in present tense, imperative style, e.g. `feat: add abc to xyz`
 
 <!-- omit in toc -->
 ## Attribution
