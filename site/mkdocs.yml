@@ -1,6 +1,6 @@
 site_name: Lokksmith
 site_url: https://lokksmith.dev
-site_description: A Kotlin Multiplatform OpenID Connect client library for Android and iOS
+site_description: Kotlin Multiplatform OpenID Connect client library for Android and iOS
 site_author: Sven Jacobs
 repo_url: https://github.com/svenjacobs/lokksmith
 repo_name: Lokksmith
