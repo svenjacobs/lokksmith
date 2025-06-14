@@ -25,6 +25,7 @@ jobs:
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
+          restore-keys: ${{ runner.os }}-konan
       - name: Strip leading v from VERSION
         run: echo "VERSION=${VERSION#v}" >> $GITHUB_ENV
         env:

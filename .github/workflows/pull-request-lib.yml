@@ -26,5 +26,6 @@ jobs:
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
+          restore-keys: ${{ runner.os }}-konan
       - run: ./gradlew check
         working-directory: ./lib
