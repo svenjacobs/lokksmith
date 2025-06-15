@@ -1,5 +1,6 @@
 package dev.lokksmith.client.jwt
 
+import dev.drewhamilton.poko.Poko
 import dev.lokksmith.serialization.StringListSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -15,63 +16,66 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
  * @see <a href="https://www.iana.org/assignments/jwt/jwt.xhtml">JWT (iana)</a>
  */
 @OptIn(ExperimentalSerializationApi::class)
-public data class Jwt(
-    val header: Header,
-    val payload: Payload,
+@Poko
+public class Jwt(
+    public val header: Header,
+    public val payload: Payload,
 ) {
 
     @Serializable
     @JsonIgnoreUnknownKeys
-    public data class Header(
-        val alg: String? = null,
-        val typ: String? = null,
-        val kid: String? = null,
+    @Poko
+    public class Header(
+        public val alg: String? = null,
+        public val typ: String? = null,
+        public val kid: String? = null,
     )
 
     @Serializable
     @JsonIgnoreUnknownKeys
-    public data class Payload(
+    @Poko
+    public class Payload(
         /**
          * Issuer
          */
-        val iss: String? = null,
+        public val iss: String? = null,
 
         /**
          * Subject
          */
-        val sub: String? = null,
+        public val sub: String? = null,
 
         /**
          * Audience
          */
         @Serializable(with = StringListSerializer::class)
-        val aud: List<String> = emptyList(),
+        public val aud: List<String> = emptyList(),
 
         /**
          * Expiration Time
          */
-        val exp: Long? = null,
+        public val exp: Long? = null,
 
         /**
          * Not Before
          */
-        val nbf: Long? = null,
+        public val nbf: Long? = null,
 
         /**
          * Issued At
          */
-        val iat: Long? = null,
+        public val iat: Long? = null,
 
         /**
          * JWT ID
          */
-        val jti: String? = null,
+        public val jti: String? = null,
 
         /**
          * Any fields that are not part of the specification are put into this map.
          *
          * @see JwtPayloadExtraTransformingSerializer
          */
-        val extra: Map<String, JsonElement> = emptyMap(),
+        public val extra: Map<String, JsonElement> = emptyMap(),
     )
 }
