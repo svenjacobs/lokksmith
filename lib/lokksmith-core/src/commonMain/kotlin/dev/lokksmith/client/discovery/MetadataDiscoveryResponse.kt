@@ -8,7 +8,7 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 @Serializable
 @JsonIgnoreUnknownKeys
 @OptIn(ExperimentalSerializationApi::class)
-internal data class MetadataDiscoveryResponse(
+internal class MetadataDiscoveryResponse(
 
     // The following four fields are required by both OIDC and OAuth 2.0
     val issuer: String,

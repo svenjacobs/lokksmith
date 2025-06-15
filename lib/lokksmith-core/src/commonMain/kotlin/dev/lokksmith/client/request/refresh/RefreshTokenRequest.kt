@@ -53,8 +53,10 @@ internal class RefreshTokenRequestImpl(
                 response = response,
                 previousIdToken = client.snapshots.value.tokens?.idToken,
             )
+        } catch (e: TokenValidationException) {
+            throw e
         } catch (e: Exception) {
-            throw TokenValidationException(e)
+            throw TokenValidationException(cause = e)
         }
 
         return Response(
