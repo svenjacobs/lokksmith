@@ -1,4 +1,4 @@
-package dev.lokksmith.client.request.flow.authorization_code
+package dev.lokksmith.client.request.flow.authorizationCode
 
 import dev.lokksmith.client.Id
 import dev.lokksmith.client.InternalClient

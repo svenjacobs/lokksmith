@@ -3,7 +3,7 @@ package dev.lokksmith.client.request.flow
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.ResponseException
-import dev.lokksmith.client.request.flow.authorization_code.VerifierStrategy
+import dev.lokksmith.client.request.flow.authorizationCode.VerifierStrategy
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult
 import io.ktor.http.URLBuilder

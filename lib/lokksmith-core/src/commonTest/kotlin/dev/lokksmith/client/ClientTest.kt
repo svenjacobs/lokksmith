@@ -6,8 +6,8 @@ import dev.lokksmith.client.jwt.JwtEncoder
 import dev.lokksmith.client.request.OAuthError
 import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.flow.AuthFlow
-import dev.lokksmith.client.request.flow.authorization_code.AuthorizationCodeFlow
-import dev.lokksmith.client.request.flow.end_session.EndSessionFlow
+import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow
+import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
 import dev.lokksmith.client.request.parameter.GrantType
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.request.refresh.RefreshTokenRequest

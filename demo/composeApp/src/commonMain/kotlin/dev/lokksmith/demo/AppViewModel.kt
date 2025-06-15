@@ -9,9 +9,9 @@ import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result
 import dev.lokksmith.client.request.flow.authFlowResult
-import dev.lokksmith.client.request.flow.authorization_code.AuthorizationCodeFlow
+import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow
 import dev.lokksmith.client.request.flow.confirmAuthFlowResultConsumed
-import dev.lokksmith.client.request.flow.end_session.EndSessionFlow
+import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
 import dev.lokksmith.client.request.parameter.Scope
 import dev.lokksmith.client.usecase.RunWithTokensOrResetUseCase
 import dev.lokksmith.demo.AppViewModel.UiState.AuthFlow
