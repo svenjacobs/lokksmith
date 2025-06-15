@@ -13,6 +13,7 @@ nav:
       - Usage: getting-started/usage.md
       - Demo: getting-started/demo.md
   - Migration: migration.md
+  - Contributing: contributing.md
   - Resources: resources.md
 theme:
   name: material
