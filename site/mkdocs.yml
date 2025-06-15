@@ -63,7 +63,7 @@ extra:
       link: https://androiddev.social/@svenjacobs
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/svenjacobs81/
-  version: "0.1.1"
+  version: "0.1.2"
 markdown_extensions:
   - abbr
   - admonition
