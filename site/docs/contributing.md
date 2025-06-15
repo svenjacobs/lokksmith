@@ -9,28 +9,28 @@ making your first contribution. This helps maintainers and ensures a smooth expe
     If you like this project but don't have time or can't contribute code, you can still support us
     by:
 
-    - Starring the project
+    - [Starring]({{ config.repo_url }}) the project
     - Sharing it on social media or in blog posts
     - Mentioning it in your project's README
     - Talking about it at meetups or with friends and colleagues
 
 ## Questions
 
-If you have a question, please open a [discussion](https://github.com/svenjacobs/lokksmith/discussions)
+If you have a question, please open a [discussion]({{ config.repo_url }}/discussions)
 or check the existing topics. Please do not use issues for questions and discussions as they are
 reserved for [bug reports](#reporting-bugs).
 
 ## Suggestions & Feature Requests
 
-Before submitting a suggestion, read the [documentation](https://lokksmith.dev) carefully and find
+Before submitting a suggestion, read the [documentation]({{ config.site_url }}) carefully and find
 out if the functionality is already covered, maybe by an individual configuration. To suggest a new
-feature or improvement, please [open an issue](https://github.com/svenjacobs/lokksmith/issues/new)
+feature or improvement, please [open an issue]({{ config.repo_url }}/issues/new)
 and describe your idea clearly.
 
 ## Reporting Bugs
 
 Before reporting a bug please ensure that you can reproduce the issue with the latest version
-`{{ version }}` of Lokksmith. If this is the case, please [open an issue](https://github.com/svenjacobs/lokksmith/issues/new)
+`{{ version }}` of Lokksmith. If this is the case, please [open an issue]({{ config.repo_url }}/issues/new)
 with the following information:
 
 - Environment
@@ -81,6 +81,7 @@ the project license.
 - Write commit messages in present tense, imperative mood (e.g., `feat: add abc to xyz`).
 
 <h2>Attribution</h2>
-This guide is based on the [contributing.md generator](https://contributing.md/generator)!
+
+This guide is based on the [contributing.md generator](https://contributing.md/generator).
 
 *[LLM]: Large Language Model
