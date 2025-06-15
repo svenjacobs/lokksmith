@@ -1,7 +1,7 @@
 [versions]
 agp = "8.10.1"
-android-compileSdk = "36"
 android-minSdk = "21"
+android-compileSdk = "36"
 android-targetSdk = "36"
 androidx-datastore = "1.1.7"
 androix-activity = "1.10.1"
@@ -44,7 +44,8 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-dokka = { id = "org.jetbrains.dokka", version = "2.0.0" }
-maven-publish = { id = "com.vanniktech.maven.publish", version = "0.32.0" }
+dokka = "org.jetbrains.dokka:2.0.0"
+poko = "dev.drewhamilton.poko:0.18.7"
+maven-publish = "com.vanniktech.maven.publish:0.32.0"
 ben-manes-versions = "com.github.ben-manes.versions:0.52.0"
 test-logger = "com.adarshr.test-logger:4.0.0"

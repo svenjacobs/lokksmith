@@ -1,6 +1,7 @@
 package dev.lokksmith.client.request.flow
 
 import androidx.compose.runtime.Immutable
+import dev.drewhamilton.poko.Poko
 
 /**
  * Represents an authentication or authorization flow, such as the OpenID Connect Authorization Code
@@ -53,6 +54,7 @@ public interface AuthFlow {
      * making it suitable for use with UI frameworks, serialization and inter-process communication.
      */
     @Immutable
+    @Poko
     public class Initiation(
         public val requestUrl: String,
         public val clientKey: String,

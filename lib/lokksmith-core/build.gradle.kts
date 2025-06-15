@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.library)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.poko)
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.test.logger)
 }
