@@ -55,8 +55,8 @@ jobs:
       - name: Create PR for documentation
         uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: update site documentation (${{ github.event.release.tag_name }})
-          title: Update site documentation (${{ github.event.release.tag_name }})
+          commit-message: "docs: update site documentation (${{ github.event.release.tag_name }})"
+          title: "docs: update site documentation (${{ github.event.release.tag_name }})"
           body: Update `extra.version` in `site/mkdocs.yml` to reflect the new release.
           branch: chore/update-documentation
           base: main
