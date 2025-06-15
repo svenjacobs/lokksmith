@@ -24,13 +24,13 @@ reserved for [bug reports](#reporting-bugs).
 
 Before submitting a suggestion, read the [documentation]({{ config.site_url }}) carefully and find
 out if the functionality is already covered, maybe by an individual configuration. To suggest a new
-feature or improvement, please [open an issue]({{ config.repo_url }}/issues/new)
+feature or improvement, please [open an issue]({{ config.repo_url }}/issues/new?template=feature_request.md)
 and describe your idea clearly.
 
 ## Reporting Bugs
 
 Before reporting a bug please ensure that you can reproduce the issue with the latest version
-`{{ version }}` of Lokksmith. If this is the case, please [open an issue]({{ config.repo_url }}/issues/new)
+`{{ version }}` of Lokksmith. If this is the case, please [open an issue]({{ config.repo_url }}/issues/new?template=bug_report.md)
 with the following information:
 
 - Environment
