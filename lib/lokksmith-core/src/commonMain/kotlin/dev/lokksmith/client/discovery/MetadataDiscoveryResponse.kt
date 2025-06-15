@@ -1,5 +1,6 @@
 package dev.lokksmith.client.discovery
 
+import dev.drewhamilton.poko.Poko
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,8 +8,9 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
 @Serializable
 @JsonIgnoreUnknownKeys
+@Poko
 @OptIn(ExperimentalSerializationApi::class)
-internal data class MetadataDiscoveryResponse(
+internal class MetadataDiscoveryResponse(
 
     // The following four fields are required by both OIDC and OAuth 2.0
     val issuer: String,

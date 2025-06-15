@@ -46,8 +46,10 @@ public class AuthorizationCodeFlowResponseHandler(
 
         val result = try {
             tokenResponseValidator.validate(response)
+        } catch (e: TokenValidationException) {
+            throw e
         } catch (e: Exception) {
-            throw TokenValidationException(e)
+            throw TokenValidationException(cause = e)
         }
 
         client.updateSnapshot {

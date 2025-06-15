@@ -6,6 +6,8 @@ import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.jwt.JwtDecoder
 import dev.lokksmith.client.token.JwtToIdTokenMapper
 import kotlinx.serialization.json.Json
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 public abstract class TokenResponseValidator<T : IdToken?>(
     serializer: Json,
@@ -30,8 +32,8 @@ public abstract class TokenResponseValidator<T : IdToken?>(
         if (idToken != null && previousIdToken != null) {
             require(idToken.issuer == previousIdToken.issuer) { "iss mismatch with previous token" }
             require(idToken.subject == previousIdToken.subject) { "sub mismatch with previous token" }
-            require(idToken.issuedAt > previousIdToken.issuedAt) { "iat not greater than previous token" }
             require(idToken.audiences.sorted() == previousIdToken.audiences.sorted()) { "aud mismatch with previous token" }
+            requireTemporal(idToken.issuedAt > previousIdToken.issuedAt) { "iat not greater than previous token" }
         }
 
         if (idToken != null) {
@@ -63,8 +65,6 @@ public abstract class TokenResponseValidator<T : IdToken?>(
     protected abstract fun validateIdTokenNonce(idToken: IdToken)
 
     /**
-     * TODO: throw a more specific exception for time-based validation so that we can propagate it to the user
-     *
      * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID Token Validation</a>
      */
     private fun validateIdToken(idToken: IdToken) {
@@ -72,15 +72,23 @@ public abstract class TokenResponseValidator<T : IdToken?>(
 
         require(idToken.issuer == client.metadata.issuer) { "iss mismatch" }
         require(idToken.audiences.contains(client.id.value)) { "client_id missing in aud" }
-        require(now - client.options.leewaySeconds < idToken.expiration) { "exp before current time" }
+        requireTemporal(idToken.issuedAt <= now + client.options.leewaySeconds) { "iat is in the future" }
+        requireTemporal(now - client.options.leewaySeconds < idToken.expiration) { "exp before current time" }
 
         idToken.notBefore?.let { nbf ->
-            require(now + client.options.leewaySeconds >= nbf) { "Token not yet valid (nbf)" }
+            requireTemporal(now + client.options.leewaySeconds >= nbf) { "token not yet valid (nbf)" }
         }
 
         validateIdTokenNonce(idToken)
 
-        // TODO check iat?
         // TODO check auth_time?
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    private inline fun requireTemporal(value: Boolean, lazyMessage: () -> String) {
+        contract {
+            returns() implies value
+        }
+        if (!value) throw TokenTemporalValidationException(message = lazyMessage())
     }
 }
