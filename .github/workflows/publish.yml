@@ -41,7 +41,7 @@ jobs:
         working-directory: ./lib
 
   documentation:
-    needs: deploy
+    needs: publish
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
