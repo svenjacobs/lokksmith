@@ -6,10 +6,10 @@ import dev.lokksmith.client.ClientImpl.Companion.create
 import dev.lokksmith.client.InternalClient.Provider
 import dev.lokksmith.client.InternalClient.SnapshotContract
 import dev.lokksmith.client.request.flow.AuthFlow
-import dev.lokksmith.client.request.flow.authorization_code.AuthorizationCodeFlow
-import dev.lokksmith.client.request.flow.authorization_code.AuthorizationCodeFlowCancellation
-import dev.lokksmith.client.request.flow.end_session.EndSessionFlow
-import dev.lokksmith.client.request.flow.end_session.EndSessionFlowCancellation
+import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow
+import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowCancellation
+import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
+import dev.lokksmith.client.request.flow.endSession.EndSessionFlowCancellation
 import dev.lokksmith.client.request.refresh.RefreshTokenRequest
 import dev.lokksmith.client.request.refresh.RefreshTokenRequestImpl
 import dev.lokksmith.client.snapshot.InternalSnapshotStore

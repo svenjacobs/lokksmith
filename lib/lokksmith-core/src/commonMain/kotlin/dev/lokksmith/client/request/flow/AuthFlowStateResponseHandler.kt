@@ -2,8 +2,8 @@ package dev.lokksmith.client.request.flow
 
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.InternalClient
-import dev.lokksmith.client.request.flow.authorization_code.AuthorizationCodeFlowResponseHandler
-import dev.lokksmith.client.request.flow.end_session.EndSessionFlowResponseHandler
+import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowResponseHandler
+import dev.lokksmith.client.request.flow.endSession.EndSessionFlowResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.snapshot.Snapshot
 import io.ktor.http.Url

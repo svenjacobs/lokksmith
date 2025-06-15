@@ -1,4 +1,4 @@
-package dev.lokksmith.client.request.flow.end_session
+package dev.lokksmith.client.request.flow.endSession
 
 import dev.lokksmith.client.Id
 import dev.lokksmith.client.InternalClient
