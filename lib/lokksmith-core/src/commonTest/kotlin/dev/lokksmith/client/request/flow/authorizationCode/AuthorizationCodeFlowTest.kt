@@ -253,6 +253,7 @@ class AuthorizationCodeFlowTest {
 
         assertEquals(
             FlowResult.Error(
+                type = FlowResult.Error.Type.OAuth,
                 message = """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI")""",
                 code = OAuthError.InvalidGrant.code,
             ), client.snapshots.value.flowResult
@@ -302,6 +303,7 @@ class AuthorizationCodeFlowTest {
 
         assertEquals(
             FlowResult.Error(
+                type = FlowResult.Error.Type.OAuth,
                 message = """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI", statusCode=400)""",
                 code = OAuthError.InvalidGrant.code,
             ), client.snapshots.value.flowResult

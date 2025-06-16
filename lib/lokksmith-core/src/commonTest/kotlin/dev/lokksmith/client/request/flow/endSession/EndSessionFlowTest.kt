@@ -110,6 +110,7 @@ class EndSessionFlowTest {
 
         assertEquals(
             FlowResult.Error(
+                type = FlowResult.Error.Type.OAuth,
                 message = """OAuthResponseException(error="invalid_client, errorDescription="error description", errorUri="error URI")""",
                 code = OAuthError.InvalidClient.code,
             ), client.snapshots.value.flowResult

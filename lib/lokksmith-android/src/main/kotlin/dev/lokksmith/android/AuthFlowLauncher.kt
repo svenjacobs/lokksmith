@@ -109,7 +109,7 @@ public class AuthFlowLauncher internal constructor(
 
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
             resultState.value = Result.Error(
-                code = null,
+                type = Result.Error.Type.Generic,
                 message = throwable.message,
             ).wrap()
         }
@@ -215,8 +215,16 @@ private object ResultParceler : Parceler<Result> {
             Result.Cancelled -> parcel.writeInt(3)
             is Result.Error -> {
                 parcel.writeInt(4)
-                parcel.writeString(result.code)
+                parcel.writeInt(
+                    when (result.type) {
+                        Result.Error.Type.Generic -> 0
+                        Result.Error.Type.OAuth -> 1
+                        Result.Error.Type.Validation -> 2
+                        Result.Error.Type.TemporalValidation -> 3
+                    }
+                )
                 parcel.writeString(result.message)
+                parcel.writeString(result.code)
             }
         }
     }
@@ -233,11 +241,20 @@ private object ResultParceler : Parceler<Result> {
             3 -> Result.Cancelled
 
             4 -> Result.Error(
-                code = parcel.readString(),
+                type = parcel.readInt().let { errorType ->
+                    when (errorType) {
+                        0 -> Result.Error.Type.Generic
+                        1 -> Result.Error.Type.OAuth
+                        2 -> Result.Error.Type.Validation
+                        3 -> Result.Error.Type.TemporalValidation
+                        else -> throw IllegalArgumentException("Unknown Result.Error.Type $errorType")
+                    }
+                },
                 message = parcel.readString(),
+                code = parcel.readString(),
             )
 
-            else -> throw IllegalArgumentException("unknown type $type")
+            else -> throw IllegalArgumentException("Unknown type $type")
         }
     }
 }
