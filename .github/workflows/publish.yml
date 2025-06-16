@@ -59,7 +59,7 @@ jobs:
         with:
           commit-message: "docs: update site documentation (${{ github.event.release.tag_name }})"
           title: "docs: update site documentation (${{ github.event.release.tag_name }})"
-          body: Update `extra.version` in `site/mkdocs.yml` to reflect the new release.
+          body: Update `extra.version` and `extra.version_name` in `site/mkdocs.yml` to reflect the new release.
           branch: chore/update-documentation
           base: main
           labels: documentation
