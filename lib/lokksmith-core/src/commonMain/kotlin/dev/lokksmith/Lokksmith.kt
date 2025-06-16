@@ -77,10 +77,12 @@ public class Lokksmith internal constructor(
         /**
          * The User-Agent string sent with HTTP requests.
          *
-         * Setting the property to `null` may send a default User-Agent by the Ktor HTTP client
-         * library.
+         * When set to a non-empty string uses the specified User-Agent for all HTTP network
+         * requests, else uses default User-Agent.
+         *
+         * Set to null to disable User-Agent altogether.
          */
-        val userAgent: String? = "Lokksmith", // TODO: Add Lokksmith version and device operating system
+        val userAgent: String? = "",
 
         /**
          * Ktor's HTTP client engine to be used.
@@ -211,3 +213,4 @@ public class Lokksmith internal constructor(
  * @see Lokksmith.Options.httpClientEngine
  */
 internal expect val platformHttpClientEngine: HttpClientEngine
+

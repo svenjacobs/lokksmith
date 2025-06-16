@@ -14,3 +14,5 @@ internal actual fun createDataStore(
 ): DataStore<Preferences> = createDataStore(fileName) {
     "${platformContext.persistenceFilePath}$SystemPathSeparator$fileName"
 }
+
+internal actual val platformUserAgentSuffix = "JVM"

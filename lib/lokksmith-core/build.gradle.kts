@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.buildconfig)
     alias(libs.plugins.dokka)
     alias(libs.plugins.poko)
     alias(libs.plugins.maven.publish)
@@ -103,6 +104,18 @@ android {
 
 testlogger {
     theme = ThemeType.MOCHA
+}
+
+buildConfig {
+    packageName("dev.lokksmith")
+    useKotlinOutput { internalVisibility = false }
+    buildConfigField(
+        "VERSION",
+        when {
+            project.hasProperty("VERSION_NAME") -> project.property("VERSION_NAME") as String
+            else -> "SNAPSHOT"
+        },
+    )
 }
 
 mavenPublishing {

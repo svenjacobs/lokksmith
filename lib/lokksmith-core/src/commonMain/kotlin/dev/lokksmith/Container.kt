@@ -44,7 +44,11 @@ internal class ContainerImpl(
     override val httpClient by lazy {
         createHttpClient(
             engine = options.httpClientEngine,
-            userAgent = options.userAgent,
+            userAgent = when {
+                options.userAgent == null -> null
+                options.userAgent.isBlank() -> defaultUserAgent
+                else -> options.userAgent
+            }
         )
     }
 
@@ -99,3 +103,14 @@ internal fun createHttpClient(
         }
     }
 }
+
+/**
+ * @see Lokksmith.Options.userAgent
+ */
+internal expect val platformUserAgentSuffix: String
+
+/**
+ * @see Lokksmith.Options.userAgent
+ */
+private val defaultUserAgent: String
+    get() = "Lokksmith/${BuildConfig.VERSION} ($platformUserAgentSuffix)"

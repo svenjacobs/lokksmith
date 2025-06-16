@@ -12,3 +12,5 @@ internal actual fun createDataStore(
     // https://developer.android.com/kotlin/multiplatform/datastore#ios
     TODO()
 }
+
+internal actual val platformUserAgentSuffix = "iOS"
