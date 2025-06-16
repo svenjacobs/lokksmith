@@ -14,3 +14,5 @@ internal actual fun createDataStore(
 ): DataStore<Preferences> = createDataStore(fileName) { name ->
     platformContext.context.filesDir.resolve(name).absolutePath
 }
+
+internal actual val platformUserAgentSuffix = "Android"
