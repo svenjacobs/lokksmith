@@ -1,8 +1,10 @@
 package dev.lokksmith.client.snapshot
 
+import dev.drewhamilton.poko.Poko
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.Id
 import dev.lokksmith.client.Key
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 internal const val CURRENT_SCHEMA_VERSION = 2
@@ -57,11 +59,17 @@ public data class Snapshot(
         @Serializable
         public data object Cancelled : FlowResult
 
+        @Poko
         @Serializable
-        public data class Error(
-            val message: String?,
-            val code: String? = null,
-        ) : FlowResult
+        public class Error(
+            @SerialName("errorType")
+            public val type: Type,
+            public val message: String?,
+            public val code: String? = null,
+        ) : FlowResult {
+
+            public enum class Type { Generic, OAuth, Validation, TemporalValidation }
+        }
     }
 
     @Serializable

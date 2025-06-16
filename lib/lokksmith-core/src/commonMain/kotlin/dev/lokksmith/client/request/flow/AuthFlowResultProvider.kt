@@ -1,11 +1,15 @@
 package dev.lokksmith.client.request.flow
 
+import dev.drewhamilton.poko.Poko
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.InternalClient
+import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Error.Type
 import dev.lokksmith.client.snapshot.Snapshot
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error.Type as FlowResultErrorType
+
 
 /**
  * Provides an observable [Result] of the current or last known progress of an auth flow which
@@ -27,10 +31,15 @@ public object AuthFlowResultProvider {
 
         public data object Cancelled : Result
 
-        public data class Error(
-            val code: String?,
-            val message: String?,
-        ) : Result
+        @Poko
+        public class Error(
+            public val type: Type,
+            public val message: String?,
+            public val code: String? = null,
+        ) : Result {
+
+            public enum class Type { Generic, OAuth, Validation, TemporalValidation }
+        }
     }
 
     /**
@@ -48,8 +57,14 @@ public object AuthFlowResultProvider {
                     flowResult == Snapshot.FlowResult.Success -> Result.Success
                     flowResult == Snapshot.FlowResult.Cancelled -> Result.Cancelled
                     flowResult is Snapshot.FlowResult.Error -> Result.Error(
-                        code = flowResult.code,
+                        type = when (flowResult.type) {
+                            FlowResultErrorType.Generic -> Type.Generic
+                            FlowResultErrorType.OAuth -> Type.OAuth
+                            FlowResultErrorType.Validation -> Type.Validation
+                            FlowResultErrorType.TemporalValidation -> Type.TemporalValidation
+                        },
                         message = flowResult.message,
+                        code = flowResult.code,
                     )
 
                     snapshot.ephemeralFlowState != null -> Result.Processing

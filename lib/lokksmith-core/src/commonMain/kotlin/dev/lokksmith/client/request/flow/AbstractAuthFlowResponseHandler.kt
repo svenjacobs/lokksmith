@@ -5,7 +5,10 @@ import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.ResponseException
 import dev.lokksmith.client.request.flow.authorizationCode.VerifierStrategy
 import dev.lokksmith.client.request.parameter.Parameter
+import dev.lokksmith.client.request.token.TokenTemporalValidationException
+import dev.lokksmith.client.request.token.TokenValidationException
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult
+import dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error.Type
 import io.ktor.http.URLBuilder
 import io.ktor.http.URLParserException
 import io.ktor.http.Url
@@ -49,8 +52,27 @@ public abstract class AbstractAuthFlowResponseHandler(
         } catch (e: OAuthResponseException) {
             setResult(
                 FlowResult.Error(
+                    type = Type.OAuth,
                     message = e.message,
                     code = e.error.code,
+                )
+            )
+
+            throw e
+        } catch (e: TokenTemporalValidationException) {
+            setResult(
+                FlowResult.Error(
+                    type = Type.TemporalValidation,
+                    message = e.message,
+                )
+            )
+
+            throw e
+        } catch (e: TokenValidationException) {
+            setResult(
+                FlowResult.Error(
+                    type = Type.Validation,
+                    message = e.message,
                 )
             )
 
@@ -58,8 +80,8 @@ public abstract class AbstractAuthFlowResponseHandler(
         } catch (e: Exception) {
             setResult(
                 FlowResult.Error(
+                    type = Type.Generic,
                     message = e.message,
-                    code = null,
                 )
             )
 
