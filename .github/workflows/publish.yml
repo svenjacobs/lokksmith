@@ -51,7 +51,9 @@ jobs:
         env:
           VERSION: ${{ github.event.release.tag_name }}
       - name: Update documentation
-        run: yq -i ".extra.version = \"$VERSION\"" ./site/mkdocs.yml
+        run: |
+          yq -i ".extra.version = \"$VERSION\"" ./site/mkdocs.yml
+          yq -i ".extra.version_date = \"$(date -u "+%b %d, %Y")\"" ./site/mkdocs.yml
       - name: Create PR for documentation
         uses: peter-evans/create-pull-request@v7
         with:

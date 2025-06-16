@@ -13,6 +13,7 @@ nav:
       - Usage: getting-started/usage.md
       - Demo: getting-started/demo.md
   - Migration: migration.md
+  - Comparison: comparison.md
   - Contributing: contributing.md
   - Resources: resources.md
 theme:
@@ -64,12 +65,14 @@ extra:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/svenjacobs81/
   version: "0.1.2"
+  version_date: Jun 15, 2025
 markdown_extensions:
   - abbr
   - admonition
   - attr_list
   - footnotes
   - md_in_html
+  - tables
   - toc:
       permalink: true
   - pymdownx.snippets
@@ -81,6 +84,9 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 plugins:
   - search
   - macros:
