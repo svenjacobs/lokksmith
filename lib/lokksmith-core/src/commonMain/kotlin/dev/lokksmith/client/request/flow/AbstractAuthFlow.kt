@@ -6,6 +6,7 @@ import dev.lokksmith.client.snapshot.Snapshot
 
 public abstract class AbstractAuthFlow internal constructor(
     internal val client: InternalClient,
+    internal val state: String,
     private val responseHandler: AuthFlowResponseHandler,
     private val cancellation: AuthFlowCancellation,
 ) : AuthFlow {
@@ -30,6 +31,7 @@ public abstract class AbstractAuthFlow internal constructor(
         }
 
         return Initiation(
+            state = state,
             requestUrl = onPrepare(),
             clientKey = client.key.value,
         )
@@ -40,6 +42,6 @@ public abstract class AbstractAuthFlow internal constructor(
     }
 
     override suspend fun cancel() {
-        cancellation.cancel()
+        cancellation.cancel(state)
     }
 }

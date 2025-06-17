@@ -88,9 +88,9 @@ class AppViewModel(
                 .filterNotNull()
                 .collect { result ->
                     when (result) {
-                        Result.Processing -> isLoading.value = true
+                        is Result.Processing -> isLoading.value = true
 
-                        Result.Cancelled -> {
+                        is Result.Cancelled -> {
                             isLoading.value = false
                             error.value = "Flow was cancelled"
                         }
@@ -100,7 +100,7 @@ class AppViewModel(
                             error.value = result.message
                         }
 
-                        Result.Success -> isLoading.value = false
+                        is Result.Success -> isLoading.value = false
 
                         Result.Undefined -> isLoading.value = false
                     }

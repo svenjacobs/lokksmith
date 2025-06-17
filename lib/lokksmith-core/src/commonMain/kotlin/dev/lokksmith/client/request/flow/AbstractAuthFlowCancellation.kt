@@ -11,10 +11,10 @@ public abstract class AbstractAuthFlowCancellation(
 
     internal open fun Snapshot.onUpdateSnapshot(): Snapshot = this
 
-    override suspend fun cancel() {
+    override suspend fun cancel(state: String) {
         stateFinalizer.finalize {
             copy(
-                flowResult = FlowResult.Cancelled,
+                flowResult = FlowResult.Cancelled(state = state),
             ).onUpdateSnapshot()
         }
     }

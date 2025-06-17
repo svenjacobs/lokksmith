@@ -521,13 +521,15 @@ internal class ClientImpl private constructor(
     }
 
     override suspend fun cancelPendingFlow() {
-        val cancellation = when (snapshots.value.ephemeralFlowState) {
+        val ephemeralFlowState =
+            checkNotNull(snapshots.value.ephemeralFlowState) { "ephemeral flow state is null" }
+
+        val cancellation = when (ephemeralFlowState) {
             is Snapshot.EphemeralAuthorizationCodeFlowState -> ::AuthorizationCodeFlowCancellation
             is Snapshot.EphemeralEndSessionFlowState -> ::EndSessionFlowCancellation
-            null -> throw IllegalStateException("ephemeral flow state is null")
         }(this)
 
-        cancellation.cancel()
+        cancellation.cancel(ephemeralFlowState.state)
     }
 
     override fun dispose() {

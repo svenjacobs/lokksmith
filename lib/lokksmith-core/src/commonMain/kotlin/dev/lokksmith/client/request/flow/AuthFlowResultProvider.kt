@@ -25,14 +25,24 @@ public object AuthFlowResultProvider {
 
         public data object Undefined : Result
 
-        public data object Processing : Result
+        @Poko
+        public class Processing(
+            public val state: String,
+        ) : Result
 
-        public data object Success : Result
+        @Poko
+        public class Success(
+            public val state: String,
+        ) : Result
 
-        public data object Cancelled : Result
+        @Poko
+        public class Cancelled(
+            public val state: String,
+        ) : Result
 
         @Poko
         public class Error(
+            public val state: String,
             public val type: Type,
             public val message: String?,
             public val code: String? = null,
@@ -54,9 +64,10 @@ public object AuthFlowResultProvider {
             .map { snapshot ->
                 val flowResult = snapshot.flowResult
                 when {
-                    flowResult == Snapshot.FlowResult.Success -> Result.Success
-                    flowResult == Snapshot.FlowResult.Cancelled -> Result.Cancelled
+                    flowResult is Snapshot.FlowResult.Success -> Result.Success(state = flowResult.state)
+                    flowResult is Snapshot.FlowResult.Cancelled -> Result.Cancelled(state = flowResult.state)
                     flowResult is Snapshot.FlowResult.Error -> Result.Error(
+                        state = flowResult.state,
                         type = when (flowResult.type) {
                             FlowResultErrorType.Generic -> Type.Generic
                             FlowResultErrorType.OAuth -> Type.OAuth
@@ -67,7 +78,10 @@ public object AuthFlowResultProvider {
                         code = flowResult.code,
                     )
 
-                    snapshot.ephemeralFlowState != null -> Result.Processing
+                    snapshot.ephemeralFlowState != null -> Result.Processing(
+                        state = snapshot.ephemeralFlowState.state,
+                    )
+
                     else -> Result.Undefined
                 }
             }

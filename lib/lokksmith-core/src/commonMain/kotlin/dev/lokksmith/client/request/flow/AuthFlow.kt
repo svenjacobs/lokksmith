@@ -52,10 +52,15 @@ public interface AuthFlow {
      *
      * This class is designed to be easily serializable and should only contain basic data types,
      * making it suitable for use with UI frameworks, serialization and inter-process communication.
+     *
+     * @param state State parameter of this auth flow
+     * @param requestUrl Request URL to be called
+     * @param clientKey Key of initiating client
      */
     @Immutable
     @Poko
     public class Initiation(
+        public val state: String,
         public val requestUrl: String,
         public val clientKey: String,
     )

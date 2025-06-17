@@ -19,11 +19,12 @@ import io.ktor.http.takeFrom
  */
 public class EndSessionFlow internal constructor(
     client: InternalClient,
+    state: String,
     private val request: Request,
-    internal val state: String,
     private val endpoint: String,
 ) : AbstractAuthFlow(
     client = client,
+    state = state,
     responseHandler = EndSessionFlowResponseHandler(state, client),
     cancellation = EndSessionFlowCancellation(client),
 ) {
@@ -89,8 +90,8 @@ public class EndSessionFlow internal constructor(
 
             EndSessionFlow(
                 client = client,
-                request = request,
                 state = state,
+                request = request,
                 endpoint = it,
             )
         }
