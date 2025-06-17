@@ -79,7 +79,7 @@ class EndSessionFlowTest {
         flow.onResponse(responseUrl)
         runCurrent()
 
-        assertEquals(FlowResult.Success, client.snapshots.value.flowResult)
+        assertEquals(FlowResult.Success(state = flow.state), client.snapshots.value.flowResult)
         assertNull(client.tokens.value)
     }
 
@@ -110,6 +110,7 @@ class EndSessionFlowTest {
 
         assertEquals(
             FlowResult.Error(
+                state = flow.state,
                 type = FlowResult.Error.Type.OAuth,
                 message = """OAuthResponseException(error="invalid_client, errorDescription="error description", errorUri="error URI")""",
                 code = OAuthError.InvalidClient.code,
@@ -139,7 +140,7 @@ class EndSessionFlowTest {
         runCurrent()
 
         assertNull(client.snapshots.value.ephemeralFlowState)
-        assertEquals(FlowResult.Cancelled, client.snapshots.value.flowResult)
+        assertEquals(FlowResult.Cancelled(state = flow.state), client.snapshots.value.flowResult)
     }
 }
 

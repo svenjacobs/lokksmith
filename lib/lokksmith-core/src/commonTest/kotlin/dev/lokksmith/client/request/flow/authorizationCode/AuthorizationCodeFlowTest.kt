@@ -223,7 +223,7 @@ class AuthorizationCodeFlowTest {
         assertEquals(tokens.idToken.issuedAt, TEST_INSTANT)
         assertEquals(tokens.idToken.nonce, flow.nonce)
 
-        assertEquals(FlowResult.Success, client.snapshots.value.flowResult)
+        assertEquals(FlowResult.Success(state = flow.state), client.snapshots.value.flowResult)
     }
 
     @Test
@@ -253,6 +253,7 @@ class AuthorizationCodeFlowTest {
 
         assertEquals(
             FlowResult.Error(
+                state = flow.state,
                 type = FlowResult.Error.Type.OAuth,
                 message = """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI")""",
                 code = OAuthError.InvalidGrant.code,
@@ -303,6 +304,7 @@ class AuthorizationCodeFlowTest {
 
         assertEquals(
             FlowResult.Error(
+                state = flow.state,
                 type = FlowResult.Error.Type.OAuth,
                 message = """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI", statusCode=400)""",
                 code = OAuthError.InvalidGrant.code,
@@ -345,7 +347,7 @@ class AuthorizationCodeFlowTest {
 
         assertNull(client.snapshots.value.ephemeralFlowState)
         assertNull(client.snapshots.value.nonce)
-        assertEquals(FlowResult.Cancelled, client.snapshots.value.flowResult)
+        assertEquals(FlowResult.Cancelled(state = flow.state), client.snapshots.value.flowResult)
     }
 }
 

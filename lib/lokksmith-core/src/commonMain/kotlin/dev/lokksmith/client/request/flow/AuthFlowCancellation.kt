@@ -5,5 +5,5 @@ package dev.lokksmith.client.request.flow
  */
 public interface AuthFlowCancellation {
 
-    public suspend fun cancel()
+    public suspend fun cancel(state: String)
 }

@@ -53,15 +53,22 @@ public data class Snapshot(
     @Serializable
     public sealed interface FlowResult {
 
+        @Poko
         @Serializable
-        public data object Success : FlowResult
+        public class Success(
+            public val state: String,
+        ) : FlowResult
 
+        @Poko
         @Serializable
-        public data object Cancelled : FlowResult
+        public class Cancelled(
+            public val state: String,
+        ) : FlowResult
 
         @Poko
         @Serializable
         public class Error(
+            public val state: String,
             @SerialName("errorType")
             public val type: Type,
             public val message: String?,

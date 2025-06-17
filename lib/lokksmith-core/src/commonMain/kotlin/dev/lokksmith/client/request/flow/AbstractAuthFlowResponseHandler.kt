@@ -15,7 +15,7 @@ import io.ktor.http.Url
 import kotlinx.coroutines.CancellationException
 
 public abstract class AbstractAuthFlowResponseHandler(
-    state: String,
+    private val state: String,
     protected val client: InternalClient,
     private val stateFinalizer: AuthFlowStateFinalizer = AuthFlowStateFinalizer(client),
 ) : AuthFlowResponseHandler {
@@ -46,12 +46,13 @@ public abstract class AbstractAuthFlowResponseHandler(
 
             requireResponseSuccess(url)
             onResponse(url)
-            setResult(FlowResult.Success)
+            setResult(FlowResult.Success(state))
         } catch (e: CancellationException) {
             throw e
         } catch (e: OAuthResponseException) {
             setResult(
                 FlowResult.Error(
+                    state = state,
                     type = Type.OAuth,
                     message = e.message,
                     code = e.error.code,
@@ -62,6 +63,7 @@ public abstract class AbstractAuthFlowResponseHandler(
         } catch (e: TokenTemporalValidationException) {
             setResult(
                 FlowResult.Error(
+                    state = state,
                     type = Type.TemporalValidation,
                     message = e.message,
                 )
@@ -71,6 +73,7 @@ public abstract class AbstractAuthFlowResponseHandler(
         } catch (e: TokenValidationException) {
             setResult(
                 FlowResult.Error(
+                    state = state,
                     type = Type.Validation,
                     message = e.message,
                 )
@@ -80,6 +83,7 @@ public abstract class AbstractAuthFlowResponseHandler(
         } catch (e: Exception) {
             setResult(
                 FlowResult.Error(
+                    state = state,
                     type = Type.Generic,
                     message = e.message,
                 )

@@ -29,13 +29,14 @@ import kotlinx.serialization.json.Json
  */
 public class AuthorizationCodeFlow private constructor(
     client: InternalClient,
+    state: String,
     responseHandler: AuthorizationCodeFlowResponseHandler,
     private val request: Request,
-    internal val state: String,
     internal val nonce: String?,
     internal val codeVerifier: String?,
 ) : AbstractAuthFlow(
     client = client,
+    state = state,
     responseHandler = responseHandler,
     cancellation = AuthorizationCodeFlowCancellation(client),
 ) {
@@ -189,9 +190,9 @@ public class AuthorizationCodeFlow private constructor(
 
             return AuthorizationCodeFlow(
                 client = client,
+                state = state,
                 responseHandler = responseHandler,
                 request = request,
-                state = state,
                 nonce = nonce,
                 codeVerifier = codeVerifier,
             )

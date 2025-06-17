@@ -65,7 +65,7 @@ public class AuthFlowLauncher internal constructor(
 
     internal fun onStart() {
         initiation?.let {
-            scope.watchClientState(it.clientKey)
+            scope.watchClientState(it)
         }
     }
 
@@ -88,7 +88,7 @@ public class AuthFlowLauncher internal constructor(
         headers: Map<String, String> = emptyMap(),
     ) {
         this.initiation = initiation
-        scope.watchClientState(initiation.clientKey)
+        scope.watchClientState(initiation)
 
         withContext(Dispatchers.Main.immediate) {
             val intent = LokksmithAuthFlowActivity.createCustomTabsIntent(
@@ -108,16 +108,17 @@ public class AuthFlowLauncher internal constructor(
      * We ensure here that the FlowResult is properly set to a cancelled or error state.
      */
     internal suspend fun cancelPendingFlow(errorMessage: String?) {
-        val key = initiation?.clientKey ?: return
-        val client = getClient(key)
+        val initiation = initiation ?: return
+        val client = getClient(initiation.clientKey)
 
         if (client.snapshots.value.flowResult != null) return
 
         client.updateSnapshot {
             copy(
                 flowResult = when (errorMessage) {
-                    null -> Snapshot.FlowResult.Cancelled
+                    null -> Snapshot.FlowResult.Cancelled(state = initiation.state)
                     else -> Snapshot.FlowResult.Error(
+                        state = initiation.state,
                         type = Snapshot.FlowResult.Error.Type.Generic,
                         message = errorMessage,
                     )
@@ -132,11 +133,11 @@ public class AuthFlowLauncher internal constructor(
         job = null
     }
 
-    private fun CoroutineScope.watchClientState(key: String) {
+    private fun CoroutineScope.watchClientState(initiation: Initiation) {
         cancel()
 
         job = launch(SupervisorJob()) {
-            val client = getClient(key)
+            val client = getClient(initiation.clientKey)
 
             launch {
                 client.snapshots
@@ -189,6 +190,7 @@ public fun rememberAuthFlowLauncher(): AuthFlowLauncher {
 
     val saver = run {
         val resultKey = "result"
+        val initiationStateKey = "initiationState"
         val initiationRequestUrlKey = "initiationRequestUrl"
         val initiationClientKeyKey = "initiationClientKey"
 
@@ -196,19 +198,23 @@ public fun rememberAuthFlowLauncher(): AuthFlowLauncher {
             save = {
                 mapOf(
                     resultKey to it.resultState,
+                    initiationStateKey to it.initiation?.state,
                     initiationRequestUrlKey to it.initiation?.requestUrl,
                     initiationClientKeyKey to it.initiation?.clientKey,
                 )
             },
             restore = {
+                val initiationState = it[initiationStateKey] as String?
                 val initiationRequestUrl = it[initiationRequestUrlKey] as String?
                 val initiationClientKey = it[initiationClientKeyKey] as String?
 
                 val initiation = when {
-                    initiationRequestUrl != null && initiationClientKey != null -> Initiation(
-                        initiationRequestUrl,
-                        initiationClientKey,
-                    )
+                    initiationState != null && initiationRequestUrl != null && initiationClientKey != null ->
+                        Initiation(
+                            state = initiationState,
+                            requestUrl = initiationRequestUrl,
+                            clientKey = initiationClientKey,
+                        )
 
                     else -> null
                 }
@@ -252,11 +258,24 @@ private object ResultParceler : Parceler<Result> {
     ) {
         when (val result = this) {
             Result.Undefined -> parcel.writeInt(0)
-            Result.Processing -> parcel.writeInt(1)
-            Result.Success -> parcel.writeInt(2)
-            Result.Cancelled -> parcel.writeInt(3)
+            is Result.Processing -> {
+                parcel.writeInt(1)
+                parcel.writeString(result.state)
+            }
+
+            is Result.Success -> {
+                parcel.writeInt(2)
+                parcel.writeString(result.state)
+            }
+
+            is Result.Cancelled -> {
+                parcel.writeInt(3)
+                parcel.writeString(result.state)
+            }
+
             is Result.Error -> {
                 parcel.writeInt(4)
+                parcel.writeString(result.state)
                 parcel.writeInt(
                     when (result.type) {
                         Result.Error.Type.Generic -> 0
@@ -276,13 +295,14 @@ private object ResultParceler : Parceler<Result> {
         return when (type) {
             0 -> Result.Undefined
 
-            1 -> Result.Processing
+            1 -> Result.Processing(state = requireNotNull(parcel.readString()))
 
-            2 -> Result.Success
+            2 -> Result.Success(state = requireNotNull(parcel.readString()))
 
-            3 -> Result.Cancelled
+            3 -> Result.Cancelled(state = requireNotNull(parcel.readString()))
 
             4 -> Result.Error(
+                state = requireNotNull(parcel.readString()),
                 type = parcel.readInt().let { errorType ->
                     when (errorType) {
                         0 -> Result.Error.Type.Generic

@@ -186,14 +186,14 @@ class ClientTest {
                 copy(
                     tokens = SAMPLE_TOKENS,
                     nonce = "0D1ck61",
-                    flowResult = FlowResult.Success,
+                    flowResult = FlowResult.Success(state = "f3SSmdwW"),
                 )
             }
         )
 
         assertEquals(SAMPLE_TOKENS, client.snapshots.value.tokens)
         assertEquals("0D1ck61", client.snapshots.value.nonce)
-        assertEquals(FlowResult.Success, client.snapshots.value.flowResult)
+        assertEquals(FlowResult.Success(state = "f3SSmdwW"), client.snapshots.value.flowResult)
 
         client.resetTokens()
         runCurrent()
