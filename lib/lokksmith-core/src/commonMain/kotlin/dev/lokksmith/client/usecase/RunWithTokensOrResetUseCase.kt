@@ -28,12 +28,13 @@ import dev.lokksmith.client.request.OAuthResponseException
  * @param errors List of OAuth error values that should trigger a local logout.
  *               Defaults to `invalid_grant`.
  *
+ * @see Client.runWithTokensOrReset
  * @see Client.runWithTokens
  * @see Client.resetTokens
  */
 public class RunWithTokensOrResetUseCase(
     private val client: Client,
-    private val errors: List<OAuthError> = listOf(OAuthError.InvalidGrant),
+    private val errors: List<OAuthError> = DEFAULT_ERRORS,
 ) {
 
     public class ResetClientStateException : LokksmithException()
@@ -64,3 +65,15 @@ public class RunWithTokensOrResetUseCase(
         }
     }
 }
+
+/**
+ * Convenience function for [RunWithTokensOrResetUseCase].
+ *
+ * @see RunWithTokensOrResetUseCase.invoke
+ */
+public suspend fun Client.runWithTokensOrReset(
+    errors: List<OAuthError> = DEFAULT_ERRORS,
+    body: suspend (Tokens) -> Unit,
+): Boolean = RunWithTokensOrResetUseCase(this, errors)(body)
+
+private val DEFAULT_ERRORS = listOf(OAuthError.InvalidGrant)

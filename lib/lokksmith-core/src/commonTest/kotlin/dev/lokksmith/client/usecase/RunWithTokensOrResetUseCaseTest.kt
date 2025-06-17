@@ -41,9 +41,8 @@ class RunWithTokensOrResetUseCaseTest {
                 )
             }
         )
-        val useCase = RunWithTokensOrResetUseCase(client)
 
-        assertFalse { useCase {} }
+        assertFalse { client.runWithTokensOrReset {} }
         runCurrent()
         assertNull(client.tokens.value)
     }
@@ -68,9 +67,8 @@ class RunWithTokensOrResetUseCaseTest {
                 )
             }
         )
-        val useCase = RunWithTokensOrResetUseCase(client)
 
-        val exception = assertFailsWith<OAuthResponseException> { useCase {} }
+        val exception = assertFailsWith<OAuthResponseException> { client.runWithTokensOrReset {} }
         assertEquals(OAuthError.ServerError, exception.error)
         runCurrent()
         assertNotNull(client.tokens.value)
@@ -83,10 +81,9 @@ class RunWithTokensOrResetUseCaseTest {
                 copy(tokens = SAMPLE_TOKENS)
             }
         )
-        val useCase = RunWithTokensOrResetUseCase(client)
 
         assertFalse {
-            useCase {
+            client.runWithTokensOrReset {
                 throw RunWithTokensOrResetUseCase.ResetClientStateException()
             }
         }
@@ -101,12 +98,11 @@ class RunWithTokensOrResetUseCaseTest {
                 copy(tokens = SAMPLE_TOKENS)
             }
         )
-        val useCase = RunWithTokensOrResetUseCase(client)
 
         var bodyWasCalled = false
 
         assertTrue {
-            useCase { tokens ->
+            client.runWithTokensOrReset { tokens ->
                 assertEquals(SAMPLE_TOKENS, tokens)
                 bodyWasCalled = true
             }
@@ -139,12 +135,11 @@ class RunWithTokensOrResetUseCaseTest {
                 )
             }
         )
-        val useCase = RunWithTokensOrResetUseCase(client)
 
         var bodyWasCalled = false
 
         assertTrue {
-            useCase { tokens ->
+            client.runWithTokensOrReset { tokens ->
                 assertEquals(SAMPLE_TOKENS, tokens)
                 bodyWasCalled = true
             }
