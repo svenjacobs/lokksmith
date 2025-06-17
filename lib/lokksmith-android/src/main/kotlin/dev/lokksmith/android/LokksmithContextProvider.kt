@@ -27,13 +27,14 @@ public interface LokksmithContextProvider {
  * This function expects that the app's [android.app.Application] class implements
  * [LokksmithContextProvider].
  *
- * @param context Any [Context] from the application. The function will use the application context.
  * @return The singleton [dev.lokksmith.Lokksmith] instance used by the application.
  * @throws kotlin.IllegalArgumentException if the application context does not implement [LokksmithContextProvider].
  */
 public val Context.lokksmith: Lokksmith
-    get() {
-        val context = applicationContext
-        require(context is LokksmithContextProvider) { "Application must implement LokksmithContextProvider" }
-        return context.lokksmithContext.lokksmith
-    }
+    get() = requireLokksmithContext(this).lokksmith
+
+internal fun requireLokksmithContext(context: Context): LokksmithContext {
+    val context = context.applicationContext
+    require(context is LokksmithContextProvider) { "Application must implement LokksmithContextProvider" }
+    return context.lokksmithContext
+}

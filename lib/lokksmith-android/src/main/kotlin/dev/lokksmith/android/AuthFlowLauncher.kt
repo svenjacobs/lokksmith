@@ -1,5 +1,6 @@
 package dev.lokksmith.android
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Parcel
@@ -17,15 +18,17 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleStartEffect
+import dev.lokksmith.android.LokksmithAuthFlowActivity.Companion.getErrorMessageFromIntent
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result
 import dev.lokksmith.client.request.flow.AuthFlowStateResponseHandler
-import kotlinx.coroutines.CoroutineExceptionHandler
+import dev.lokksmith.client.snapshot.Snapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -99,6 +102,31 @@ public class AuthFlowLauncher internal constructor(
         }
     }
 
+    /**
+     * The method is called when we receive a cancellation from the ActivityResultLauncher.
+     * This might happen for instance if an error occurred in the response Activity early on.
+     * We ensure here that the FlowResult is properly set to a cancelled or error state.
+     */
+    internal suspend fun cancelPendingFlow(errorMessage: String?) {
+        val key = initiation?.clientKey ?: return
+        val client = getClient(key)
+
+        if (client.snapshots.value.flowResult != null) return
+
+        client.updateSnapshot {
+            copy(
+                flowResult = when (errorMessage) {
+                    null -> Snapshot.FlowResult.Cancelled
+                    else -> Snapshot.FlowResult.Error(
+                        type = Snapshot.FlowResult.Error.Type.Generic,
+                        message = errorMessage,
+                    )
+                },
+                ephemeralFlowState = null,
+            )
+        }
+    }
+
     private fun cancel() {
         job?.cancel()
         job = null
@@ -107,14 +135,7 @@ public class AuthFlowLauncher internal constructor(
     private fun CoroutineScope.watchClientState(key: String) {
         cancel()
 
-        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            resultState.value = Result.Error(
-                type = Result.Error.Type.Generic,
-                message = throwable.message,
-            ).wrap()
-        }
-
-        job = launch(exceptionHandler) {
+        job = launch(SupervisorJob()) {
             val client = getClient(key)
 
             launch {
@@ -123,7 +144,17 @@ public class AuthFlowLauncher internal constructor(
                     .filterNotNull()
                     .distinctUntilChanged()
                     .collect { responseUri ->
-                        AuthFlowStateResponseHandler(context.lokksmith).onResponse(responseUri)
+                        // We're catching all exceptions here because we assume that in case of an
+                        // error the client's result state has been updated accordingly.
+                        try {
+                            AuthFlowStateResponseHandler(context.lokksmith).onResponse(responseUri)
+                        } catch (e: Exception) {
+                            Log.e(
+                                "AuthFlowLauncher",
+                                "Received exception in AuthFlowStateResponseHandler.onResponse()",
+                                e,
+                            )
+                        }
                     }
             }
 
@@ -140,9 +171,20 @@ public class AuthFlowLauncher internal constructor(
 @Composable
 public fun rememberAuthFlowLauncher(): AuthFlowLauncher {
     val context = LocalContext.current
+
+    // We're calling this check here to eagerly identify any errors with the setup
+    requireLokksmithContext(context)
+
+    lateinit var launcher: AuthFlowLauncher
     val scope = rememberCoroutineScope()
     val activityLauncher = rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-        Log.d("AuthFlowLauncher", "Received Activity result $result")
+        if (result.resultCode == Activity.RESULT_CANCELED) {
+            scope.launch {
+                launcher.cancelPendingFlow(
+                    errorMessage = getErrorMessageFromIntent(result.data),
+                )
+            }
+        }
     }
 
     val saver = run {
@@ -183,7 +225,7 @@ public fun rememberAuthFlowLauncher(): AuthFlowLauncher {
         )
     }
 
-    val launcher = rememberSaveable(saver = saver) {
+    launcher = rememberSaveable(saver = saver) {
         AuthFlowLauncher(
             activityLauncher = activityLauncher,
             context = context,

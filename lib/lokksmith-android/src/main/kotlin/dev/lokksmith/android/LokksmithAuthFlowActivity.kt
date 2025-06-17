@@ -61,7 +61,9 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                 "$EXTRA_LOKKSMITH_CLIENT_KEY missing from Intent extras"
             }
 
-            coroutineScope.launch {
+            coroutineScope.launch(
+                exceptionHandler { "Error cancelling flow" },
+            ) {
                 val client = checkNotNull(lokksmith.get(clientKey)) {
                     "Client with key $clientKey not found"
                 } as InternalClient
@@ -100,13 +102,9 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                 "Parameter \"${Parameter.STATE}\" missing from response"
             }
 
-            val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-                Log.e(TAG, "Error handling response", throwable)
-                setResult(RESULT_CANCELED)
-                finish()
-            }
-
-            coroutineScope.launch(exceptionHandler) {
+            coroutineScope.launch(
+                exceptionHandler { "Error handling response" },
+            ) {
                 val snapshot = checkNotNull(lokksmith.container.snapshotStore.getForState(state)) {
                     "No client snapshot found for state"
                 }
@@ -127,10 +125,24 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Error handling response", e)
-            setResult(RESULT_CANCELED)
+            setResult(
+                RESULT_CANCELED,
+                createErrorResultIntent("[$TAG] Error handling response: ${e.message.orEmpty()}"),
+            )
             finish()
         }
     }
+
+    private fun exceptionHandler(errorMessage: () -> String) =
+        CoroutineExceptionHandler { _, throwable ->
+            val msg = errorMessage()
+            Log.e(TAG, msg, throwable)
+            setResult(
+                RESULT_CANCELED,
+                createErrorResultIntent("[$TAG] $msg: ${throwable.message.orEmpty()}"),
+            )
+            finish()
+        }
 
     private val lokksmith: Lokksmith
         get() = lokksmithContext.lokksmith
@@ -174,9 +186,21 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
 
+        internal fun createErrorResultIntent(
+            errorMessage: String,
+        ): Intent = Intent().apply {
+            putExtra(RESULT_EXTRA_ERROR_MESSAGE, errorMessage)
+        }
+
+        internal fun getErrorMessageFromIntent(
+            intent: Intent?,
+        ): String? = intent?.getStringExtra(RESULT_EXTRA_ERROR_MESSAGE)
+
         private const val EXTRA_LOKKSMITH_URL = "EXTRA_LOKKSMITH_URL"
         private const val EXTRA_LOKKSMITH_CLIENT_KEY = "EXTRA_LOKKSMITH_CLIENT_KEY"
         private const val EXTRA_LOKKSMITH_HEADERS = "EXTRA_LOKKSMITH_HEADERS"
+
+        private const val RESULT_EXTRA_ERROR_MESSAGE = "RESULT_EXTRA_ERROR_MESSAGE"
 
         private val TAG = LokksmithAuthFlowActivity::class.simpleName.orEmpty()
     }
