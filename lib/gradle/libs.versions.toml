@@ -37,6 +37,8 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 skydoves-compose-stable-marker = "com.github.skydoves:compose-stable-marker:1.0.6"
+spotless-gradle-plugin = "com.diffplug.spotless:spotless-plugin-gradle:7.0.4"
+test-logger-gradle-plugin = "com.adarshr.test-logger:com.adarshr.test-logger.gradle.plugin:4.0.0"
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
@@ -49,4 +51,3 @@ dokka = "org.jetbrains.dokka:2.0.0"
 poko = "dev.drewhamilton.poko:0.18.7"
 maven-publish = "com.vanniktech.maven.publish:0.32.0"
 ben-manes-versions = "com.github.ben-manes.versions:0.52.0"
-test-logger = "com.adarshr.test-logger:4.0.0"

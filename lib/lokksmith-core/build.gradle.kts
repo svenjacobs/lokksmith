@@ -1,4 +1,3 @@
-import com.adarshr.gradle.testlogger.theme.ThemeType
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 
@@ -10,7 +9,8 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.poko)
     alias(libs.plugins.maven.publish)
-    alias(libs.plugins.test.logger)
+    id("testlogger-conventions")
+    id("spotless-conventions")
 }
 
 kotlin {
@@ -100,10 +100,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-}
-
-testlogger {
-    theme = ThemeType.MOCHA
 }
 
 buildConfig {
