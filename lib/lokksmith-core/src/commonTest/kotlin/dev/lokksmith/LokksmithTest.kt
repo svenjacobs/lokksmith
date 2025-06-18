@@ -91,9 +91,11 @@ class LokksmithTest {
         val client = lokksmith.getOrCreate(key.value) {
             id = "clientId"
             discoveryUrl = "https://example.com/.well-known/openid-configuration"
+            options = Client.Options(leewaySeconds = 30)
         }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
+        assertEquals(Client.Options(), client.options)
 
         assertEquals(1, snapshotStore.existsCalls.size)
         assertContains(
@@ -118,9 +120,11 @@ class LokksmithTest {
         val client = lokksmith.getOrCreate(key.value) {
             id = "clientId"
             discoveryUrl = "https://example.com/.well-known/openid-configuration"
+            options = Client.Options(leewaySeconds = 30)
         }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
+        assertEquals(Client.Options(leewaySeconds = 30), client.options)
 
         assertEquals(2, snapshotStore.existsCalls.size)
         assertEquals(
@@ -137,7 +141,7 @@ class LokksmithTest {
                     key = key,
                     id = "clientId".asId(),
                     metadata = mockMetadata,
-                    options = Client.Options(),
+                    options = Client.Options(leewaySeconds = 30),
                 )
             ),
             "SnapshotStore.set() not called",
@@ -195,15 +199,13 @@ class LokksmithTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
-        val client = lokksmith.create(
-            key = key.value,
+        val client = lokksmith.create(key.value) {
+            id = "clientId"
+            discoveryUrl = "https://example.com/.well-known/openid-configuration"
             options = Client.Options(
                 leewaySeconds = 5,
                 preemptiveRefreshSeconds = 30,
-            ),
-        ) {
-            id = "clientId"
-            discoveryUrl = "https://example.com/.well-known/openid-configuration"
+            )
         }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)

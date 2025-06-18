@@ -72,7 +72,7 @@ public interface Client {
     )
 
     /**
-     * Options to configure the behavior of this client.
+     * Options to configure the behaviour of this client.
      */
     @Serializable
     public data class Options(
@@ -204,7 +204,7 @@ public interface Client {
     public var metadata: Metadata
 
     /**
-     * Options for configuring the behavior of this client.
+     * Options for configuring the behaviour of this client.
      *
      * @see Options
      * @see [Lokksmith.getOrCreate]
@@ -315,7 +315,7 @@ public interface Client {
      *
      * After calling this method, the client instance becomes nonfunctional and must not be used.
      * Any ongoing operations may be cancelled, and further method calls may result in undefined
-     * behavior.
+     * behaviour.
      *
      * This method should be called when the client is no longer needed to avoid resource leaks.
      *
