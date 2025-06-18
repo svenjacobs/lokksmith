@@ -30,7 +30,7 @@ import kotlinx.coroutines.cancel
  * and utilize that **singleton** reference for getting or creating [Client] instances. If you
  * absolutely must use multiple instances, make sure that each one uses a unique persistence file
  * specified via [Options.persistenceFileBaseName]. Any other configuration may lead to undefined or
- * erroneous behavior.
+ * erroneous behaviour.
  *
  * Use the platform-specific `createLokksmith()` function to create an instance.
  *
@@ -121,19 +121,18 @@ public class Lokksmith internal constructor(
      * Calling [getOrCreate] multiple times with the same key returns new [Client] instances that
      * share synchronized state. However, it's recommended to use a single instance per unique key.
      *
-     * The passed [options] are only applied to newly created clients. For adjusting the
-     * configuration of an existing client see [Client.options].
+     * The passed [CreateContext.options] in the provided [builder] lambda are only applied to newly
+     * created clients. For adjusting the configuration of an existing client see [Client.options].
      *
      * @param key Key of new client
-     * @param options Options for configuring the behavior of the client **if** the client was newly
+     * @param options Options for configuring the behaviour of the client **if** the client was newly
      *                created
      */
     public suspend fun getOrCreate(
         key: String,
-        options: Client.Options = Client.Options(),
         builder: CreateContext.() -> Unit,
     ): Client =
-        get(key) ?: create(key, options, builder)
+        get(key) ?: create(key, builder)
 
     /**
      * Returns `true` if a client for the given [key] exists.
@@ -146,11 +145,9 @@ public class Lokksmith internal constructor(
      * [builder] for initial configuration.
      *
      * @param key Key of new client
-     * @param options Options for configuring the behavior of the client
      */
     public suspend fun create(
         key: String,
-        options: Client.Options = Client.Options(),
         builder: CreateContext.() -> Unit,
     ): Client {
         require(!exists(key)) { "client with key \"$key\" already exists" }
@@ -173,7 +170,7 @@ public class Lokksmith internal constructor(
                 key = key,
                 id = id,
                 metadata = metadata,
-                options = options,
+                options = context.props.options,
             )
         )
 
@@ -189,7 +186,7 @@ public class Lokksmith internal constructor(
      * Deletes client with the given [key] or returns `false` if client doesn't exist.
      *
      * Don't use a [Client] instance for given key after it has been deleted. Doing so might result
-     * in undefined and erroneous behavior.
+     * in undefined and erroneous behaviour.
      */
     public suspend fun delete(key: String): Boolean =
         container.snapshotStore.delete(key.asKey())
@@ -199,7 +196,7 @@ public class Lokksmith internal constructor(
      *
      * After calling this method, the Lokksmith instance and all [Clients][Client] produced by it
      * become nonfunctional and must not be used. Any ongoing operations may be cancelled, and
-     * further method calls may result in undefined behavior.
+     * further method calls may result in undefined behaviour.
      *
      * This method should be called when the Lokksmith instance is no longer needed to avoid
      * resource leaks.
