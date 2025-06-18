@@ -1,0 +1,6 @@
+bash << EOF
+if git diff --name-only --cached | grep -q '^lib/'; then
+  cd lib
+  ./gradlew spotlessCheck
+fi
+EOF

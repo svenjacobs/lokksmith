@@ -1,4 +1,3 @@
-import com.adarshr.gradle.testlogger.theme.ThemeType
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -7,8 +6,9 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.maven.publish)
-    alias(libs.plugins.test.logger)
     id("kotlin-parcelize")
+    id("testlogger-conventions")
+    id("spotless-conventions")
 }
 
 kotlin {
@@ -54,10 +54,6 @@ dependencies {
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.runtime.saveable)
     api(libs.androidx.compose.ui)
-}
-
-testlogger {
-    theme = ThemeType.MOCHA
 }
 
 mavenPublishing {
