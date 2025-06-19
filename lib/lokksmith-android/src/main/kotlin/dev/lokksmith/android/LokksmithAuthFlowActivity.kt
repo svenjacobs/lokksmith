@@ -22,7 +22,9 @@ import android.os.Bundle
 import android.provider.Browser
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.annotation.OptIn
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.ExperimentalEphemeralBrowsing
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import dev.lokksmith.Lokksmith
@@ -91,11 +93,17 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalEphemeralBrowsing::class)
     private fun handleIntent(intent: Intent) {
         val uri = intent.getStringExtra(EXTRA_LOKKSMITH_URL)
 
         if (uri != null) {
-            val customTabsIntent = CustomTabsIntent.Builder().build()
+            val customTabsIntent =
+                CustomTabsIntent.Builder()
+                    .setEphemeralBrowsingEnabled(
+                        intent.getBooleanExtra(EXTRA_LOKKSMITH_EPHEMERAL_BROWSING, false)
+                    )
+                    .build()
 
             // https://developer.chrome.com/docs/android/custom-tabs/howto-custom-tab-request-headers
             val headers = intent.getBundleExtra(EXTRA_LOKKSMITH_HEADERS)
@@ -179,6 +187,8 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
          *
          * @param clientKey Key of client
          * @param url URL to open in Custom Tab
+         * @param ephemeralBrowsing Whether ephemeral browsing should be used. See documentation of
+         *   Custom Tab.
          * @param headers Extra headers that are passed to Custom Tab. See documentation of Custom
          *   Tabs, especially regarding CORS.
          */
@@ -186,11 +196,13 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
             context: Context,
             clientKey: String,
             url: String,
+            ephemeralBrowsing: Boolean = true,
             headers: Map<String, String> = emptyMap(),
         ): Intent =
             Intent(context, LokksmithAuthFlowActivity::class.java).apply {
                 putExtra(EXTRA_LOKKSMITH_CLIENT_KEY, clientKey)
                 putExtra(EXTRA_LOKKSMITH_URL, url)
+                putExtra(EXTRA_LOKKSMITH_EPHEMERAL_BROWSING, ephemeralBrowsing)
                 putExtra(EXTRA_LOKKSMITH_HEADERS, bundleOf(*headers.toList().toTypedArray()))
             }
 
@@ -208,6 +220,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
 
         private const val EXTRA_LOKKSMITH_URL = "EXTRA_LOKKSMITH_URL"
         private const val EXTRA_LOKKSMITH_CLIENT_KEY = "EXTRA_LOKKSMITH_CLIENT_KEY"
+        private const val EXTRA_LOKKSMITH_EPHEMERAL_BROWSING = "EXTRA_LOKKSMITH_EPHEMERAL_BROWSING"
         private const val EXTRA_LOKKSMITH_HEADERS = "EXTRA_LOKKSMITH_HEADERS"
 
         private const val RESULT_EXTRA_ERROR_MESSAGE = "RESULT_EXTRA_ERROR_MESSAGE"
