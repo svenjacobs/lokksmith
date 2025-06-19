@@ -59,7 +59,7 @@ the project license.
 
 !!! info
     [Code style](#code) and [commit messages](#commit-messages) are verified via Continuous 
-    Integration. Therefor we suggest setting up the commit hooks to catch errors early.
+    Integration. Therefore we suggest setting up the commit hooks to catch errors early.
 
 ### Rules
 
