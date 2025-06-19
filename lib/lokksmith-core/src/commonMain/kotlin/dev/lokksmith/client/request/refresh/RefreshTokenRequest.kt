@@ -27,7 +27,8 @@ import io.ktor.client.HttpClient
 import kotlinx.serialization.json.Json
 
 /**
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens">Refresh Request</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#RefreshTokens">Refresh
+ *   Request</a>
  */
 public fun interface RefreshTokenRequest {
 
@@ -46,16 +47,12 @@ internal class RefreshTokenRequestImpl(
     serializer: Json,
     private val tokenRequest: TokenRequest = TokenRequest(client, httpClient),
     private val tokenResponseValidator: RefreshTokenResponseValidator =
-        RefreshTokenResponseValidator(
-            serializer = serializer,
-            client = client,
-        ),
+        RefreshTokenResponseValidator(serializer = serializer, client = client),
 ) : RefreshTokenRequest {
 
     override suspend operator fun invoke(): Response {
-        val refreshToken = checkNotNull(client.snapshots.value.tokens?.refreshToken) {
-            "refresh token is null"
-        }
+        val refreshToken =
+            checkNotNull(client.snapshots.value.tokens?.refreshToken) { "refresh token is null" }
 
         val response = tokenRequest {
             append(Parameter.GRANT_TYPE, GrantType.RefreshToken.value)
@@ -63,16 +60,17 @@ internal class RefreshTokenRequestImpl(
             append(Parameter.REFRESH_TOKEN, refreshToken.token)
         }
 
-        val result = try {
-            tokenResponseValidator.validate(
-                response = response,
-                previousIdToken = client.snapshots.value.tokens?.idToken,
-            )
-        } catch (e: TokenValidationException) {
-            throw e
-        } catch (e: Exception) {
-            throw TokenValidationException(cause = e)
-        }
+        val result =
+            try {
+                tokenResponseValidator.validate(
+                    response = response,
+                    previousIdToken = client.snapshots.value.tokens?.idToken,
+                )
+            } catch (e: TokenValidationException) {
+                throw e
+            } catch (e: Exception) {
+                throw TokenValidationException(cause = e)
+            }
 
         return Response(
             accessToken = result.accessToken,

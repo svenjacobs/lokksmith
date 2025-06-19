@@ -43,13 +43,6 @@ import io.ktor.client.request.forms.FormDataContent
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runCurrent
-import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -59,6 +52,13 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ClientTest {
@@ -74,35 +74,33 @@ class ClientTest {
                     assertEquals(HttpMethod.Post, request.method)
                     val body = assertIs<FormDataContent>(request.body)
 
-                    assertEquals(
-                        GrantType.RefreshToken.value,
-                        body.formData[Parameter.GRANT_TYPE],
-                    )
+                    assertEquals(GrantType.RefreshToken.value, body.formData[Parameter.GRANT_TYPE])
                     assertEquals("clientId", body.formData[Parameter.CLIENT_ID])
                     assertEquals("bMGysPYch", body.formData[Parameter.REFRESH_TOKEN])
 
-                    val idToken = Jwt(
-                        header = Jwt.Header(
-                            alg = "none",
-                        ),
-                        payload = Jwt.Payload(
-                            iss = "issuer",
-                            sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
-                            aud = listOf("clientId"),
-                            exp = 1748706999 + 600,
-                            iat = 1748706999,
-                            extra = mapOf("nonce" to JsonPrimitive("0D1ck61")),
-                        ),
-                    )
+                    val idToken =
+                        Jwt(
+                            header = Jwt.Header(alg = "none"),
+                            payload =
+                                Jwt.Payload(
+                                    iss = "issuer",
+                                    sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                    aud = listOf("clientId"),
+                                    exp = 1748706999 + 600,
+                                    iat = 1748706999,
+                                    extra = mapOf("nonce" to JsonPrimitive("0D1ck61")),
+                                ),
+                        )
 
-                    val response = TokenResponse(
-                        tokenType = "Bearer",
-                        accessToken = "Lh0rP8vrtQH",
-                        expiresIn = 600,
-                        refreshToken = "cyaVZ3zPU",
-                        refreshExpiresIn = 1_209_600,
-                        idToken = jwtEncoder.encode(idToken),
-                    )
+                    val response =
+                        TokenResponse(
+                            tokenType = "Bearer",
+                            accessToken = "Lh0rP8vrtQH",
+                            expiresIn = 600,
+                            refreshToken = "cyaVZ3zPU",
+                            refreshExpiresIn = 1_209_600,
+                            idToken = jwtEncoder.encode(idToken),
+                        )
 
                     val json = httpJson.encodeToString(response)
 
@@ -117,18 +115,15 @@ class ClientTest {
             }
         }
 
-        val client = createTestClient(
-            provider = TestProvider(
-                httpClient = createHttpClient(engine),
-                instantProvider = { 1748706999 },
-            ),
-            initialSnapshot = {
-                copy(
-                    tokens = SAMPLE_TOKENS,
-                    nonce = "0D1ck61",
-                )
-            }
-        )
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        instantProvider = { 1748706999 },
+                    ),
+                initialSnapshot = { copy(tokens = SAMPLE_TOKENS, nonce = "0D1ck61") },
+            )
 
         assertEquals(SAMPLE_TOKENS, client.tokens.value)
 
@@ -149,11 +144,12 @@ class ClientTest {
         val engine = MockEngine { request ->
             when (request.url.toString()) {
                 "https://example.com/tokenEndpoint" -> {
-                    val response = TokenErrorResponse(
-                        error = OAuthError.InvalidGrant.code,
-                        errorDescription = "error description",
-                        errorUri = "error URI",
-                    )
+                    val response =
+                        TokenErrorResponse(
+                            error = OAuthError.InvalidGrant.code,
+                            errorDescription = "error description",
+                            errorUri = "error URI",
+                        )
 
                     val json = httpJson.encodeToString(response)
 
@@ -168,24 +164,19 @@ class ClientTest {
             }
         }
 
-        val client = createTestClient(
-            provider = TestProvider(
-                httpClient = createHttpClient(engine),
-                instantProvider = { 1748706999 },
-            ),
-            initialSnapshot = {
-                copy(
-                    tokens = SAMPLE_TOKENS,
-                    nonce = "0D1ck61",
-                )
-            }
-        )
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        instantProvider = { 1748706999 },
+                    ),
+                initialSnapshot = { copy(tokens = SAMPLE_TOKENS, nonce = "0D1ck61") },
+            )
 
         assertEquals(SAMPLE_TOKENS, client.tokens.value)
 
-        val exception = assertFailsWith<OAuthResponseException> {
-            client.refresh()
-        }
+        val exception = assertFailsWith<OAuthResponseException> { client.refresh() }
 
         runCurrent()
 
@@ -196,15 +187,16 @@ class ClientTest {
 
     @Test
     fun `resetTokens should reset tokens`() = runTest {
-        val client = createTestClient(
-            initialSnapshot = {
-                copy(
-                    tokens = SAMPLE_TOKENS,
-                    nonce = "0D1ck61",
-                    flowResult = FlowResult.Success(state = "f3SSmdwW"),
-                )
-            }
-        )
+        val client =
+            createTestClient(
+                initialSnapshot = {
+                    copy(
+                        tokens = SAMPLE_TOKENS,
+                        nonce = "0D1ck61",
+                        flowResult = FlowResult.Success(state = "f3SSmdwW"),
+                    )
+                }
+            )
 
         assertEquals(SAMPLE_TOKENS, client.snapshots.value.tokens)
         assertEquals("0D1ck61", client.snapshots.value.nonce)
@@ -220,71 +212,60 @@ class ClientTest {
 
     @Test
     fun `runWithTokens should run lambda with current tokens`() = runTest {
-        val client = createTestClient(
-            provider = TestProvider(
-                refreshTokenRequest = {
-                    RefreshTokenRequest {
-                        fail("RefreshTokenRequest was called")
-                    }
-                }
-            ),
-            initialSnapshot = {
-                copy(
-                    tokens = SAMPLE_TOKENS,
-                )
-            }
-        )
-
-        client.runWithTokens { tokens ->
-            assertEquals(
-                SAMPLE_TOKENS,
-                tokens
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        refreshTokenRequest = {
+                            RefreshTokenRequest { fail("RefreshTokenRequest was called") }
+                        }
+                    ),
+                initialSnapshot = { copy(tokens = SAMPLE_TOKENS) },
             )
-        }
+
+        client.runWithTokens { tokens -> assertEquals(SAMPLE_TOKENS, tokens) }
     }
 
     @Test
     fun `runWithTokens should run lambda with refreshed tokens`() = runTest {
         var refreshTokenCalled = false
-        val client = createTestClient(
-            provider = TestProvider(
-                refreshTokenRequest = {
-                    RefreshTokenRequest {
-                        refreshTokenCalled = true
-                        RefreshTokenRequest.Response(
-                            accessToken = SAMPLE_TOKENS.accessToken,
-                            refreshToken = SAMPLE_TOKENS.refreshToken,
-                            idToken = SAMPLE_TOKENS.idToken,
-                        )
-                    }
-                }
-            ),
-            initialSnapshot = {
-                copy(
-                    tokens = Client.Tokens(
-                        accessToken = Client.Tokens.AccessToken(
-                            token = "sjrgCu2Elk4",
-                            expiresAt = TEST_INSTANT - 60,
-                        ),
-                        refreshToken = Client.Tokens.RefreshToken(
-                            token = "zMyQZqI",
-                            expiresAt = null,
-                        ),
-                        idToken = SAMPLE_TOKENS.idToken.copy(
-                            expiration = TEST_INSTANT - 60,
-                            issuedAt = TEST_INSTANT - 120,
-                        ),
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        refreshTokenRequest = {
+                            RefreshTokenRequest {
+                                refreshTokenCalled = true
+                                RefreshTokenRequest.Response(
+                                    accessToken = SAMPLE_TOKENS.accessToken,
+                                    refreshToken = SAMPLE_TOKENS.refreshToken,
+                                    idToken = SAMPLE_TOKENS.idToken,
+                                )
+                            }
+                        }
                     ),
-                )
-            }
-        )
-
-        client.runWithTokens { tokens ->
-            assertEquals(
-                SAMPLE_TOKENS,
-                tokens
+                initialSnapshot = {
+                    copy(
+                        tokens =
+                            Client.Tokens(
+                                accessToken =
+                                    Client.Tokens.AccessToken(
+                                        token = "sjrgCu2Elk4",
+                                        expiresAt = TEST_INSTANT - 60,
+                                    ),
+                                refreshToken =
+                                    Client.Tokens.RefreshToken(token = "zMyQZqI", expiresAt = null),
+                                idToken =
+                                    SAMPLE_TOKENS.idToken.copy(
+                                        expiration = TEST_INSTANT - 60,
+                                        issuedAt = TEST_INSTANT - 120,
+                                    ),
+                            )
+                    )
+                },
             )
-        }
+
+        client.runWithTokens { tokens -> assertEquals(SAMPLE_TOKENS, tokens) }
 
         assertTrue(refreshTokenCalled)
     }
@@ -295,20 +276,11 @@ class ClientTest {
 
         assertTrue {
             client.isExpired(
-                Tokens.AccessToken(
-                    token = "xaneJeBElWQ",
-                    expiresAt = TEST_INSTANT - 60,
-                )
+                Tokens.AccessToken(token = "xaneJeBElWQ", expiresAt = TEST_INSTANT - 60)
             )
         }
 
-        assertTrue {
-            client.isExpired(
-                SAMPLE_TOKENS.idToken.copy(
-                    expiration = TEST_INSTANT - 60,
-                )
-            )
-        }
+        assertTrue { client.isExpired(SAMPLE_TOKENS.idToken.copy(expiration = TEST_INSTANT - 60)) }
     }
 
     @Test
@@ -317,19 +289,12 @@ class ClientTest {
 
         assertFalse {
             client.isExpired(
-                Tokens.AccessToken(
-                    token = "xaneJeBElWQ",
-                    expiresAt = TEST_INSTANT + 120,
-                )
+                Tokens.AccessToken(token = "xaneJeBElWQ", expiresAt = TEST_INSTANT + 120)
             )
         }
 
         assertFalse {
-            client.isExpired(
-                SAMPLE_TOKENS.idToken.copy(
-                    expiration = TEST_INSTANT + 120,
-                )
-            )
+            client.isExpired(SAMPLE_TOKENS.idToken.copy(expiration = TEST_INSTANT + 120))
         }
     }
 
@@ -342,65 +307,63 @@ class ClientTest {
 }
 
 internal data class TestProvider(
-    private val httpClient: HttpClient = createHttpClient(engine = MockEngine { respondBadRequest() }),
+    private val httpClient: HttpClient =
+        createHttpClient(engine = MockEngine { respondBadRequest() }),
     private val serializer: Json = Json,
     override val instantProvider: InstantProvider = { TEST_INSTANT },
     override val refreshTokenRequest: (InternalClient) -> RefreshTokenRequest = { client ->
-        RefreshTokenRequestImpl(
-            client = client,
-            httpClient = httpClient,
-            serializer = serializer,
-        )
+        RefreshTokenRequestImpl(client = client, httpClient = httpClient, serializer = serializer)
     },
-    override val authorizationCodeFlow: (InternalClient, AuthorizationCodeFlow.Request) -> AuthFlow = { client, request ->
-        AuthorizationCodeFlow.create(
-            request = request,
-            client = client,
-            httpClient = httpClient,
-            serializer = serializer,
-        )
-    },
-    override val endSessionFlow: (InternalClient, EndSessionFlow.Request) -> AuthFlow? = { client, request ->
-        EndSessionFlow.createOrNull(
-            client = client,
-            request = request,
-        )
-    },
+    override val authorizationCodeFlow:
+        (InternalClient, AuthorizationCodeFlow.Request) -> AuthFlow =
+        { client, request ->
+            AuthorizationCodeFlow.create(
+                request = request,
+                client = client,
+                httpClient = httpClient,
+                serializer = serializer,
+            )
+        },
+    override val endSessionFlow: (InternalClient, EndSessionFlow.Request) -> AuthFlow? =
+        { client, request ->
+            EndSessionFlow.createOrNull(client = client, request = request)
+        },
 ) : InternalClient.Provider
 
 @OptIn(ExperimentalCoroutinesApi::class)
 suspend fun TestScope.createTestClient(
     key: Key = "key".asKey(),
     id: Id = "clientId".asId(),
-    snapshotStore: SnapshotStore = SnapshotStoreImpl(
-        persistence = PersistenceFake(),
-        serializer = Json,
-    ),
+    snapshotStore: SnapshotStore =
+        SnapshotStoreImpl(persistence = PersistenceFake(), serializer = Json),
     provider: InternalClient.Provider = TestProvider(),
     initialSnapshot: Snapshot.() -> Snapshot = { this },
 ): InternalClient {
     // Create initial snapshot
     snapshotStore.set(
         key = key,
-        snapshot = Snapshot(
-            key = key,
-            id = id,
-            metadata = Client.Metadata(
-                issuer = "issuer",
-                authorizationEndpoint = "https://example.com/authorizationEndpoint",
-                tokenEndpoint = "https://example.com/tokenEndpoint",
-                endSessionEndpoint = "https://example.com/endSessionEndpoint",
+        snapshot =
+            Snapshot(
+                key = key,
+                id = id,
+                metadata =
+                    Client.Metadata(
+                        issuer = "issuer",
+                        authorizationEndpoint = "https://example.com/authorizationEndpoint",
+                        tokenEndpoint = "https://example.com/tokenEndpoint",
+                        endSessionEndpoint = "https://example.com/endSessionEndpoint",
+                    ),
+                options = Client.Options(),
             ),
-            options = Client.Options(),
-        )
     )
 
-    val client = ClientImpl.create(
-        key = key,
-        coroutineScope = backgroundScope,
-        snapshotStore = snapshotStore,
-        provider = provider,
-    ) as InternalClient
+    val client =
+        ClientImpl.create(
+            key = key,
+            coroutineScope = backgroundScope,
+            snapshotStore = snapshotStore,
+            provider = provider,
+        ) as InternalClient
 
     client.updateSnapshot(initialSnapshot)
     runCurrent()

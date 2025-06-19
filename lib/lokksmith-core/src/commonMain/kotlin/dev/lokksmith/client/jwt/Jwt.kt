@@ -26,16 +26,15 @@ import kotlinx.serialization.json.JsonIgnoreUnknownKeys
  * JSON Web Token
  *
  * @see <a href="https://www.rfc-editor.org/info/rfc7519">JSON Web Token (JWT)</a>
- * @see <a href="https://datatracker.ietf.org/group/jose/documents/">Javascript Object Signing and Encryption (jose)</a>
- * @see <a href="https://www.rfc-editor.org/info/rfc7520">Examples of Protecting Content Using JSON Object Signing and Encryption (JOSE)</a>
+ * @see <a href="https://datatracker.ietf.org/group/jose/documents/">Javascript Object Signing and
+ *   Encryption (jose)</a>
+ * @see <a href="https://www.rfc-editor.org/info/rfc7520">Examples of Protecting Content Using JSON
+ *   Object Signing and Encryption (JOSE)</a>
  * @see <a href="https://www.iana.org/assignments/jwt/jwt.xhtml">JWT (iana)</a>
  */
 @OptIn(ExperimentalSerializationApi::class)
 @Poko
-public class Jwt(
-    public val header: Header,
-    public val payload: Payload,
-) {
+public class Jwt(public val header: Header, public val payload: Payload) {
 
     @Serializable
     @JsonIgnoreUnknownKeys
@@ -50,40 +49,26 @@ public class Jwt(
     @JsonIgnoreUnknownKeys
     @Poko
     public class Payload(
-        /**
-         * Issuer
-         */
+        /** Issuer */
         public val iss: String? = null,
 
-        /**
-         * Subject
-         */
+        /** Subject */
         public val sub: String? = null,
 
-        /**
-         * Audience
-         */
+        /** Audience */
         @Serializable(with = StringListSerializer::class)
         public val aud: List<String> = emptyList(),
 
-        /**
-         * Expiration Time
-         */
+        /** Expiration Time */
         public val exp: Long? = null,
 
-        /**
-         * Not Before
-         */
+        /** Not Before */
         public val nbf: Long? = null,
 
-        /**
-         * Issued At
-         */
+        /** Issued At */
         public val iat: Long? = null,
 
-        /**
-         * JWT ID
-         */
+        /** JWT ID */
         public val jti: String? = null,
 
         /**

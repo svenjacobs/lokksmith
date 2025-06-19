@@ -30,27 +30,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
-public class TokenRequest(
-    private val client: Client,
-    private val httpClient: HttpClient,
-) {
+public class TokenRequest(private val client: Client, private val httpClient: HttpClient) {
 
     public suspend operator fun invoke(builder: ParametersBuilder.() -> Unit): TokenResponse {
-        val response = try {
-            withContext(Dispatchers.IO) {
-                httpClient.submitForm(
-                    url = client.metadata.tokenEndpoint,
-                    formParameters = Parameters.build(builder),
-                )
+        val response =
+            try {
+                withContext(Dispatchers.IO) {
+                    httpClient.submitForm(
+                        url = client.metadata.tokenEndpoint,
+                        formParameters = Parameters.build(builder),
+                    )
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                throw RequestException(cause = e, reason = RequestException.Reason.HttpError)
             }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            throw RequestException(
-                cause = e,
-                reason = RequestException.Reason.HttpError,
-            )
-        }
 
         if (!response.status.isSuccess()) {
             val tokenResponse = response.bodyOrThrow<TokenErrorResponse>()
@@ -62,10 +57,12 @@ public class TokenRequest(
                     errorUri = tokenResponse.errorUri,
                     statusCode = response.status.value,
                 )
-            } ?: throw ResponseException(
-                message = "error status code ${response.status.value} received from token endpoint",
-                reason = ResponseException.Reason.HttpError,
-            )
+            }
+                ?: throw ResponseException(
+                    message =
+                        "error status code ${response.status.value} received from token endpoint",
+                    reason = ResponseException.Reason.HttpError,
+                )
         }
 
         val tokenResponse = response.bodyOrThrow<TokenResponse>()

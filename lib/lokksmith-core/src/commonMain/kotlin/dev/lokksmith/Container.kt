@@ -35,9 +35,7 @@ import okio.Path.Companion.toPath
 
 internal expect class PlatformContext
 
-/**
- * IoC container providing dependencies
- */
+/** IoC container providing dependencies */
 public interface Container {
     public val coroutineScope: CoroutineScope
     public val httpClient: HttpClient
@@ -59,15 +57,16 @@ internal class ContainerImpl(
     override val httpClient by lazy {
         createHttpClient(
             engine = options.httpClientEngine,
-            userAgent = when {
-                options.userAgent == null -> null
-                options.userAgent.isBlank() -> defaultUserAgent
-                else -> options.userAgent
-            }
+            userAgent =
+                when {
+                    options.userAgent == null -> null
+                    options.userAgent.isBlank() -> defaultUserAgent
+                    else -> options.userAgent
+                },
         )
     }
 
-    //<editor-fold desc="SnapshotStore">
+    // <editor-fold desc="SnapshotStore">
     private val snapshotDataStore by lazy {
         createDataStore(
             fileName = "${options.persistenceFileBaseName.trim()}.preferences_pb",
@@ -76,20 +75,14 @@ internal class ContainerImpl(
     }
 
     override val snapshotStore by lazy {
-        SnapshotStoreImpl(
-            dataStore = snapshotDataStore,
-            serializer = serializer,
-        )
+        SnapshotStoreImpl(dataStore = snapshotDataStore, serializer = serializer)
     }
-    //</editor-fold>
+    // </editor-fold>
 
     override val metadataDiscoveryRequest by lazy { MetadataDiscoveryRequestImpl(httpClient) }
 
     override val clientProviderFactory: () -> InternalClient.Provider = {
-        ClientImpl.DefaultProvider(
-            httpClient = httpClient,
-            serializer = serializer,
-        )
+        ClientImpl.DefaultProvider(httpClient = httpClient, serializer = serializer)
     }
 }
 
@@ -104,28 +97,16 @@ internal expect fun createDataStore(
     platformContext: PlatformContext,
 ): DataStore<Preferences>
 
-internal fun createHttpClient(
-    engine: HttpClientEngine,
-    userAgent: String? = null,
-) = HttpClient(engine) {
-    install(ContentNegotiation) {
-        json()
+internal fun createHttpClient(engine: HttpClientEngine, userAgent: String? = null) =
+    HttpClient(engine) {
+        install(ContentNegotiation) { json() }
+
+        userAgent?.let { userAgent -> install(UserAgent) { agent = userAgent } }
     }
 
-    userAgent?.let { userAgent ->
-        install(UserAgent) {
-            agent = userAgent
-        }
-    }
-}
-
-/**
- * @see Lokksmith.Options.userAgent
- */
+/** @see Lokksmith.Options.userAgent */
 internal expect val platformUserAgentSuffix: String
 
-/**
- * @see Lokksmith.Options.userAgent
- */
+/** @see Lokksmith.Options.userAgent */
 private val defaultUserAgent: String
     get() = "Lokksmith/${BuildConfig.VERSION} ($platformUserAgentSuffix)"

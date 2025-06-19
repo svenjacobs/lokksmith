@@ -25,15 +25,15 @@ import kotlinx.serialization.json.longOrNull
 /**
  * Standard Claims
  *
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims">Standard Claim</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims">Standard
+ *   Claim</a>
  * @see [IdToken]
  * @see [IdToken.claims]
  */
-public class Claims(
-    private val idToken: IdToken,
-) {
+public class Claims(private val idToken: IdToken) {
     /**
-     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim">Address Claim</a>
+     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim">Address
+     *   Claim</a>
      */
     public data class Address(
         val formatted: String?,
@@ -95,15 +95,16 @@ public class Claims(
         get() = idToken.extra["phone_number_verified"]?.jsonPrimitive?.booleanOrNull
 
     public val address: Address?
-        get() = idToken.extra["address"]?.jsonObject?.let { adr ->
-            Address(
-                formatted = adr["formatted"]?.jsonPrimitive?.contentOrNull,
-                streetAddress = adr["street_address"]?.jsonPrimitive?.contentOrNull,
-                locality = adr["locality"]?.jsonPrimitive?.contentOrNull,
-                region = adr["region"]?.jsonPrimitive?.contentOrNull,
-                country = adr["country"]?.jsonPrimitive?.contentOrNull,
-            )
-        }
+        get() =
+            idToken.extra["address"]?.jsonObject?.let { adr ->
+                Address(
+                    formatted = adr["formatted"]?.jsonPrimitive?.contentOrNull,
+                    streetAddress = adr["street_address"]?.jsonPrimitive?.contentOrNull,
+                    locality = adr["locality"]?.jsonPrimitive?.contentOrNull,
+                    region = adr["region"]?.jsonPrimitive?.contentOrNull,
+                    country = adr["country"]?.jsonPrimitive?.contentOrNull,
+                )
+            }
 
     public val updatedAt: Long?
         get() = idToken.extra["updated_at"]?.jsonPrimitive?.longOrNull

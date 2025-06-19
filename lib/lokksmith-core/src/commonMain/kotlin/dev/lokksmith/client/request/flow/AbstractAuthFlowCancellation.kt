@@ -28,9 +28,7 @@ public abstract class AbstractAuthFlowCancellation(
 
     override suspend fun cancel(state: String) {
         stateFinalizer.finalize {
-            copy(
-                flowResult = FlowResult.Cancelled(state = state),
-            ).onUpdateSnapshot()
+            copy(flowResult = FlowResult.Cancelled(state = state)).onUpdateSnapshot()
         }
     }
 }

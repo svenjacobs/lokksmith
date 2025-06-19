@@ -36,44 +36,42 @@ public class AuthorizationCodeFlowResponseHandler(
     private val codeVerifier: String?,
     private val tokenRequest: TokenRequest = TokenRequest(client, httpClient),
     private val tokenResponseValidator: AuthorizationCodeFlowTokenResponseValidator =
-        AuthorizationCodeFlowTokenResponseValidator(
-            serializer = serializer,
-            client = client,
-        ),
+        AuthorizationCodeFlowTokenResponseValidator(serializer = serializer, client = client),
 ) : AbstractAuthFlowResponseHandler(state, client) {
 
     override suspend fun onResponse(url: Url) {
-        val code = url.parameters[Parameter.CODE] ?: throw ResponseException(
-            message = "code parameter missing from response",
-            reason = ResponseException.Reason.InvalidResponse,
-        )
+        val code =
+            url.parameters[Parameter.CODE]
+                ?: throw ResponseException(
+                    message = "code parameter missing from response",
+                    reason = ResponseException.Reason.InvalidResponse,
+                )
 
         val response = tokenRequest {
             append(Parameter.GRANT_TYPE, GrantType.AuthorizationCode.value)
             append(Parameter.CLIENT_ID, client.id.value)
             append(Parameter.CODE, code)
-            append(
-                Parameter.REDIRECT_URI,
-                this@AuthorizationCodeFlowResponseHandler.redirectUri,
-            )
+            append(Parameter.REDIRECT_URI, this@AuthorizationCodeFlowResponseHandler.redirectUri)
             codeVerifier?.let { append(Parameter.CODE_VERIFIER, it) }
         }
 
-        val result = try {
-            tokenResponseValidator.validate(response)
-        } catch (e: TokenValidationException) {
-            throw e
-        } catch (e: Exception) {
-            throw TokenValidationException(cause = e)
-        }
+        val result =
+            try {
+                tokenResponseValidator.validate(response)
+            } catch (e: TokenValidationException) {
+                throw e
+            } catch (e: Exception) {
+                throw TokenValidationException(cause = e)
+            }
 
         client.updateSnapshot {
             copy(
-                tokens = Tokens(
-                    accessToken = result.accessToken,
-                    refreshToken = result.refreshToken,
-                    idToken = result.idToken,
-                ),
+                tokens =
+                    Tokens(
+                        accessToken = result.accessToken,
+                        refreshToken = result.refreshToken,
+                        idToken = result.idToken,
+                    )
             )
         }
     }

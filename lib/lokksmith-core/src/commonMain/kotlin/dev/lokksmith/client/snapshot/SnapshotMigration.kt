@@ -22,9 +22,7 @@ internal object SnapshotMigration {
     suspend fun migrate(client: InternalClient): InternalClient {
         if (client.snapshots.value.schemaVersion == CURRENT_SCHEMA_VERSION) return client
 
-        client.updateSnapshot {
-            migrateSnapshot(this)
-        }
+        client.updateSnapshot { migrateSnapshot(this) }
 
         return client
     }
@@ -38,5 +36,4 @@ internal object SnapshotMigration {
     }
 }
 
-internal suspend fun InternalClient.migrate(): InternalClient =
-    SnapshotMigration.migrate(this)
+internal suspend fun InternalClient.migrate(): InternalClient = SnapshotMigration.migrate(this)

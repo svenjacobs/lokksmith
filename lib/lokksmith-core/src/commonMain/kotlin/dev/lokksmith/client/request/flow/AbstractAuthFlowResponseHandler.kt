@@ -39,16 +39,14 @@ public abstract class AbstractAuthFlowResponseHandler(
 
     override suspend fun onResponse(redirectUri: String) {
         try {
-            val url = try {
-                URLBuilder(redirectUri).build()
-            } catch (e: URLParserException) {
-                throw ResponseException(
-                    cause = e,
-                    reason = ResponseException.Reason.UrlParsing,
-                )
-            } catch (e: Exception) {
-                throw ResponseException(cause = e)
-            }
+            val url =
+                try {
+                    URLBuilder(redirectUri).build()
+                } catch (e: URLParserException) {
+                    throw ResponseException(cause = e, reason = ResponseException.Reason.UrlParsing)
+                } catch (e: Exception) {
+                    throw ResponseException(cause = e)
+                }
 
             // The "state" parameter needs to be verified first because it will also be added to
             // error responses.
@@ -77,32 +75,16 @@ public abstract class AbstractAuthFlowResponseHandler(
             throw e
         } catch (e: TokenTemporalValidationException) {
             setResult(
-                FlowResult.Error(
-                    state = state,
-                    type = Type.TemporalValidation,
-                    message = e.message,
-                )
+                FlowResult.Error(state = state, type = Type.TemporalValidation, message = e.message)
             )
 
             throw e
         } catch (e: TokenValidationException) {
-            setResult(
-                FlowResult.Error(
-                    state = state,
-                    type = Type.Validation,
-                    message = e.message,
-                )
-            )
+            setResult(FlowResult.Error(state = state, type = Type.Validation, message = e.message))
 
             throw e
         } catch (e: Exception) {
-            setResult(
-                FlowResult.Error(
-                    state = state,
-                    type = Type.Generic,
-                    message = e.message,
-                )
-            )
+            setResult(FlowResult.Error(state = state, type = Type.Generic, message = e.message))
 
             throw e
         } finally {
@@ -116,8 +98,8 @@ public abstract class AbstractAuthFlowResponseHandler(
      * Checks the given [url] for an OAuth error response.
      *
      * If the URL contains an `error` parameter, this function throws an [OAuthResponseException]
-     * with the error details extracted from the URL's query parameters, as specified by the
-     * OpenID Connect and OAuth 2.0 standards.
+     * with the error details extracted from the URL's query parameters, as specified by the OpenID
+     * Connect and OAuth 2.0 standards.
      *
      * This function ensures that the authorization or token response does not indicate an error
      * before proceeding with further processing.
@@ -136,10 +118,6 @@ public abstract class AbstractAuthFlowResponseHandler(
     }
 
     private suspend fun setResult(result: FlowResult) {
-        client.updateSnapshot {
-            copy(
-                flowResult = result,
-            )
-        }
+        client.updateSnapshot { copy(flowResult = result) }
     }
 }

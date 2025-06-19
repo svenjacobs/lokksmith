@@ -54,7 +54,8 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
 
 @Stable
-public class AuthFlowLauncher internal constructor(
+public class AuthFlowLauncher
+internal constructor(
     private val activityLauncher: ActivityResultLauncher<Intent>,
     private val context: Context,
     private val scope: CoroutineScope,
@@ -64,9 +65,7 @@ public class AuthFlowLauncher internal constructor(
 
     @Parcelize
     @TypeParceler<Result, ResultParceler>
-    internal data class ResultHolder(
-        val result: Result,
-    ) : Parcelable
+    internal data class ResultHolder(val result: Result) : Parcelable
 
     /**
      * Observable result of the current flow progress.
@@ -79,9 +78,7 @@ public class AuthFlowLauncher internal constructor(
     private var job: Job? = null
 
     internal fun onStart() {
-        initiation?.let {
-            scope.watchClientState(it)
-        }
+        initiation?.let { scope.watchClientState(it) }
     }
 
     internal fun onStop() {
@@ -89,38 +86,36 @@ public class AuthFlowLauncher internal constructor(
     }
 
     /**
-     * Starts the authentication flow by launching the request URL in a Custom Tab browser.
-     * The progress can be observed via [result], which is backed by Compose state.
+     * Starts the authentication flow by launching the request URL in a Custom Tab browser. The
+     * progress can be observed via [result], which is backed by Compose state.
      *
-     * @param initiation The initiation parameters for the auth flow, including the client key and request URL.
-     * @param headers Extra headers that are passed to Custom Tab.
-     *                See documentation of Custom Tabs, especially regarding CORS.
-     *
+     * @param initiation The initiation parameters for the auth flow, including the client key and
+     *   request URL.
+     * @param headers Extra headers that are passed to Custom Tab. See documentation of Custom Tabs,
+     *   especially regarding CORS.
      * @see result
      */
-    public suspend fun launch(
-        initiation: Initiation,
-        headers: Map<String, String> = emptyMap(),
-    ) {
+    public suspend fun launch(initiation: Initiation, headers: Map<String, String> = emptyMap()) {
         this.initiation = initiation
         scope.watchClientState(initiation)
 
         withContext(Dispatchers.Main.immediate) {
-            val intent = LokksmithAuthFlowActivity.createCustomTabsIntent(
-                context = context,
-                url = initiation.requestUrl,
-                clientKey = initiation.clientKey,
-                headers = headers,
-            )
+            val intent =
+                LokksmithAuthFlowActivity.createCustomTabsIntent(
+                    context = context,
+                    url = initiation.requestUrl,
+                    clientKey = initiation.clientKey,
+                    headers = headers,
+                )
 
             activityLauncher.launch(intent)
         }
     }
 
     /**
-     * The method is called when we receive a cancellation from the ActivityResultLauncher.
-     * This might happen for instance if an error occurred in the response Activity early on.
-     * We ensure here that the FlowResult is properly set to a cancelled or error state.
+     * The method is called when we receive a cancellation from the ActivityResultLauncher. This
+     * might happen for instance if an error occurred in the response Activity early on. We ensure
+     * here that the FlowResult is properly set to a cancelled or error state.
      */
     internal suspend fun cancelPendingFlow(errorMessage: String?) {
         val initiation = initiation ?: return
@@ -130,14 +125,16 @@ public class AuthFlowLauncher internal constructor(
 
         client.updateSnapshot {
             copy(
-                flowResult = when (errorMessage) {
-                    null -> Snapshot.FlowResult.Cancelled(state = initiation.state)
-                    else -> Snapshot.FlowResult.Error(
-                        state = initiation.state,
-                        type = Snapshot.FlowResult.Error.Type.Generic,
-                        message = errorMessage,
-                    )
-                },
+                flowResult =
+                    when (errorMessage) {
+                        null -> Snapshot.FlowResult.Cancelled(state = initiation.state)
+                        else ->
+                            Snapshot.FlowResult.Error(
+                                state = initiation.state,
+                                type = Snapshot.FlowResult.Error.Type.Generic,
+                                message = errorMessage,
+                            )
+                    },
                 ephemeralFlowState = null,
             )
         }
@@ -151,33 +148,36 @@ public class AuthFlowLauncher internal constructor(
     private fun CoroutineScope.watchClientState(initiation: Initiation) {
         cancel()
 
-        job = launch(SupervisorJob()) {
-            val client = getClient(initiation.clientKey)
+        job =
+            launch(SupervisorJob()) {
+                val client = getClient(initiation.clientKey)
 
-            launch {
-                client.snapshots
-                    .map { it.ephemeralFlowState?.responseUri }
-                    .filterNotNull()
-                    .distinctUntilChanged()
-                    .collect { responseUri ->
-                        // We're catching all exceptions here because we assume that in case of an
-                        // error the client's result state has been updated accordingly.
-                        try {
-                            AuthFlowStateResponseHandler(context.lokksmith).onResponse(responseUri)
-                        } catch (e: Exception) {
-                            Log.e(
-                                "AuthFlowLauncher",
-                                "Received exception in AuthFlowStateResponseHandler.onResponse()",
-                                e,
-                            )
+                launch {
+                    client.snapshots
+                        .map { it.ephemeralFlowState?.responseUri }
+                        .filterNotNull()
+                        .distinctUntilChanged()
+                        .collect { responseUri ->
+                            // We're catching all exceptions here because we assume that in case of
+                            // an
+                            // error the client's result state has been updated accordingly.
+                            try {
+                                AuthFlowStateResponseHandler(context.lokksmith)
+                                    .onResponse(responseUri)
+                            } catch (e: Exception) {
+                                Log.e(
+                                    "AuthFlowLauncher",
+                                    "Received exception in AuthFlowStateResponseHandler.onResponse()",
+                                    e,
+                                )
+                            }
                         }
-                    }
-            }
+                }
 
-            AuthFlowResultProvider.forClient(client).collect { result ->
-                resultState.value = result.wrap()
+                AuthFlowResultProvider.forClient(client).collect { result ->
+                    resultState.value = result.wrap()
+                }
             }
-        }
     }
 
     private suspend fun getClient(key: String): InternalClient =
@@ -193,15 +193,16 @@ public fun rememberAuthFlowLauncher(): AuthFlowLauncher {
 
     lateinit var launcher: AuthFlowLauncher
     val scope = rememberCoroutineScope()
-    val activityLauncher = rememberLauncherForActivityResult(StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_CANCELED) {
-            scope.launch {
-                launcher.cancelPendingFlow(
-                    errorMessage = getErrorMessageFromIntent(result.data),
-                )
+    val activityLauncher =
+        rememberLauncherForActivityResult(StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_CANCELED) {
+                scope.launch {
+                    launcher.cancelPendingFlow(
+                        errorMessage = getErrorMessageFromIntent(result.data)
+                    )
+                }
             }
         }
-    }
 
     val saver = run {
         val resultKey = "result"
@@ -223,16 +224,19 @@ public fun rememberAuthFlowLauncher(): AuthFlowLauncher {
                 val initiationRequestUrl = it[initiationRequestUrlKey] as String?
                 val initiationClientKey = it[initiationClientKeyKey] as String?
 
-                val initiation = when {
-                    initiationState != null && initiationRequestUrl != null && initiationClientKey != null ->
-                        Initiation(
-                            state = initiationState,
-                            requestUrl = initiationRequestUrl,
-                            clientKey = initiationClientKey,
-                        )
+                val initiation =
+                    when {
+                        initiationState != null &&
+                            initiationRequestUrl != null &&
+                            initiationClientKey != null ->
+                            Initiation(
+                                state = initiationState,
+                                requestUrl = initiationRequestUrl,
+                                clientKey = initiationClientKey,
+                            )
 
-                    else -> null
-                }
+                        else -> null
+                    }
 
                 @Suppress("UNCHECKED_CAST")
                 AuthFlowLauncher(
@@ -246,14 +250,15 @@ public fun rememberAuthFlowLauncher(): AuthFlowLauncher {
         )
     }
 
-    launcher = rememberSaveable(saver = saver) {
-        AuthFlowLauncher(
-            activityLauncher = activityLauncher,
-            context = context,
-            scope = scope,
-            resultState = mutableStateOf(Result.Undefined.wrap()),
-        )
-    }
+    launcher =
+        rememberSaveable(saver = saver) {
+            AuthFlowLauncher(
+                activityLauncher = activityLauncher,
+                context = context,
+                scope = scope,
+                resultState = mutableStateOf(Result.Undefined.wrap()),
+            )
+        }
 
     LifecycleStartEffect(Unit) {
         launcher.onStart()
@@ -267,10 +272,7 @@ private fun Result.wrap() = AuthFlowLauncher.ResultHolder(this)
 
 private object ResultParceler : Parceler<Result> {
 
-    override fun Result.write(
-        parcel: Parcel,
-        flags: Int
-    ) {
+    override fun Result.write(parcel: Parcel, flags: Int) {
         when (val result = this) {
             Result.Undefined -> parcel.writeInt(0)
             is Result.Processing -> {
@@ -316,20 +318,25 @@ private object ResultParceler : Parceler<Result> {
 
             3 -> Result.Cancelled(state = requireNotNull(parcel.readString()))
 
-            4 -> Result.Error(
-                state = requireNotNull(parcel.readString()),
-                type = parcel.readInt().let { errorType ->
-                    when (errorType) {
-                        0 -> Result.Error.Type.Generic
-                        1 -> Result.Error.Type.OAuth
-                        2 -> Result.Error.Type.Validation
-                        3 -> Result.Error.Type.TemporalValidation
-                        else -> throw IllegalArgumentException("Unknown Result.Error.Type $errorType")
-                    }
-                },
-                message = parcel.readString(),
-                code = parcel.readString(),
-            )
+            4 ->
+                Result.Error(
+                    state = requireNotNull(parcel.readString()),
+                    type =
+                        parcel.readInt().let { errorType ->
+                            when (errorType) {
+                                0 -> Result.Error.Type.Generic
+                                1 -> Result.Error.Type.OAuth
+                                2 -> Result.Error.Type.Validation
+                                3 -> Result.Error.Type.TemporalValidation
+                                else ->
+                                    throw IllegalArgumentException(
+                                        "Unknown Result.Error.Type $errorType"
+                                    )
+                            }
+                        },
+                    message = parcel.readString(),
+                    code = parcel.readString(),
+                )
 
             else -> throw IllegalArgumentException("Unknown type $type")
         }

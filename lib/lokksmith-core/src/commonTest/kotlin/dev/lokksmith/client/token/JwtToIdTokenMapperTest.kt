@@ -16,10 +16,10 @@
 package dev.lokksmith.client.token
 
 import dev.lokksmith.client.jwt.JwtDecoder
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonPrimitive
 
 @Suppress("SpellCheckingInspection")
 class JwtToIdTokenMapperTest {
@@ -39,46 +39,16 @@ class JwtToIdTokenMapperTest {
             "https://login.microsoftonline.com/9122040d-6c67-4c5b-b112-36a304b66dad/v2.0",
             idToken.issuer,
         )
-        assertEquals(
-            "AAAAAAAAAAAAAAAAAAAAAIkzqFVrSaSaFHy782bbtaQ",
-            idToken.subject,
-        )
-        assertEquals(
-            listOf("6cb04018-a3f5-46a7-b995-940c78f5aef3"),
-            idToken.audiences,
-        )
-        assertEquals(
-            1536361411,
-            idToken.expiration,
-        )
-        assertEquals(
-            1536274711,
-            idToken.issuedAt,
-        )
-        assertEquals(
-            1536274711,
-            idToken.notBefore,
-        )
-        assertEquals(
-            "123523",
-            idToken.nonce,
-        )
-        assertEquals(
-            raw,
-            idToken.raw,
-        )
-        assertEquals(
-            "2.0",
-            idToken.extra["ver"]?.jsonPrimitive?.content,
-        )
-        assertEquals(
-            "Abe Lincoln",
-            idToken.claims.name,
-        )
-        assertEquals(
-            "AbeLi@microsoft.com",
-            idToken.claims.preferredUsername,
-        )
+        assertEquals("AAAAAAAAAAAAAAAAAAAAAIkzqFVrSaSaFHy782bbtaQ", idToken.subject)
+        assertEquals(listOf("6cb04018-a3f5-46a7-b995-940c78f5aef3"), idToken.audiences)
+        assertEquals(1536361411, idToken.expiration)
+        assertEquals(1536274711, idToken.issuedAt)
+        assertEquals(1536274711, idToken.notBefore)
+        assertEquals("123523", idToken.nonce)
+        assertEquals(raw, idToken.raw)
+        assertEquals("2.0", idToken.extra["ver"]?.jsonPrimitive?.content)
+        assertEquals("Abe Lincoln", idToken.claims.name)
+        assertEquals("AbeLi@microsoft.com", idToken.claims.preferredUsername)
         assertEquals(
             "00000000-0000-0000-66f3-3332eca7ea81",
             idToken.extra["oid"]?.jsonPrimitive?.content,

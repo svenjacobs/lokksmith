@@ -27,16 +27,17 @@ import io.ktor.http.URLBuilder
  *
  * Use [Default] to add PKCE parameters, or [None] if PKCE is not used.
  *
- * @see <a href="https://www.rfc-editor.org/info/rfc7636">Proof Key for Code Exchange by OAuth Public Clients</a>
+ * @see <a href="https://www.rfc-editor.org/info/rfc7636">Proof Key for Code Exchange by OAuth
+ *   Public Clients</a>
  */
 internal sealed interface CodeChallengeStrategy {
 
     /**
      * Adds PKCE code challenge parameters to the given [URLBuilder].
      *
-     * TODO: Use case for context parameters :)
-     *
      * @param builder The [URLBuilder] to which PKCE parameters will be added.
+     *
+     * TODO: Use case for context parameters :)
      */
     fun addParameters(builder: URLBuilder)
 
@@ -46,10 +47,8 @@ internal sealed interface CodeChallengeStrategy {
      * @property method The PKCE code challenge method (e.g., SHA-256).
      * @property codeChallenge The generated code challenge string.
      */
-    class Default(
-        val method: CodeChallengeMethod,
-        val codeChallenge: String,
-    ) : CodeChallengeStrategy {
+    class Default(val method: CodeChallengeMethod, val codeChallenge: String) :
+        CodeChallengeStrategy {
 
         override fun addParameters(builder: URLBuilder) {
             builder.parameters[Parameter.CODE_CHALLENGE_METHOD] = method.toString()
@@ -57,19 +56,17 @@ internal sealed interface CodeChallengeStrategy {
         }
     }
 
-    /**
-     * Implementation for cases where no PKCE code challenge is required.
-     */
+    /** Implementation for cases where no PKCE code challenge is required. */
     object None : CodeChallengeStrategy {
 
-        override fun addParameters(builder: URLBuilder) {
-        }
+        override fun addParameters(builder: URLBuilder) {}
     }
 
     companion object {
 
         /**
-         * Factory method to create a [CodeChallengeStrategy] based on the provided method and verifier.
+         * Factory method to create a [CodeChallengeStrategy] based on the provided method and
+         * verifier.
          *
          * @param method The PKCE code challenge method, or null if PKCE is not used.
          * @param codeVerifier The code verifier string, or null if PKCE is not used.
@@ -78,12 +75,13 @@ internal sealed interface CodeChallengeStrategy {
         suspend fun create(
             method: CodeChallengeMethod?,
             codeVerifier: String?,
-        ): CodeChallengeStrategy = when {
-            method == null || codeVerifier == null -> None
-            else -> {
-                val codeChallenge = CodeChallengeFactory.forMethod(method)(codeVerifier)
-                Default(method, codeChallenge)
+        ): CodeChallengeStrategy =
+            when {
+                method == null || codeVerifier == null -> None
+                else -> {
+                    val codeChallenge = CodeChallengeFactory.forMethod(method)(codeVerifier)
+                    Default(method, codeChallenge)
+                }
             }
-        }
     }
 }

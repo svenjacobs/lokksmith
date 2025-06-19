@@ -26,44 +26,44 @@ import io.ktor.http.Url
 /**
  * Handles OAuth flow responses by recovering the client using the `state` parameter.
  *
- * This handler is designed for scenarios where the initiation of an OAuth flow and the handling
- * of its response are decoupled, such as on mobile platforms.
+ * This handler is designed for scenarios where the initiation of an OAuth flow and the handling of
+ * its response are decoupled, such as on mobile platforms.
  */
-public class AuthFlowStateResponseHandler(
-    private val lokksmith: Lokksmith,
-) {
+public class AuthFlowStateResponseHandler(private val lokksmith: Lokksmith) {
 
     public suspend fun onResponse(responseUri: String) {
         val url = Url(responseUri)
-        val state = checkNotNull(url.parameters[Parameter.STATE]) {
-            "Parameter \"${Parameter.STATE}\" missing from response"
-        }
+        val state =
+            checkNotNull(url.parameters[Parameter.STATE]) {
+                "Parameter \"${Parameter.STATE}\" missing from response"
+            }
 
-        val snapshot = checkNotNull(lokksmith.container.snapshotStore.getForState(state)) {
-            "No client snapshot found for state"
-        }
+        val snapshot =
+            checkNotNull(lokksmith.container.snapshotStore.getForState(state)) {
+                "No client snapshot found for state"
+            }
 
-        val client = checkNotNull(lokksmith.get(snapshot.key.value)) {
-            "No client found for state"
-        } as InternalClient
+        val client =
+            checkNotNull(lokksmith.get(snapshot.key.value)) { "No client found for state" }
+                as InternalClient
 
-        val handler = when (val ephemeralState = snapshot.ephemeralFlowState) {
-            is Snapshot.EphemeralAuthorizationCodeFlowState -> AuthorizationCodeFlowResponseHandler(
-                serializer = lokksmith.container.serializer,
-                state = ephemeralState.state,
-                client = client,
-                httpClient = lokksmith.container.httpClient,
-                redirectUri = ephemeralState.redirectUri,
-                codeVerifier = ephemeralState.codeVerifier,
-            )
+        val handler =
+            when (val ephemeralState = snapshot.ephemeralFlowState) {
+                is Snapshot.EphemeralAuthorizationCodeFlowState ->
+                    AuthorizationCodeFlowResponseHandler(
+                        serializer = lokksmith.container.serializer,
+                        state = ephemeralState.state,
+                        client = client,
+                        httpClient = lokksmith.container.httpClient,
+                        redirectUri = ephemeralState.redirectUri,
+                        codeVerifier = ephemeralState.codeVerifier,
+                    )
 
-            is Snapshot.EphemeralEndSessionFlowState -> EndSessionFlowResponseHandler(
-                state = ephemeralState.state,
-                client = client,
-            )
+                is Snapshot.EphemeralEndSessionFlowState ->
+                    EndSessionFlowResponseHandler(state = ephemeralState.state, client = client)
 
-            null -> throw IllegalStateException("ephemeralFlowState is null")
-        }
+                null -> throw IllegalStateException("ephemeralFlowState is null")
+            }
 
         handler.onResponse(responseUri)
     }

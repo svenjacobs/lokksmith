@@ -36,41 +36,43 @@ import kotlinx.serialization.json.Json
 /**
  * Implements the OpenID Connect Authorization Code Flow.
  *
- * Use the result of [prepare] to initiate the flow by opening the URL in a browser
- * (e.g., a Custom Tab), following [OAuth 2.0 for Native Apps](https://www.rfc-editor.org/info/rfc8252).
+ * Use the result of [prepare] to initiate the flow by opening the URL in a browser (e.g., a Custom
+ * Tab), following [OAuth 2.0 for Native Apps](https://www.rfc-editor.org/info/rfc8252).
  *
  * Keep the same instance of this class in memory throughout the flow. After the user completes
  * authentication, pass the full redirect URI received from the OpenID provider to [onResponse].
  */
-public class AuthorizationCodeFlow private constructor(
+public class AuthorizationCodeFlow
+private constructor(
     client: InternalClient,
     state: String,
     responseHandler: AuthorizationCodeFlowResponseHandler,
     private val request: Request,
     internal val nonce: String?,
     internal val codeVerifier: String?,
-) : AbstractAuthFlow(
-    client = client,
-    state = state,
-    responseHandler = responseHandler,
-    cancellation = AuthorizationCodeFlowCancellation(client),
-) {
+) :
+    AbstractAuthFlow(
+        client = client,
+        state = state,
+        responseHandler = responseHandler,
+        cancellation = AuthorizationCodeFlowCancellation(client),
+    ) {
 
     /**
-     * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication Request</a>
+     * @see <a
+     *   href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication
+     *   Request</a>
      */
     public data class Request(
 
-        /**
-         * Redirect URI to which the response is sent by the OpenID provider.
-         */
+        /** Redirect URI to which the response is sent by the OpenID provider. */
         override val redirectUri: String,
 
         /**
          * Scopes to specify what access privileges are being requested for access tokens.
          *
-         * Although the default value is an empty set, some flows might augment the set with required
-         * scopes if needed.
+         * Although the default value is an empty set, some flows might augment the set with
+         * required scopes if needed.
          */
         val scope: Set<Scope> = emptySet(),
 
@@ -84,36 +86,39 @@ public class AuthorizationCodeFlow private constructor(
          * Length of the cryptographically random `state` parameter included in the authorization
          * request.
          *
-         * The `state` parameter is required to prevent cross-site request forgery (CSRF) attacks and to
-         * allow Lokksmith to restore the flow when handling the authorization response. It is returned
-         * by the OpenID provider and must be validated by the client.
+         * The `state` parameter is required to prevent cross-site request forgery (CSRF) attacks
+         * and to allow Lokksmith to restore the flow when handling the authorization response. It
+         * is returned by the OpenID provider and must be validated by the client.
          *
-         * Disabling the `state` parameter is not supported, as it is essential for both security and
-         * Lokksmith's flow management. While the OpenID Connect specification does not define a minimum
-         * or maximum length, Lokksmith enforces a minimum of 16 characters for security.
+         * Disabling the `state` parameter is not supported, as it is essential for both security
+         * and Lokksmith's flow management. While the OpenID Connect specification does not define a
+         * minimum or maximum length, Lokksmith enforces a minimum of 16 characters for security.
          */
         override val stateLength: Int = Defaults.STATE_MIN_LENGTH,
 
         /**
-         * Specifies the length of the `nonce` parameter to be included in the authorization request.
+         * Specifies the length of the `nonce` parameter to be included in the authorization
+         * request.
          *
-         * The `nonce` parameter is a cryptographically random string used to prevent replay attacks.
-         * It is returned by the OpenID provider in the ID token and must be validated by the client.
+         * The `nonce` parameter is a cryptographically random string used to prevent replay
+         * attacks. It is returned by the OpenID provider in the ID token and must be validated by
+         * the client.
          *
-         * A value of 0 disables the `nonce` parameter (not recommended). Although the OpenID Connect
-         * specification does not mandate a minimum or maximum length, Lokksmith enforces a minimum of
-         * 16 for security reasons.
+         * A value of 0 disables the `nonce` parameter (not recommended). Although the OpenID
+         * Connect specification does not mandate a minimum or maximum length, Lokksmith enforces a
+         * minimum of 16 for security reasons.
          *
-         * It is strongly recommended to keep this on unless the OpenID provider does not support the
-         * `nonce` parameter.
+         * It is strongly recommended to keep this on unless the OpenID provider does not support
+         * the `nonce` parameter.
          */
         val nonceLength: Int = Defaults.NONCE_MIN_LENGTH,
 
         /**
-         * The PKCE code challenge method to use. Currently only SHA256 is supported.
-         * Setting this property to `null` disables PKCE (not recommended).
+         * The PKCE code challenge method to use. Currently only SHA256 is supported. Setting this
+         * property to `null` disables PKCE (not recommended).
          *
-         * @see <a href="https://www.rfc-editor.org/info/rfc7636">Proof Key for Code Exchange by OAuth Public Clients</a>
+         * @see <a href="https://www.rfc-editor.org/info/rfc7636">Proof Key for Code Exchange by
+         *   OAuth Public Clients</a>
          */
         val codeChallengeMethod: CodeChallengeMethod? = CodeChallengeMethod.SHA256,
     ) : AuthFlow.Request
@@ -124,46 +129,40 @@ public class AuthorizationCodeFlow private constructor(
     private val scopes = (request.scope + Scope.OpenId).joinToString(" ")
 
     override val ephemeralFlowState: Snapshot.EphemeralFlowState
-        get() = Snapshot.EphemeralAuthorizationCodeFlowState(
-            state = state,
-            redirectUri = request.redirectUri,
-            codeVerifier = codeVerifier,
-            responseUri = null,
-        )
+        get() =
+            Snapshot.EphemeralAuthorizationCodeFlowState(
+                state = state,
+                redirectUri = request.redirectUri,
+                codeVerifier = codeVerifier,
+                responseUri = null,
+            )
 
-    override fun onPrepareUpdateSnapshot(snapshot: Snapshot) =
-        snapshot.copy(
-            nonce = nonce,
-        )
+    override fun onPrepareUpdateSnapshot(snapshot: Snapshot) = snapshot.copy(nonce = nonce)
 
     override suspend fun onPrepare(): String {
-        val codeChallengeStrategy = CodeChallengeStrategy.create(
-            request.codeChallengeMethod,
-            codeVerifier,
-        )
+        val codeChallengeStrategy =
+            CodeChallengeStrategy.create(request.codeChallengeMethod, codeVerifier)
 
         return try {
             buildUrl {
-                takeFrom(client.metadata.authorizationEndpoint)
+                    takeFrom(client.metadata.authorizationEndpoint)
 
-                parameters[Parameter.SCOPE] = scopes
-                parameters[Parameter.RESPONSE_TYPE] = ResponseType.Code.value
-                parameters[Parameter.CLIENT_ID] = client.id.value
-                parameters[Parameter.REDIRECT_URI] = request.redirectUri
+                    parameters[Parameter.SCOPE] = scopes
+                    parameters[Parameter.RESPONSE_TYPE] = ResponseType.Code.value
+                    parameters[Parameter.CLIENT_ID] = client.id.value
+                    parameters[Parameter.REDIRECT_URI] = request.redirectUri
 
-                stateVerifierStrategy.addParameter(this)
-                nonceVerifierStrategy.addParameter(this)
-                codeChallengeStrategy.addParameters(this)
+                    stateVerifierStrategy.addParameter(this)
+                    nonceVerifierStrategy.addParameter(this)
+                    codeChallengeStrategy.addParameters(this)
 
-                if (request.prompt.isNotEmpty()) {
-                    parameters[Parameter.PROMPT] = request.prompt.joinToString(" ")
+                    if (request.prompt.isNotEmpty()) {
+                        parameters[Parameter.PROMPT] = request.prompt.joinToString(" ")
+                    }
                 }
-            }.toString()
+                .toString()
         } catch (e: URLParserException) {
-            throw RequestException(
-                cause = e,
-                reason = RequestException.Reason.UrlParsing,
-            )
+            throw RequestException(cause = e, reason = RequestException.Reason.UrlParsing)
         } catch (e: Exception) {
             throw RequestException(e)
         }
@@ -178,30 +177,42 @@ public class AuthorizationCodeFlow private constructor(
             serializer: Json,
             random: Random = Random(),
         ): AuthorizationCodeFlow {
-            val state = when {
-                request.stateLength >= Defaults.STATE_MIN_LENGTH -> random.randomAsciiString(request.stateLength)
-                else -> throw IllegalArgumentException("stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}")
-            }
+            val state =
+                when {
+                    request.stateLength >= Defaults.STATE_MIN_LENGTH ->
+                        random.randomAsciiString(request.stateLength)
+                    else ->
+                        throw IllegalArgumentException(
+                            "stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}"
+                        )
+                }
 
-            val nonce = when {
-                request.nonceLength == 0 -> null
-                request.nonceLength >= Defaults.NONCE_MIN_LENGTH -> random.randomAsciiString(request.nonceLength)
-                else -> throw IllegalArgumentException("nonceLength must not be less than ${Defaults.NONCE_MIN_LENGTH}")
-            }
+            val nonce =
+                when {
+                    request.nonceLength == 0 -> null
+                    request.nonceLength >= Defaults.NONCE_MIN_LENGTH ->
+                        random.randomAsciiString(request.nonceLength)
+                    else ->
+                        throw IllegalArgumentException(
+                            "nonceLength must not be less than ${Defaults.NONCE_MIN_LENGTH}"
+                        )
+                }
 
-            val codeVerifier = when (request.codeChallengeMethod) {
-                null -> null
-                else -> random.randomCodeVerifier(128)
-            }
+            val codeVerifier =
+                when (request.codeChallengeMethod) {
+                    null -> null
+                    else -> random.randomCodeVerifier(128)
+                }
 
-            val responseHandler = AuthorizationCodeFlowResponseHandler(
-                serializer = serializer,
-                state = state,
-                client = client,
-                httpClient = httpClient,
-                redirectUri = request.redirectUri,
-                codeVerifier = codeVerifier,
-            )
+            val responseHandler =
+                AuthorizationCodeFlowResponseHandler(
+                    serializer = serializer,
+                    state = state,
+                    client = client,
+                    httpClient = httpClient,
+                    redirectUri = request.redirectUri,
+                    codeVerifier = codeVerifier,
+                )
 
             return AuthorizationCodeFlow(
                 client = client,

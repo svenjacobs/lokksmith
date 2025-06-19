@@ -35,7 +35,6 @@ internal class MetadataDiscoveryResponse(
 
     // Required for OIDC but optional for OAuth 2.0
     @SerialName("jwks_uri") val jwksUri: String? = null,
-
     @SerialName("scopes_supported") val scopesSupported: List<String> = emptyList(),
 
     // Extension of "Connect RP-Initiated Logout 1.0"

@@ -30,9 +30,7 @@ public class LokksmithRedirectActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        startActivity(
-            LokksmithAuthFlowActivity.createRedirectIntent(this, intent.data)
-        )
+        startActivity(LokksmithAuthFlowActivity.createRedirectIntent(this, intent.data))
 
         finish()
     }

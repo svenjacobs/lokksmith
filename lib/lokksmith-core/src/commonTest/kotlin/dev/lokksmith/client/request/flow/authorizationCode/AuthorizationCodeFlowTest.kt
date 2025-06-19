@@ -50,18 +50,18 @@ import io.ktor.http.Url
 import io.ktor.http.buildUrl
 import io.ktor.http.headersOf
 import io.ktor.http.takeFrom
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runCurrent
-import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AuthorizationCodeFlowTest {
@@ -70,21 +70,22 @@ class AuthorizationCodeFlowTest {
 
     @Test
     fun `prepare should prepare Authorization Code Flow`() = runTest {
-        val (flow, client) = createFlow(
-            request = AuthorizationCodeFlow.Request(
-                redirectUri = "https://example.com/app/redirect",
-                scope = setOf(Scope.Email, Scope.Profile),
-                prompt = setOf(Prompt.Login),
-            ),
-        )
+        val (flow, client) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        scope = setOf(Scope.Email, Scope.Profile),
+                        prompt = setOf(Prompt.Login),
+                    )
+            )
 
         val initiation = flow.prepare()
         runCurrent()
         val requestUrl = Url(initiation.requestUrl)
 
-        val codeChallengeStrategy = CodeChallengeFactory.forMethod(
-            CodeChallengeMethod.SHA256,
-        )(flow.codeVerifier!!)
+        val codeChallengeStrategy =
+            CodeChallengeFactory.forMethod(CodeChallengeMethod.SHA256)(flow.codeVerifier!!)
 
         assertEquals("key", initiation.clientKey)
 
@@ -97,16 +98,15 @@ class AuthorizationCodeFlowTest {
         assertEquals("clientId", requestUrl.parameters[Parameter.CLIENT_ID])
         assertEquals(
             "https://example.com/app/redirect",
-            requestUrl.parameters[Parameter.REDIRECT_URI]
+            requestUrl.parameters[Parameter.REDIRECT_URI],
         )
         assertEquals(flow.state, requestUrl.parameters[Parameter.STATE])
         assertEquals(flow.nonce, requestUrl.parameters[Parameter.NONCE])
         assertEquals(codeChallengeStrategy, requestUrl.parameters[Parameter.CODE_CHALLENGE])
         assertEquals("S256", requestUrl.parameters[Parameter.CODE_CHALLENGE_METHOD])
 
-        val flowState = assertIs<EphemeralAuthorizationCodeFlowState>(
-            client.snapshots.value.ephemeralFlowState
-        )
+        val flowState =
+            assertIs<EphemeralAuthorizationCodeFlowState>(client.snapshots.value.ephemeralFlowState)
         assertEquals(flow.state, flowState.state)
         assertEquals(flow.codeVerifier, flowState.codeVerifier)
         assertEquals("https://example.com/app/redirect", flowState.redirectUri)
@@ -114,12 +114,14 @@ class AuthorizationCodeFlowTest {
 
     @Test
     fun `prepare should prepare Authorization Code Flow without PKCE`() = runTest {
-        val (flow, client) = createFlow(
-            request = AuthorizationCodeFlow.Request(
-                redirectUri = "https://example.com/app/redirect",
-                codeChallengeMethod = null,
-            ),
-        )
+        val (flow, client) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        codeChallengeMethod = null,
+                    )
+            )
 
         val initiation = flow.prepare()
         runCurrent()
@@ -130,9 +132,8 @@ class AuthorizationCodeFlowTest {
         assertEquals(null, requestUrl.parameters[Parameter.CODE_CHALLENGE])
         assertEquals(null, requestUrl.parameters[Parameter.CODE_CHALLENGE_METHOD])
 
-        val flowState = assertIs<EphemeralAuthorizationCodeFlowState>(
-            client.snapshots.value.ephemeralFlowState
-        )
+        val flowState =
+            assertIs<EphemeralAuthorizationCodeFlowState>(client.snapshots.value.ephemeralFlowState)
         assertNull(flowState.codeVerifier)
     }
 
@@ -140,61 +141,66 @@ class AuthorizationCodeFlowTest {
     fun `onResponse should handle successful response`() = runTest {
         val jwtEncoder = JwtEncoder(Json)
 
-        val (flow, client, testState) = createFlow { testState ->
-            { request ->
-                when (request.url.toString()) {
-                    "https://example.com/tokenEndpoint" -> {
-                        assertEquals(HttpMethod.Post, request.method)
-                        val body = assertIs<FormDataContent>(request.body)
+        val (flow, client, testState) =
+            createFlow { testState ->
+                { request ->
+                    when (request.url.toString()) {
+                        "https://example.com/tokenEndpoint" -> {
+                            assertEquals(HttpMethod.Post, request.method)
+                            val body = assertIs<FormDataContent>(request.body)
 
-                        assertEquals(
-                            GrantType.AuthorizationCode.value,
-                            body.formData[Parameter.GRANT_TYPE],
-                        )
-                        assertEquals("clientId", body.formData[Parameter.CLIENT_ID])
-                        assertEquals("s7FBqWPnG2", body.formData[Parameter.CODE])
-                        assertEquals(
-                            "https://example.com/app/redirect",
-                            body.formData[Parameter.REDIRECT_URI]
-                        )
-                        assertEquals(testState.codeVerifier, body.formData[Parameter.CODE_VERIFIER])
+                            assertEquals(
+                                GrantType.AuthorizationCode.value,
+                                body.formData[Parameter.GRANT_TYPE],
+                            )
+                            assertEquals("clientId", body.formData[Parameter.CLIENT_ID])
+                            assertEquals("s7FBqWPnG2", body.formData[Parameter.CODE])
+                            assertEquals(
+                                "https://example.com/app/redirect",
+                                body.formData[Parameter.REDIRECT_URI],
+                            )
+                            assertEquals(
+                                testState.codeVerifier,
+                                body.formData[Parameter.CODE_VERIFIER],
+                            )
 
-                        val idToken = Jwt(
-                            header = Jwt.Header(
-                                alg = "none",
-                            ),
-                            payload = Jwt.Payload(
-                                iss = "issuer",
-                                sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
-                                aud = listOf("clientId"),
-                                exp = TEST_INSTANT + 600,
-                                iat = TEST_INSTANT,
-                                extra = mapOf("nonce" to JsonPrimitive(testState.nonce)),
-                            ),
-                        )
+                            val idToken =
+                                Jwt(
+                                    header = Jwt.Header(alg = "none"),
+                                    payload =
+                                        Jwt.Payload(
+                                            iss = "issuer",
+                                            sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                            aud = listOf("clientId"),
+                                            exp = TEST_INSTANT + 600,
+                                            iat = TEST_INSTANT,
+                                            extra = mapOf("nonce" to JsonPrimitive(testState.nonce)),
+                                        ),
+                                )
 
-                        val response = TokenResponse(
-                            tokenType = "Bearer",
-                            accessToken = "Lh0rP8vrtQH",
-                            expiresIn = 600,
-                            refreshToken = "cyaVZ3zPU",
-                            refreshExpiresIn = 1_209_600,
-                            idToken = jwtEncoder.encode(idToken),
-                        )
+                            val response =
+                                TokenResponse(
+                                    tokenType = "Bearer",
+                                    accessToken = "Lh0rP8vrtQH",
+                                    expiresIn = 600,
+                                    refreshToken = "cyaVZ3zPU",
+                                    refreshExpiresIn = 1_209_600,
+                                    idToken = jwtEncoder.encode(idToken),
+                                )
 
-                        val json = httpJson.encodeToString(response)
+                            val json = httpJson.encodeToString(response)
 
-                        respond(
-                            content = json,
-                            status = HttpStatusCode.OK,
-                            headers = headersOf("Content-Type", "application/json"),
-                        )
+                            respond(
+                                content = json,
+                                status = HttpStatusCode.OK,
+                                headers = headersOf("Content-Type", "application/json"),
+                            )
+                        }
+
+                        else -> respondBadRequest()
                     }
-
-                    else -> respondBadRequest()
                 }
             }
-        }
 
         flow.prepare()
         runCurrent()
@@ -203,25 +209,21 @@ class AuthorizationCodeFlowTest {
             client.snapshots.value.ephemeralFlowState,
             "ephemeralFlowState must not be null",
         )
-        assertNotNull(
-            client.snapshots.value.nonce,
-            "nonce must not be null",
-        )
-        assertNull(
-            client.snapshots.value.flowResult,
-            "flowResult must be null",
-        )
+        assertNotNull(client.snapshots.value.nonce, "nonce must not be null")
+        assertNull(client.snapshots.value.flowResult, "flowResult must be null")
 
         // values that we require in the mock request lambda above which however can't access the
         // flow instance before it was created.
         testState.codeVerifier = flow.codeVerifier
         testState.nonce = flow.nonce
 
-        val responseUrl = buildUrl {
-            takeFrom("https://example.com/app/redirect")
-            parameters[Parameter.STATE] = flow.state
-            parameters[Parameter.CODE] = "s7FBqWPnG2"
-        }.toString()
+        val responseUrl =
+            buildUrl {
+                    takeFrom("https://example.com/app/redirect")
+                    parameters[Parameter.STATE] = flow.state
+                    parameters[Parameter.CODE] = "s7FBqWPnG2"
+                }
+                .toString()
 
         flow.onResponse(responseUrl)
         runCurrent()
@@ -248,17 +250,17 @@ class AuthorizationCodeFlowTest {
         flow.prepare()
         runCurrent()
 
-        val responseUrl = buildUrl {
-            takeFrom("https://example.com/app/redirect")
-            parameters[Parameter.STATE] = flow.state
-            parameters[Parameter.ERROR] = OAuthError.InvalidGrant.code
-            parameters[Parameter.ERROR_DESCRIPTION] = "error description"
-            parameters[Parameter.ERROR_URI] = "error URI"
-        }.toString()
+        val responseUrl =
+            buildUrl {
+                    takeFrom("https://example.com/app/redirect")
+                    parameters[Parameter.STATE] = flow.state
+                    parameters[Parameter.ERROR] = OAuthError.InvalidGrant.code
+                    parameters[Parameter.ERROR_DESCRIPTION] = "error description"
+                    parameters[Parameter.ERROR_URI] = "error URI"
+                }
+                .toString()
 
-        val exception = assertFailsWith<OAuthResponseException> {
-            flow.onResponse(responseUrl)
-        }
+        val exception = assertFailsWith<OAuthResponseException> { flow.onResponse(responseUrl) }
 
         runCurrent()
 
@@ -270,9 +272,11 @@ class AuthorizationCodeFlowTest {
             FlowResult.Error(
                 state = flow.state,
                 type = FlowResult.Error.Type.OAuth,
-                message = """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI")""",
+                message =
+                    """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI")""",
                 code = OAuthError.InvalidGrant.code,
-            ), client.snapshots.value.flowResult
+            ),
+            client.snapshots.value.flowResult,
         )
 
         assertNull(client.snapshots.value.ephemeralFlowState)
@@ -280,36 +284,38 @@ class AuthorizationCodeFlowTest {
 
     @Test
     fun `onResponse should handle error in token response`() = runTest {
-        val (flow, client) = createFlow { testState ->
-            {
-                val response = httpJson.encodeToString(
-                    TokenErrorResponse(
-                        error = OAuthError.InvalidGrant.code,
-                        errorDescription = "error description",
-                        errorUri = "error URI",
-                    )
-                )
+        val (flow, client) =
+            createFlow { testState ->
+                {
+                    val response =
+                        httpJson.encodeToString(
+                            TokenErrorResponse(
+                                error = OAuthError.InvalidGrant.code,
+                                errorDescription = "error description",
+                                errorUri = "error URI",
+                            )
+                        )
 
-                respond(
-                    content = response,
-                    status = HttpStatusCode.BadRequest,
-                    headers = headersOf("Content-Type", "application/json"),
-                )
+                    respond(
+                        content = response,
+                        status = HttpStatusCode.BadRequest,
+                        headers = headersOf("Content-Type", "application/json"),
+                    )
+                }
             }
-        }
 
         flow.prepare()
         runCurrent()
 
-        val responseUrl = buildUrl {
-            takeFrom("https://example.com/app/redirect")
-            parameters[Parameter.STATE] = flow.state
-            parameters[Parameter.CODE] = "s7FBqWPnG2"
-        }.toString()
+        val responseUrl =
+            buildUrl {
+                    takeFrom("https://example.com/app/redirect")
+                    parameters[Parameter.STATE] = flow.state
+                    parameters[Parameter.CODE] = "s7FBqWPnG2"
+                }
+                .toString()
 
-        val exception = assertFailsWith<OAuthResponseException> {
-            flow.onResponse(responseUrl)
-        }
+        val exception = assertFailsWith<OAuthResponseException> { flow.onResponse(responseUrl) }
 
         runCurrent()
 
@@ -321,9 +327,11 @@ class AuthorizationCodeFlowTest {
             FlowResult.Error(
                 state = flow.state,
                 type = FlowResult.Error.Type.OAuth,
-                message = """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI", statusCode=400)""",
+                message =
+                    """OAuthResponseException(error="invalid_grant, errorDescription="error description", errorUri="error URI", statusCode=400)""",
                 code = OAuthError.InvalidGrant.code,
-            ), client.snapshots.value.flowResult
+            ),
+            client.snapshots.value.flowResult,
         )
 
         assertNull(client.snapshots.value.ephemeralFlowState)
@@ -331,15 +339,16 @@ class AuthorizationCodeFlowTest {
 
     @Test
     fun `cancel should cancel flow`() = runTest {
-        val (flow, client) = createFlow { testState ->
-            {
-                respond(
-                    content = "",
-                    status = HttpStatusCode.BadRequest,
-                    headersOf("Content-Type", "application/json"),
-                )
+        val (flow, client) =
+            createFlow { testState ->
+                {
+                    respond(
+                        content = "",
+                        status = HttpStatusCode.BadRequest,
+                        headersOf("Content-Type", "application/json"),
+                    )
+                }
             }
-        }
 
         flow.prepare()
         runCurrent()
@@ -348,14 +357,8 @@ class AuthorizationCodeFlowTest {
             client.snapshots.value.ephemeralFlowState,
             "ephemeralFlowState must not be null",
         )
-        assertNotNull(
-            client.snapshots.value.nonce,
-            "nonce must not be null",
-        )
-        assertNull(
-            client.snapshots.value.flowResult,
-            "flowResult must be null",
-        )
+        assertNotNull(client.snapshots.value.nonce, "nonce must not be null")
+        assertNull(client.snapshots.value.flowResult, "flowResult must be null")
 
         flow.cancel()
         runCurrent()
@@ -366,28 +369,23 @@ class AuthorizationCodeFlowTest {
     }
 }
 
-private data class TestState(
-    var codeVerifier: String? = null,
-    var nonce: String? = null,
-)
+private data class TestState(var codeVerifier: String? = null, var nonce: String? = null)
 
 private suspend fun TestScope.createFlow(
     key: Key = "key".asKey(),
     id: Id = "clientId".asId(),
-    request: AuthorizationCodeFlow.Request = AuthorizationCodeFlow.Request(
-        redirectUri = "https://example.com/app/redirect",
-    ),
-    requestHandler: (TestState) -> MockRequestHandleScope.(HttpRequestData) -> HttpResponseData = { { respondBadRequest() } },
+    request: AuthorizationCodeFlow.Request =
+        AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect"),
+    requestHandler: (TestState) -> MockRequestHandleScope.(HttpRequestData) -> HttpResponseData = {
+        { respondBadRequest() }
+    },
 ): Triple<AuthorizationCodeFlow, InternalClient, TestState> {
     val testState = TestState()
     val mockEngine = MockEngine(requestHandler(testState))
     val httpClient = createHttpClient(mockEngine)
 
-    val client = createTestClient(
-        key = key,
-        id = id,
-        provider = TestProvider(httpClient = httpClient),
-    )
+    val client =
+        createTestClient(key = key, id = id, provider = TestProvider(httpClient = httpClient))
 
     return Triple(
         AuthorizationCodeFlow.create(
