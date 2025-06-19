@@ -24,6 +24,8 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.annotation.OptIn
+import androidx.browser.customtabs.ExperimentalEphemeralBrowsing
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.Stable
@@ -91,11 +93,18 @@ internal constructor(
      *
      * @param initiation The initiation parameters for the auth flow, including the client key and
      *   request URL.
+     * @param ephemeralBrowsing Whether to enable ephemeral browsing mode for enhanced privacy
+     *   (default: true).
      * @param headers Extra headers that are passed to Custom Tab. See documentation of Custom Tabs,
      *   especially regarding CORS.
      * @see result
      */
-    public suspend fun launch(initiation: Initiation, headers: Map<String, String> = emptyMap()) {
+    @OptIn(ExperimentalEphemeralBrowsing::class)
+    public suspend fun launch(
+        initiation: Initiation,
+        ephemeralBrowsing: Boolean = true,
+        headers: Map<String, String> = emptyMap(),
+    ) {
         this.initiation = initiation
         scope.watchClientState(initiation)
 
@@ -105,6 +114,7 @@ internal constructor(
                     context = context,
                     url = initiation.requestUrl,
                     clientKey = initiation.clientKey,
+                    ephemeralBrowsing = ephemeralBrowsing,
                     headers = headers,
                 )
 
