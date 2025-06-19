@@ -58,8 +58,8 @@ the project license.
     - Run `npm install` in the root folder of the project to set up Git commit hooks.
 
 !!! info
-    [Commit messages](#commit-messages) are verified via Continuous Integration. Therefor we suggest setting up the
-    commit hooks to catch errors early.
+    [Code style](#code) and [commit messages](#commit-messages) are verified via Continuous 
+    Integration. Therefor we suggest setting up the commit hooks to catch errors early.
 
 ### Rules
 
@@ -74,6 +74,9 @@ the project license.
 
 - Follow the [Kotlin Coding Conventions](https://kotlinlang.org/docs/coding-conventions.html).
 - Use spaces with an indentation of 4 characters.
+
+!!! tip
+    Run `./gradlew spotlessApply` to format source code according to our rules.
 
 #### Commit Messages
 
