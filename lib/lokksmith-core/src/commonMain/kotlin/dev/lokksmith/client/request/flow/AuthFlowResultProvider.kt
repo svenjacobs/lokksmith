@@ -20,15 +20,14 @@ import dev.lokksmith.client.Client
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Error.Type
 import dev.lokksmith.client.snapshot.Snapshot
+import dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error.Type as FlowResultErrorType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error.Type as FlowResultErrorType
-
 
 /**
- * Provides an observable [Result] of the current or last known progress of an auth flow which
- * can be used to display some progression in the UI layer of an application.
+ * Provides an observable [Result] of the current or last known progress of an auth flow which can
+ * be used to display some progression in the UI layer of an application.
  *
  * @see AuthFlowResultProvider.forClient
  * @see AuthFlowResultProvider.confirmConsumed
@@ -40,20 +39,11 @@ public object AuthFlowResultProvider {
 
         public data object Undefined : Result
 
-        @Poko
-        public class Processing(
-            public val state: String,
-        ) : Result
+        @Poko public class Processing(public val state: String) : Result
 
-        @Poko
-        public class Success(
-            public val state: String,
-        ) : Result
+        @Poko public class Success(public val state: String) : Result
 
-        @Poko
-        public class Cancelled(
-            public val state: String,
-        ) : Result
+        @Poko public class Cancelled(public val state: String) : Result
 
         @Poko
         public class Error(
@@ -63,7 +53,12 @@ public object AuthFlowResultProvider {
             public val code: String? = null,
         ) : Result {
 
-            public enum class Type { Generic, OAuth, Validation, TemporalValidation }
+            public enum class Type {
+                Generic,
+                OAuth,
+                Validation,
+                TemporalValidation,
+            }
         }
     }
 
@@ -75,27 +70,32 @@ public object AuthFlowResultProvider {
      * @see authFlowResult
      */
     public fun forClient(client: Client): Flow<Result> =
-        (client as InternalClient).snapshots
+        (client as InternalClient)
+            .snapshots
             .map { snapshot ->
                 val flowResult = snapshot.flowResult
                 when {
-                    flowResult is Snapshot.FlowResult.Success -> Result.Success(state = flowResult.state)
-                    flowResult is Snapshot.FlowResult.Cancelled -> Result.Cancelled(state = flowResult.state)
-                    flowResult is Snapshot.FlowResult.Error -> Result.Error(
-                        state = flowResult.state,
-                        type = when (flowResult.type) {
-                            FlowResultErrorType.Generic -> Type.Generic
-                            FlowResultErrorType.OAuth -> Type.OAuth
-                            FlowResultErrorType.Validation -> Type.Validation
-                            FlowResultErrorType.TemporalValidation -> Type.TemporalValidation
-                        },
-                        message = flowResult.message,
-                        code = flowResult.code,
-                    )
+                    flowResult is Snapshot.FlowResult.Success ->
+                        Result.Success(state = flowResult.state)
+                    flowResult is Snapshot.FlowResult.Cancelled ->
+                        Result.Cancelled(state = flowResult.state)
+                    flowResult is Snapshot.FlowResult.Error ->
+                        Result.Error(
+                            state = flowResult.state,
+                            type =
+                                when (flowResult.type) {
+                                    FlowResultErrorType.Generic -> Type.Generic
+                                    FlowResultErrorType.OAuth -> Type.OAuth
+                                    FlowResultErrorType.Validation -> Type.Validation
+                                    FlowResultErrorType.TemporalValidation ->
+                                        Type.TemporalValidation
+                                },
+                            message = flowResult.message,
+                            code = flowResult.code,
+                        )
 
-                    snapshot.ephemeralFlowState != null -> Result.Processing(
-                        state = snapshot.ephemeralFlowState.state,
-                    )
+                    snapshot.ephemeralFlowState != null ->
+                        Result.Processing(state = snapshot.ephemeralFlowState.state)
 
                     else -> Result.Undefined
                 }
@@ -103,29 +103,21 @@ public object AuthFlowResultProvider {
             .distinctUntilChanged()
 
     /**
-     * Confirms that the result has been consumed and displayed to the user.
-     * Resets the internal result state so that it does not reappear.
+     * Confirms that the result has been consumed and displayed to the user. Resets the internal
+     * result state so that it does not reappear.
      *
      * @see confirmAuthFlowResultConsumed
      */
     public suspend fun confirmConsumed(client: Client) {
-        (client as InternalClient).updateSnapshot {
-            copy(
-                flowResult = null,
-            )
-        }
+        (client as InternalClient).updateSnapshot { copy(flowResult = null) }
     }
 }
 
-/**
- * @see AuthFlowResultProvider.forClient
- */
+/** @see AuthFlowResultProvider.forClient */
 public val Client.authFlowResult: Flow<AuthFlowResultProvider.Result>
     get() = AuthFlowResultProvider.forClient(this)
 
-/**
- * @see AuthFlowResultProvider.confirmConsumed
- */
+/** @see AuthFlowResultProvider.confirmConsumed */
 public suspend fun Client.confirmAuthFlowResultConsumed() {
     AuthFlowResultProvider.confirmConsumed(this)
 }

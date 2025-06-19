@@ -15,12 +15,12 @@
  */
 package dev.lokksmith.client.jwt
 
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.boolean
-import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.jsonPrimitive
 
 class JwtDecoderTest {
 
@@ -29,7 +29,9 @@ class JwtDecoderTest {
     @Test
     fun `decode should decode encoded raw string into JWT`() {
         val jwt =
-            decoder.decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
+            decoder.decode(
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+            )
 
         // Header
         assertEquals("HS256", jwt.header.alg)
@@ -44,7 +46,9 @@ class JwtDecoderTest {
     @Test
     fun `decode should decode an unsecured JWT`() {
         val jwt =
-            decoder.decode("eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTczNjI5MjEyNH0.")
+            decoder.decode(
+                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTczNjI5MjEyNH0."
+            )
 
         // Header
         assertEquals("none", jwt.header.alg)
@@ -59,7 +63,9 @@ class JwtDecoderTest {
     @Test
     fun `decode should decode a JWT with a single 'aud' value`() {
         val jwt =
-            decoder.decode("eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjoiYXVkMSJ9.")
+            decoder.decode(
+                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjoiYXVkMSJ9."
+            )
 
         assertEquals(listOf("aud1"), jwt.payload.aud)
     }
@@ -67,7 +73,9 @@ class JwtDecoderTest {
     @Test
     fun `decode should decode a JWT with multiple 'aud' values`() {
         val jwt =
-            decoder.decode("eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjpbImF1ZDEiLCJhdWQyIl19.")
+            decoder.decode(
+                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjpbImF1ZDEiLCJhdWQyIl19."
+            )
 
         assertEquals(listOf("aud1", "aud2"), jwt.payload.aud)
     }

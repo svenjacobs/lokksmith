@@ -26,14 +26,12 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 /**
  * Factory for generating PKCE (Proof Key for Code Exchange) code challenges.
  *
- * This class creates a code challenge from a code verifier using the specified
- * cryptographic hash algorithm, as required by the OAuth 2.0 PKCE extension.
+ * This class creates a code challenge from a code verifier using the specified cryptographic hash
+ * algorithm, as required by the OAuth 2.0 PKCE extension.
  *
  * @property algorithmId The cryptographic algorithm identifier used for hashing the code verifier.
  */
-internal class CodeChallengeFactory(
-    private val algorithmId: CryptographyAlgorithmId<Digest>,
-) {
+internal class CodeChallengeFactory(private val algorithmId: CryptographyAlgorithmId<Digest>) {
 
     /**
      * Generates a Base64 URL-safe encoded code challenge for the given [codeVerifier].
@@ -48,9 +46,7 @@ internal class CodeChallengeFactory(
     suspend operator fun invoke(codeVerifier: String): String {
         val hasher = CryptographyProvider.Companion.Default.get(algorithmId).hasher()
         val hash = hasher.hash(codeVerifier.encodeToByteArray())
-        return Base64.Default.UrlSafe
-            .withPadding(Base64.PaddingOption.ABSENT)
-            .encode(hash)
+        return Base64.Default.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(hash)
     }
 
     companion object {
@@ -62,9 +58,10 @@ internal class CodeChallengeFactory(
          * @return A [CodeChallengeFactory] configured for the given method.
          */
         fun forMethod(method: CodeChallengeMethod): CodeChallengeFactory {
-            val id = when (method) {
-                CodeChallengeMethod.SHA256 -> SHA256
-            }
+            val id =
+                when (method) {
+                    CodeChallengeMethod.SHA256 -> SHA256
+                }
             return CodeChallengeFactory(id)
         }
     }

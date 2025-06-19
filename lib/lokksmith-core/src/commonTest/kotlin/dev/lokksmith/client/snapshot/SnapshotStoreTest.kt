@@ -19,6 +19,11 @@ import dev.lokksmith.client.Client
 import dev.lokksmith.client.Key
 import dev.lokksmith.client.asId
 import dev.lokksmith.client.asKey
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,11 +32,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class SnapshotStoreTest {
 
@@ -41,10 +41,7 @@ class SnapshotStoreTest {
     @BeforeTest
     fun before() {
         persistence = PersistenceFake()
-        store = SnapshotStoreImpl(
-            persistence = persistence,
-            serializer = Json,
-        )
+        store = SnapshotStoreImpl(persistence = persistence, serializer = Json)
     }
 
     @Test
@@ -66,9 +63,7 @@ class SnapshotStoreTest {
         assertEquals(null, store.observe(key).firstOrNull())
 
         val snapshot = newSnapshot(key)
-        persistence.memory.value = mutableMapOf(
-            key.value to Json.encodeToString(snapshot),
-        )
+        persistence.memory.value = mutableMapOf(key.value to Json.encodeToString(snapshot))
 
         assertEquals(snapshot, store.observe(key).firstOrNull())
     }
@@ -81,9 +76,7 @@ class SnapshotStoreTest {
         assertEquals(null, store.getForState(state))
 
         val snapshot = newSnapshot(key, state)
-        persistence.memory.value = mutableMapOf(
-            key.value to Json.encodeToString(snapshot),
-        )
+        persistence.memory.value = mutableMapOf(key.value to Json.encodeToString(snapshot))
 
         assertEquals(snapshot, store.getForState(state))
     }
@@ -127,62 +120,48 @@ class SnapshotStoreTest {
     }
 }
 
-class PersistenceFake(
-    initialData: Map<String, String> = emptyMap(),
-) : InternalSnapshotStore.Persistence {
+class PersistenceFake(initialData: Map<String, String> = emptyMap()) :
+    InternalSnapshotStore.Persistence {
 
     val memory = MutableStateFlow(initialData)
 
-    override val data: Flow<Map<String, String>> =
-        memory.asStateFlow()
+    override val data: Flow<Map<String, String>> = memory.asStateFlow()
 
-    override fun observe(key: Key): Flow<String?> =
-        memory.map { it[key.value] }
+    override fun observe(key: Key): Flow<String?> = memory.map { it[key.value] }
 
-    override suspend fun get(key: Key): String? =
-        observe(key).firstOrNull()
+    override suspend fun get(key: Key): String? = observe(key).firstOrNull()
 
     override suspend fun set(key: Key, snapshot: String) {
-        memory.update { data ->
-            data.toMutableMap().apply {
-                set(key.value, snapshot)
-            }
-        }
+        memory.update { data -> data.toMutableMap().apply { set(key.value, snapshot) } }
     }
 
     override suspend fun delete(key: Key) {
-        memory.update { data ->
-            data.toMutableMap().apply {
-                remove(key.value)
-            }
-        }
+        memory.update { data -> data.toMutableMap().apply { remove(key.value) } }
     }
 
-    override suspend fun contains(key: Key): Boolean =
-        memory.value.contains(key.value)
+    override suspend fun contains(key: Key): Boolean = memory.value.contains(key.value)
 }
 
-private fun newSnapshot(
-    key: Key,
-    state: String? = null,
-): Snapshot {
-    val ephemeralFlowState = state?.let {
-        Snapshot.EphemeralAuthorizationCodeFlowState(
-            state = state,
-            redirectUri = "redirectUri",
-            codeVerifier = null,
-            responseUri = null,
-        )
-    }
+private fun newSnapshot(key: Key, state: String? = null): Snapshot {
+    val ephemeralFlowState =
+        state?.let {
+            Snapshot.EphemeralAuthorizationCodeFlowState(
+                state = state,
+                redirectUri = "redirectUri",
+                codeVerifier = null,
+                responseUri = null,
+            )
+        }
 
     return Snapshot(
         key = key,
         id = key.value.asId(),
-        metadata = Client.Metadata(
-            issuer = "issuer",
-            authorizationEndpoint = "authorizationEndpoint",
-            tokenEndpoint = "tokenEndpoint",
-        ),
+        metadata =
+            Client.Metadata(
+                issuer = "issuer",
+                authorizationEndpoint = "authorizationEndpoint",
+                tokenEndpoint = "tokenEndpoint",
+            ),
         options = Client.Options(),
         ephemeralFlowState = ephemeralFlowState,
     )

@@ -17,7 +17,8 @@ package dev.lokksmith.client.request
 
 import dev.lokksmith.LokksmithException
 
-public open class ResponseException internal constructor(
+public open class ResponseException
+internal constructor(
     message: String? = null,
     cause: Throwable? = null,
     public val reason: Reason? = null,

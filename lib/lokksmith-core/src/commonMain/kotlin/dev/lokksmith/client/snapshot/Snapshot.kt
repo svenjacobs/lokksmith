@@ -24,9 +24,7 @@ import kotlinx.serialization.Serializable
 
 internal const val CURRENT_SCHEMA_VERSION = 2
 
-/**
- * A [Snapshot] represents the persistable state of a [Client].
- */
+/** A [Snapshot] represents the persistable state of a [Client]. */
 @Serializable
 public data class Snapshot(
     val schemaVersion: Int = CURRENT_SCHEMA_VERSION,
@@ -45,52 +43,44 @@ public data class Snapshot(
     /**
      * Holds the result of the most recently executed auth flow.
      *
-     * This property is particularly important when flow initiation and response handling are decoupled,
-     * as is common on mobile devices and with certain UI frameworks. By persisting the flow result,
-     * the client can reliably track whether the last flow completed successfully or encountered an error,
-     * even if the app process is restarted or the UI is recreated.
+     * This property is particularly important when flow initiation and response handling are
+     * decoupled, as is common on mobile devices and with certain UI frameworks. By persisting the
+     * flow result, the client can reliably track whether the last flow completed successfully or
+     * encountered an error, even if the app process is restarted or the UI is recreated.
      *
      * @see dev.lokksmith.client.request.flow.AuthFlowResultProvider
      */
     val flowResult: FlowResult? = null,
 
-    /**
-     * Holds temporary data that is required to fulfill an auth request.
-     */
+    /** Holds temporary data that is required to fulfill an auth request. */
     val ephemeralFlowState: EphemeralFlowState? = null,
 
-    /**
-     * Flag that denotes if the client was migrated via [dev.lokksmith.client.Migration].
-     */
+    /** Flag that denotes if the client was migrated via [dev.lokksmith.client.Migration]. */
     val migrated: Boolean = false,
 ) {
 
     @Serializable
     public sealed interface FlowResult {
 
-        @Poko
-        @Serializable
-        public class Success(
-            public val state: String,
-        ) : FlowResult
+        @Poko @Serializable public class Success(public val state: String) : FlowResult
 
-        @Poko
-        @Serializable
-        public class Cancelled(
-            public val state: String,
-        ) : FlowResult
+        @Poko @Serializable public class Cancelled(public val state: String) : FlowResult
 
         @Poko
         @Serializable
         public class Error(
             public val state: String,
-            @SerialName("errorType")
-            public val type: Type,
+            @SerialName("errorType") public val type: Type,
             public val message: String?,
             public val code: String? = null,
         ) : FlowResult {
 
-            public enum class Type { Generic, OAuth, Validation, TemporalValidation }
+            public enum class Type {
+                Generic,
+                OAuth,
+                Validation,
+                TemporalValidation,
+            }
         }
     }
 

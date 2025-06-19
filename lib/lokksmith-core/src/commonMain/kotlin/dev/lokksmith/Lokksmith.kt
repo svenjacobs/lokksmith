@@ -31,10 +31,9 @@ import kotlinx.coroutines.cancel
 /**
  * Manages persistable [Client] instances.
  *
- * Clients are identified by a unique internal key, distinct from the OAuth client ID.
- * This design supports multiple environment-specific configurations (e.g. production and testing)
- * that reference the same OAuth client ID while remaining independently addressable within the
- * system.
+ * Clients are identified by a unique internal key, distinct from the OAuth client ID. This design
+ * supports multiple environment-specific configurations (e.g. production and testing) that
+ * reference the same OAuth client ID while remaining independently addressable within the system.
  *
  * ## Singleton
  *
@@ -52,29 +51,28 @@ import kotlinx.coroutines.cancel
  * @see exists
  * @see delete
  */
-public class Lokksmith internal constructor(
+public class Lokksmith
+internal constructor(
     /**
      * Internal dependency container for this [Lokksmith] instance.
      *
-     * Provides access to core services such as persistence, HTTP client, serialization,
-     * and coroutine scope. This property is intended for internal use and is only public
-     * to allow access from other Lokksmith modules. Application code must not interact
-     * with the container directly.
+     * Provides access to core services such as persistence, HTTP client, serialization, and
+     * coroutine scope. This property is intended for internal use and is only public to allow
+     * access from other Lokksmith modules. Application code must not interact with the container
+     * directly.
      */
-    public val container: Container,
+    public val container: Container
 ) {
 
     internal constructor(
         platformContext: PlatformContext,
         options: Options = Options(),
-    ) : this(
-        container = ContainerImpl(platformContext, options)
-    )
+    ) : this(container = ContainerImpl(platformContext, options))
 
     public data class Options(
         /**
-         * Name of [androidx.datastore.core.DataStore] file for client state persistence.
-         * Must be unique per [Lokksmith] instance.
+         * Name of [androidx.datastore.core.DataStore] file for client state persistence. Must be
+         * unique per [Lokksmith] instance.
          */
         val persistenceFileBaseName: String = "lokksmith_clients",
 
@@ -82,9 +80,8 @@ public class Lokksmith internal constructor(
          * Coroutine scope that is used to launch various coroutines in the context of this
          * [Lokksmith] instance.
          */
-        val coroutineScope: CoroutineScope = CoroutineScope(
-            Dispatchers.Default + SupervisorJob() + CoroutineName("Lokksmith")
-        ),
+        val coroutineScope: CoroutineScope =
+            CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineName("Lokksmith")),
 
         /**
          * The User-Agent string sent with HTTP requests.
@@ -105,7 +102,9 @@ public class Lokksmith internal constructor(
         val httpClientEngine: HttpClientEngine = platformHttpClientEngine,
     ) {
         init {
-            require(persistenceFileBaseName.isNotBlank()) { "persistenceFileBaseName must not be blank" }
+            require(persistenceFileBaseName.isNotBlank()) {
+                "persistenceFileBaseName must not be blank"
+            }
         }
     }
 
@@ -119,16 +118,17 @@ public class Lokksmith internal constructor(
         if (!exists(key)) return null
         val key = key.asKey()
         return ClientImpl.create(
-            key = key,
-            coroutineScope = container.coroutineScope,
-            snapshotStore = container.snapshotStore,
-            provider = container.clientProviderFactory(),
-        ).migrate()
+                key = key,
+                coroutineScope = container.coroutineScope,
+                snapshotStore = container.snapshotStore,
+                provider = container.clientProviderFactory(),
+            )
+            .migrate()
     }
 
     /**
-     * Returns the persisted client with the given [key], or creates a new instance using
-     * [builder] if one does not exist.
+     * Returns the persisted client with the given [key], or creates a new instance using [builder]
+     * if one does not exist.
      *
      * Calling [getOrCreate] multiple times with the same key returns new [Client] instances that
      * share synchronized state. However, it's recommended to use a single instance per unique key.
@@ -137,20 +137,14 @@ public class Lokksmith internal constructor(
      * created clients. For adjusting the configuration of an existing client see [Client.options].
      *
      * @param key Key of new client
-     * @param options Options for configuring the behaviour of the client **if** the client was newly
-     *                created
+     * @param options Options for configuring the behaviour of the client **if** the client was
+     *   newly created
      */
-    public suspend fun getOrCreate(
-        key: String,
-        builder: CreateContext.() -> Unit,
-    ): Client =
+    public suspend fun getOrCreate(key: String, builder: CreateContext.() -> Unit): Client =
         get(key) ?: create(key, builder)
 
-    /**
-     * Returns `true` if a client for the given [key] exists.
-     */
-    public suspend fun exists(key: String): Boolean =
-        container.snapshotStore.exists(key.asKey())
+    /** Returns `true` if a client for the given [key] exists. */
+    public suspend fun exists(key: String): Boolean = container.snapshotStore.exists(key.asKey())
 
     /**
      * Creates a new client with the given [key] either by static configuration or discovery using
@@ -158,32 +152,26 @@ public class Lokksmith internal constructor(
      *
      * @param key Key of new client
      */
-    public suspend fun create(
-        key: String,
-        builder: CreateContext.() -> Unit,
-    ): Client {
+    public suspend fun create(key: String, builder: CreateContext.() -> Unit): Client {
         require(!exists(key)) { "client with key \"$key\" already exists" }
 
-        val context = CreateContext().apply {
-            builder()
-            validate()
-        }
+        val context =
+            CreateContext().apply {
+                builder()
+                validate()
+            }
 
         val key = key.asKey()
         val id = context.props.id!!.asId() // id cannot be null at this point
-        val metadata = context.props.discoveryUrl?.let { url ->
-            container.metadataDiscoveryRequest(url)
-        } ?: context.props.metadata!! // metadata cannot be null at this point
+        val metadata =
+            context.props.discoveryUrl?.let { url -> container.metadataDiscoveryRequest(url) }
+                ?: context.props.metadata!! // metadata cannot be null at this point
 
         // Create initial snapshot
         container.snapshotStore.set(
             key = key,
-            snapshot = Snapshot(
-                key = key,
-                id = id,
-                metadata = metadata,
-                options = context.props.options,
-            )
+            snapshot =
+                Snapshot(key = key, id = id, metadata = metadata, options = context.props.options),
         )
 
         return ClientImpl.create(
@@ -200,8 +188,7 @@ public class Lokksmith internal constructor(
      * Don't use a [Client] instance for given key after it has been deleted. Doing so might result
      * in undefined and erroneous behaviour.
      */
-    public suspend fun delete(key: String): Boolean =
-        container.snapshotStore.delete(key.asKey())
+    public suspend fun delete(key: String): Boolean = container.snapshotStore.delete(key.asKey())
 
     /**
      * Releases all resources held by this Lokksmith instance and performs necessary cleanup.
@@ -218,8 +205,5 @@ public class Lokksmith internal constructor(
     }
 }
 
-/**
- * @see Lokksmith.Options.httpClientEngine
- */
+/** @see Lokksmith.Options.httpClientEngine */
 internal expect val platformHttpClientEngine: HttpClientEngine
-

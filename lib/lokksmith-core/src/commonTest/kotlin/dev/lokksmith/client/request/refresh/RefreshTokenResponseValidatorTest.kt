@@ -21,12 +21,8 @@ import dev.lokksmith.client.request.token.AbstractTokenResponseValidatorTest
 import kotlinx.serialization.json.Json
 
 @Suppress("unused")
-class RefreshTokenResponseValidatorTest :
-    AbstractTokenResponseValidatorTest<IdToken?>() {
+class RefreshTokenResponseValidatorTest : AbstractTokenResponseValidatorTest<IdToken?>() {
 
     override fun newValidator(client: InternalClient) =
-        RefreshTokenResponseValidator(
-            serializer = Json,
-            client = client,
-        )
+        RefreshTokenResponseValidator(serializer = Json, client = client)
 }

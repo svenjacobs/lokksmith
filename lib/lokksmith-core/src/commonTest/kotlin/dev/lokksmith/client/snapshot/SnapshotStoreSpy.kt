@@ -18,15 +18,19 @@ package dev.lokksmith.client.snapshot
 import dev.lokksmith.client.Key
 import kotlinx.coroutines.flow.Flow
 
-internal class SnapshotStoreSpy(
-    internal val subject: InternalSnapshotStore,
-) : InternalSnapshotStore by subject {
+internal class SnapshotStoreSpy(internal val subject: InternalSnapshotStore) :
+    InternalSnapshotStore by subject {
 
     data class ObserveCall(val key: Key)
+
     data class GetForStateCall(val state: String)
+
     data class SetCall(val key: Key, val snapshot: Snapshot)
+
     data class InternalSetCall(val key: Key, val snapshot: Snapshot)
+
     data class DeleteCall(val key: Key)
+
     data class ExistsCall(val key: Key)
 
     val observeCalls = mutableListOf<ObserveCall>()
@@ -46,18 +50,12 @@ internal class SnapshotStoreSpy(
         return subject.getForState(state)
     }
 
-    override suspend fun set(
-        key: Key,
-        snapshot: Snapshot
-    ): Snapshot {
+    override suspend fun set(key: Key, snapshot: Snapshot): Snapshot {
         setCalls.add(SetCall(key, snapshot))
         return subject.set(key, snapshot)
     }
 
-    override suspend fun internalSet(
-        key: Key,
-        snapshot: Snapshot
-    ): Snapshot {
+    override suspend fun internalSet(key: Key, snapshot: Snapshot): Snapshot {
         internalSetCalls.add(InternalSetCall(key, snapshot))
         return subject.internalSet(key, snapshot)
     }

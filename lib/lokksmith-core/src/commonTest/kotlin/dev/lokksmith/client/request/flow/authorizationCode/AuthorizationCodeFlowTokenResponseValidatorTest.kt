@@ -25,8 +25,5 @@ class AuthorizationCodeFlowTokenResponseValidatorTest :
     AbstractTokenResponseValidatorTest<IdToken>() {
 
     override fun newValidator(client: InternalClient) =
-        AuthorizationCodeFlowTokenResponseValidator(
-            serializer = Json,
-            client = client,
-        )
+        AuthorizationCodeFlowTokenResponseValidator(serializer = Json, client = client)
 }

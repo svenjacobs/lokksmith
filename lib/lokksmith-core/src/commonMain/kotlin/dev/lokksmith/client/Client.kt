@@ -71,11 +71,10 @@ import kotlinx.serialization.json.JsonElement
  */
 public interface Client {
 
-    // TODO: Should a Client have an option to proactively and automatically refresh tokens in the background?
+    // TODO: Should a Client have an option to proactively and automatically refresh tokens in the
+    // background?
 
-    /**
-     * OAuth / OIDC metadata
-     */
+    /** OAuth / OIDC metadata */
     @Serializable
     public data class Metadata(
         val issuer: String,
@@ -86,9 +85,7 @@ public interface Client {
         val userInfoEndpoint: String? = null,
     )
 
-    /**
-     * Options to configure the behaviour of this client.
-     */
+    /** Options to configure the behaviour of this client. */
     @Serializable
     public data class Options(
         /**
@@ -96,11 +93,11 @@ public interface Client {
          * such as `exp` (expiration), `nbf` (not before), and `iat` (issued at).
          *
          * This leeway is applied in both positive and negative directions to account for small
-         * differences between the clocks of the authorization server and the client device.
-         * It helps prevent valid tokens from being incorrectly rejected due to minor clock drift.
+         * differences between the clocks of the authorization server and the client device. It
+         * helps prevent valid tokens from being incorrectly rejected due to minor clock drift.
          *
-         * All time-based validation is performed in UTC, so daylight saving time (DST) changes
-         * do not affect this value.
+         * All time-based validation is performed in UTC, so daylight saving time (DST) changes do
+         * not affect this value.
          *
          * Commonly referred to as "clock skew" or "leeway" in OAuth 2.0 and OpenID Connect
          * specifications.
@@ -108,7 +105,9 @@ public interface Client {
          * Setting this to a very large value will effectively bypass token validity and expiration
          * checks, which is highly discouraged.
          *
-         * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">OpenID Connect Core: ID Token Validation</a>
+         * @see <a
+         *   href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">OpenID
+         *   Connect Core: ID Token Validation</a>
          * @see preemptiveRefreshSeconds
          */
         val leewaySeconds: Int = 10,
@@ -135,7 +134,9 @@ public interface Client {
     ) {
         init {
             require(leewaySeconds >= 0) { "leewaySeconds must be a positive value" }
-            require(preemptiveRefreshSeconds >= 0) { "preemptiveRefreshSeconds must be a positive value" }
+            require(preemptiveRefreshSeconds >= 0) {
+                "preemptiveRefreshSeconds must be a positive value"
+            }
         }
     }
 
@@ -151,16 +152,12 @@ public interface Client {
         }
 
         @Serializable
-        public data class AccessToken(
-            override val token: String,
-            override val expiresAt: Long?,
-        ) : Token
+        public data class AccessToken(override val token: String, override val expiresAt: Long?) :
+            Token
 
         @Serializable
-        public data class RefreshToken(
-            override val token: String,
-            override val expiresAt: Long?,
-        ) : Token
+        public data class RefreshToken(override val token: String, override val expiresAt: Long?) :
+            Token
 
         /**
          * OpenID Connect ID Token
@@ -193,14 +190,10 @@ public interface Client {
         )
     }
 
-    /**
-     * Unique key as per [Lokksmith] instance.
-     */
+    /** Unique key as per [Lokksmith] instance. */
     public val key: Key
 
-    /**
-     * OAuth 2.0 client ID.
-     */
+    /** OAuth 2.0 client ID. */
     public val id: Id
 
     /**
@@ -209,8 +202,8 @@ public interface Client {
      * Only update the metadata of an existing client if it still points to the same OpenID
      * provider. For example, this is appropriate when the provider's domain name changes but the
      * underlying service remains the same. Changing the metadata to reference a completely
-     * different provider will almost certainly invalidate all existing tokens. In such cases,
-     * use [Lokksmith.create] to register a new client instead.
+     * different provider will almost certainly invalidate all existing tokens. In such cases, use
+     * [Lokksmith.create] to register a new client instead.
      *
      * @see Metadata
      * @see [Lokksmith.getOrCreate]
@@ -241,13 +234,14 @@ public interface Client {
      * provided by the OpenID provider.
      *
      * @return The updated [Tokens] instance containing the new tokens.
-     *
-     * @throws IllegalStateException if this client is unauthenticated and does not yet contain any tokens
+     * @throws IllegalStateException if this client is unauthenticated and does not yet contain any
+     *   tokens
      * @throws dev.lokksmith.client.request.RequestException if for example a network error occurred
      * @throws dev.lokksmith.client.request.ResponseException if the response is invalid
-     * @throws dev.lokksmith.client.request.OAuthResponseException if the OAuth provider returned an error
-     * @throws dev.lokksmith.client.request.token.TokenValidationException if the tokens could not be validated
-     *
+     * @throws dev.lokksmith.client.request.OAuthResponseException if the OAuth provider returned an
+     *   error
+     * @throws dev.lokksmith.client.request.token.TokenValidationException if the tokens could not
+     *   be validated
      * @see runWithTokens
      */
     public suspend fun refresh(): Tokens
@@ -262,8 +256,7 @@ public interface Client {
      * OpenID provider. If you need to end the session with the provider, use [endSessionFlow].
      *
      * @return `true` if tokens were present and removed; `false` if the client did not contain any
-     *         tokens.
-     *
+     *   tokens.
      * @see authorizationCodeFlow
      * @see endSessionFlow
      */
@@ -273,19 +266,20 @@ public interface Client {
      * Executes the given [body] lambda with fresh and valid [Tokens], refreshing them only when
      * necessary.
      *
-     * This method ensures that the tokens provided to [body] are up-to-date and not expired.
-     * If the current tokens are expired or about to expire, a refresh operation is performed
-     * before invoking [body]. The lambda receives the valid [Tokens] instance for use in
-     * authenticated requests.
+     * This method ensures that the tokens provided to [body] are up-to-date and not expired. If the
+     * current tokens are expired or about to expire, a refresh operation is performed before
+     * invoking [body]. The lambda receives the valid [Tokens] instance for use in authenticated
+     * requests.
      *
      * @param body Lambda to execute with valid [Tokens].
-     *
-     * @throws IllegalStateException if this client is unauthenticated and does not yet contain any tokens
+     * @throws IllegalStateException if this client is unauthenticated and does not yet contain any
+     *   tokens
      * @throws dev.lokksmith.client.request.RequestException if for example a network error occurred
      * @throws dev.lokksmith.client.request.ResponseException if the response is invalid
-     * @throws dev.lokksmith.client.request.OAuthResponseException if the OAuth provider returned an error
-     * @throws dev.lokksmith.client.request.token.TokenValidationException if the tokens could not be validated
-     *
+     * @throws dev.lokksmith.client.request.OAuthResponseException if the OAuth provider returned an
+     *   error
+     * @throws dev.lokksmith.client.request.token.TokenValidationException if the tokens could not
+     *   be validated
      * @see dev.lokksmith.client.usecase.RunWithTokensOrResetUseCase
      */
     public suspend fun runWithTokens(body: suspend (Tokens) -> Unit)
@@ -298,8 +292,8 @@ public interface Client {
     public fun authorizationCodeFlow(request: AuthorizationCodeFlow.Request): AuthFlow
 
     /**
-     * Returns an [EndSessionFlow] to initiate the End Session Flow.
-     * Returns `null` if this client doesn't support this flow.
+     * Returns an [EndSessionFlow] to initiate the End Session Flow. Returns `null` if this client
+     * doesn't support this flow.
      *
      * @see EndSessionFlow
      */
@@ -309,9 +303,9 @@ public interface Client {
      * Checks whether the provided token is expired, using the client's current expiration and
      * refresh policy.
      *
+     * @return `true` if the token is expired or should be refreshed; `false` otherwise.
      * @see runWithTokens
      * @see refresh
-     * @return `true` if the token is expired or should be refreshed; `false` otherwise.
      */
     public fun isExpired(token: Tokens.Token): Boolean
 
@@ -319,9 +313,9 @@ public interface Client {
      * Checks whether the provided token is expired, using the client's current expiration and
      * refresh policy.
      *
+     * @return `true` if the token is expired or should be refreshed; `false` otherwise.
      * @see runWithTokens
      * @see refresh
-     * @return `true` if the token is expired or should be refreshed; `false` otherwise.
      */
     public fun isExpired(token: Tokens.IdToken): Boolean
 
@@ -356,8 +350,8 @@ public interface InternalClient : Client {
     }
 
     /**
-     * Provides various internal dependencies.
-     * Particularly useful in unit tests when replacing dependencies with fakes.
+     * Provides various internal dependencies. Particularly useful in unit tests when replacing
+     * dependencies with fakes.
      */
     public interface Provider {
 
@@ -365,15 +359,11 @@ public interface InternalClient : Client {
 
         public val refreshTokenRequest: (client: InternalClient) -> RefreshTokenRequest
 
-        public val authorizationCodeFlow: (
-            client: InternalClient,
-            request: AuthorizationCodeFlow.Request,
-        ) -> AuthFlow
+        public val authorizationCodeFlow:
+            (client: InternalClient, request: AuthorizationCodeFlow.Request) -> AuthFlow
 
-        public val endSessionFlow: (
-            client: InternalClient,
-            request: EndSessionFlow.Request,
-        ) -> AuthFlow?
+        public val endSessionFlow:
+            (client: InternalClient, request: EndSessionFlow.Request) -> AuthFlow?
     }
 
     public val provider: Provider
@@ -387,7 +377,8 @@ public interface InternalClient : Client {
     public suspend fun cancelPendingFlow()
 }
 
-internal class ClientImpl private constructor(
+internal class ClientImpl
+private constructor(
     override val key: Key,
     override val tokens: StateFlow<Tokens?>,
     override val provider: Provider,
@@ -406,20 +397,20 @@ internal class ClientImpl private constructor(
                 serializer = serializer,
             )
         },
-        override val authorizationCodeFlow: (InternalClient, AuthorizationCodeFlow.Request) -> AuthFlow = { client, request ->
-            AuthorizationCodeFlow.create(
-                request = request,
-                client = client,
-                httpClient = httpClient,
-                serializer = serializer,
-            )
-        },
-        override val endSessionFlow: (InternalClient, EndSessionFlow.Request) -> AuthFlow? = { client, request ->
-            EndSessionFlow.createOrNull(
-                client = client,
-                request = request,
-            )
-        },
+        override val authorizationCodeFlow:
+            (InternalClient, AuthorizationCodeFlow.Request) -> AuthFlow =
+            { client, request ->
+                AuthorizationCodeFlow.create(
+                    request = request,
+                    client = client,
+                    httpClient = httpClient,
+                    serializer = serializer,
+                )
+            },
+        override val endSessionFlow: (InternalClient, EndSessionFlow.Request) -> AuthFlow? =
+            { client, request ->
+                EndSessionFlow.createOrNull(client = client, request = request)
+            },
     ) : Provider
 
     override val snapshots: StateFlow<Snapshot>
@@ -431,40 +422,33 @@ internal class ClientImpl private constructor(
     override var metadata: Client.Metadata
         get() = snapshots.value.metadata
         set(value) {
-            coroutineScope.launch {
-                updateSnapshot {
-                    copy(metadata = value)
-                }
-            }
+            coroutineScope.launch { updateSnapshot { copy(metadata = value) } }
         }
 
     override var options: Client.Options
         get() = snapshots.value.options
         set(value) {
-            coroutineScope.launch {
-                updateSnapshot {
-                    copy(options = value)
-                }
-            }
+            coroutineScope.launch { updateSnapshot { copy(options = value) } }
         }
 
     override suspend fun refresh(): Tokens {
         val tokens =
             checkNotNull(snapshots.value.tokens) { "Client not authenticated (tokens are null)" }
-        check(tokens.accessToken.expiresAt == null || tokens.refreshToken != null) { "access token has expiration but refresh token is missing" }
+        check(tokens.accessToken.expiresAt == null || tokens.refreshToken != null) {
+            "access token has expiration but refresh token is missing"
+        }
 
         val refreshTokenRequest = provider.refreshTokenRequest(this)
         val response = refreshTokenRequest()
 
-        val refreshedTokens = Tokens(
-            accessToken = response.accessToken,
-            refreshToken = response.refreshToken,
-            idToken = response.idToken ?: tokens.idToken,
-        )
+        val refreshedTokens =
+            Tokens(
+                accessToken = response.accessToken,
+                refreshToken = response.refreshToken,
+                idToken = response.idToken ?: tokens.idToken,
+            )
 
-        updateSnapshot {
-            copy(tokens = refreshedTokens)
-        }
+        updateSnapshot { copy(tokens = refreshedTokens) }
 
         return refreshedTokens
     }
@@ -472,15 +456,16 @@ internal class ClientImpl private constructor(
     override suspend fun runWithTokens(body: suspend (Tokens) -> Unit) {
         val currentTokens =
             checkNotNull(snapshots.value.tokens) { "Client not authenticated (tokens are null)" }
-        val validTokens = when {
-            currentTokens.areExpired(
-                preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-                leewaySeconds = options.leewaySeconds,
-                instantProvider = provider.instantProvider,
-            ) -> refresh()
+        val validTokens =
+            when {
+                currentTokens.areExpired(
+                    preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
+                    leewaySeconds = options.leewaySeconds,
+                    instantProvider = provider.instantProvider,
+                ) -> refresh()
 
-            else -> currentTokens
-        }
+                else -> currentTokens
+            }
 
         body(validTokens)
     }
@@ -489,12 +474,7 @@ internal class ClientImpl private constructor(
         if (snapshots.value.tokens == null) return false
 
         updateSnapshot {
-            copy(
-                tokens = null,
-                nonce = null,
-                flowResult = null,
-                ephemeralFlowState = null,
-            )
+            copy(tokens = null, nonce = null, flowResult = null, ephemeralFlowState = null)
         }
 
         return true
@@ -506,32 +486,35 @@ internal class ClientImpl private constructor(
     override fun endSessionFlow(request: EndSessionFlow.Request) =
         provider.endSessionFlow(this, request)
 
-    override fun isExpired(token: Tokens.Token) = token.isExpired(
-        preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-        leewaySeconds = options.leewaySeconds,
-        instantProvider = provider.instantProvider,
-    )
+    override fun isExpired(token: Tokens.Token) =
+        token.isExpired(
+            preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
+            leewaySeconds = options.leewaySeconds,
+            instantProvider = provider.instantProvider,
+        )
 
-    override fun isExpired(token: Tokens.IdToken) = token.isExpired(
-        preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-        leewaySeconds = options.leewaySeconds,
-        instantProvider = provider.instantProvider,
-    )
+    override fun isExpired(token: Tokens.IdToken) =
+        token.isExpired(
+            preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
+            leewaySeconds = options.leewaySeconds,
+            instantProvider = provider.instantProvider,
+        )
 
     override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) =
         snapshotContract.updateSnapshot(body)
 
     override suspend fun updatePendingFlowResponse(responseUri: String) {
         updateSnapshot {
-            val updatedFlowState = when (val state = ephemeralFlowState) {
-                is Snapshot.EphemeralAuthorizationCodeFlowState -> state.copy(responseUri = responseUri)
-                is Snapshot.EphemeralEndSessionFlowState -> state.copy(responseUri = responseUri)
-                null -> throw IllegalStateException("ephemeralFlowState is null")
-            }
+            val updatedFlowState =
+                when (val state = ephemeralFlowState) {
+                    is Snapshot.EphemeralAuthorizationCodeFlowState ->
+                        state.copy(responseUri = responseUri)
+                    is Snapshot.EphemeralEndSessionFlowState ->
+                        state.copy(responseUri = responseUri)
+                    null -> throw IllegalStateException("ephemeralFlowState is null")
+                }
 
-            copy(
-                ephemeralFlowState = updatedFlowState,
-            )
+            copy(ephemeralFlowState = updatedFlowState)
         }
     }
 
@@ -539,10 +522,12 @@ internal class ClientImpl private constructor(
         val ephemeralFlowState =
             checkNotNull(snapshots.value.ephemeralFlowState) { "ephemeral flow state is null" }
 
-        val cancellation = when (ephemeralFlowState) {
-            is Snapshot.EphemeralAuthorizationCodeFlowState -> ::AuthorizationCodeFlowCancellation
-            is Snapshot.EphemeralEndSessionFlowState -> ::EndSessionFlowCancellation
-        }(this)
+        val cancellation =
+            when (ephemeralFlowState) {
+                is Snapshot.EphemeralAuthorizationCodeFlowState ->
+                    ::AuthorizationCodeFlowCancellation
+                is Snapshot.EphemeralEndSessionFlowState -> ::EndSessionFlowCancellation
+            }(this)
 
         cancellation.cancel(ephemeralFlowState.state)
     }
@@ -566,16 +551,18 @@ internal class ClientImpl private constructor(
             provider: Provider,
         ): InternalClient {
             // Create a "child" CoroutineScope that can be cancelled individually per client
-            val clientCoroutineScope = CoroutineScope(
-                coroutineScope.coroutineContext
-                    + Job(coroutineScope.coroutineContext.job)
-                    + CoroutineName("LokksmithClient(${key.value})")
-            )
+            val clientCoroutineScope =
+                CoroutineScope(
+                    coroutineScope.coroutineContext +
+                        Job(coroutineScope.coroutineContext.job) +
+                        CoroutineName("LokksmithClient(${key.value})")
+                )
 
-            val snapshotContract = (snapshotStore as InternalSnapshotStore).contract(
-                key = key,
-                coroutineScope = clientCoroutineScope,
-            )
+            val snapshotContract =
+                (snapshotStore as InternalSnapshotStore).contract(
+                    key = key,
+                    coroutineScope = clientCoroutineScope,
+                )
 
             val tokens = snapshotContract.snapshots.map { it.tokens }.stateIn(clientCoroutineScope)
 

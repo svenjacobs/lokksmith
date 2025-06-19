@@ -18,22 +18,23 @@ package dev.lokksmith.client.request.flow.authorizationCode
 import io.ktor.http.URLBuilder
 
 /**
- * Strategy interface for handling and verifying OpenID Connect parameters such as "state" and "nonce".
+ * Strategy interface for handling and verifying OpenID Connect parameters such as "state" and
+ * "nonce".
  *
  * Implementations of this interface define how these parameters are added to authorization requests
  * and how their values are verified in responses, as required by the OpenID Connect specification.
  *
- * Use [Default] to add and verify a specific key-value parameter (e.g., "state" or "nonce"), or [None]
- * if the parameter is not required or verification should always succeed.
+ * Use [Default] to add and verify a specific key-value parameter (e.g., "state" or "nonce"), or
+ * [None] if the parameter is not required or verification should always succeed.
  */
 internal sealed interface VerifierStrategy {
 
     /**
      * Adds the relevant parameter (e.g., "state" or "nonce") to the given [URLBuilder].
      *
-     * TODO: Use case for context parameters :)
-     *
      * @param builder The [URLBuilder] to which the parameter will be added.
+     *
+     * TODO: Use case for context parameters :)
      */
     fun addParameter(builder: URLBuilder)
 
@@ -51,26 +52,22 @@ internal sealed interface VerifierStrategy {
      * @property key The parameter key (e.g., "state" or "nonce").
      * @property value The expected parameter value.
      */
-    class Default(
-        val key: String,
-        val value: String,
-    ) : VerifierStrategy {
+    class Default(val key: String, val value: String) : VerifierStrategy {
 
         override fun addParameter(builder: URLBuilder) {
             builder.parameters[key] = value
         }
 
-        override fun verify(actualValue: String?) =
-            actualValue == value
+        override fun verify(actualValue: String?) = actualValue == value
     }
 
     /**
-     * Implementation for cases where no parameter is required or verification should always succeed.
+     * Implementation for cases where no parameter is required or verification should always
+     * succeed.
      */
     object None : VerifierStrategy {
 
-        override fun addParameter(builder: URLBuilder) {
-        }
+        override fun addParameter(builder: URLBuilder) {}
 
         override fun verify(actualValue: String?) = true
     }

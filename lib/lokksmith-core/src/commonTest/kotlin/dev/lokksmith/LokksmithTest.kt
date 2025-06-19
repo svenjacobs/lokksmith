@@ -35,12 +35,6 @@ import dev.lokksmith.discovery.MetadataDiscoveryRequestFake
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respondBadRequest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -49,6 +43,12 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 
 class LokksmithTest {
 
@@ -59,12 +59,13 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot = Snapshot(
-                key = key,
-                id = "clientId".asId(),
-                metadata = mockMetadata,
-                options = Client.Options(),
-            )
+            snapshot =
+                Snapshot(
+                    key = key,
+                    id = "clientId".asId(),
+                    metadata = mockMetadata,
+                    options = Client.Options(),
+                ),
         )
 
         val client = assertNotNull(lokksmith.get(key.value))
@@ -94,20 +95,22 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot = Snapshot(
-                key = key,
-                id = "clientId".asId(),
-                metadata = mockMetadata,
-                options = Client.Options(),
-            )
+            snapshot =
+                Snapshot(
+                    key = key,
+                    id = "clientId".asId(),
+                    metadata = mockMetadata,
+                    options = Client.Options(),
+                ),
         )
         snapshotStore.setCalls.clear()
 
-        val client = lokksmith.getOrCreate(key.value) {
-            id = "clientId"
-            discoveryUrl = "https://example.com/.well-known/openid-configuration"
-            options = Client.Options(leewaySeconds = 30)
-        }
+        val client =
+            lokksmith.getOrCreate(key.value) {
+                id = "clientId"
+                discoveryUrl = "https://example.com/.well-known/openid-configuration"
+                options = Client.Options(leewaySeconds = 30)
+            }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
         assertEquals(Client.Options(), client.options)
@@ -132,11 +135,12 @@ class LokksmithTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
-        val client = lokksmith.getOrCreate(key.value) {
-            id = "clientId"
-            discoveryUrl = "https://example.com/.well-known/openid-configuration"
-            options = Client.Options(leewaySeconds = 30)
-        }
+        val client =
+            lokksmith.getOrCreate(key.value) {
+                id = "clientId"
+                discoveryUrl = "https://example.com/.well-known/openid-configuration"
+                options = Client.Options(leewaySeconds = 30)
+            }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
         assertEquals(Client.Options(leewaySeconds = 30), client.options)
@@ -152,12 +156,13 @@ class LokksmithTest {
             snapshotStore.setCalls,
             SetCall(
                 key = key,
-                snapshot = Snapshot(
-                    key = key,
-                    id = "clientId".asId(),
-                    metadata = mockMetadata,
-                    options = Client.Options(leewaySeconds = 30),
-                )
+                snapshot =
+                    Snapshot(
+                        key = key,
+                        id = "clientId".asId(),
+                        metadata = mockMetadata,
+                        options = Client.Options(leewaySeconds = 30),
+                    ),
             ),
             "SnapshotStore.set() not called",
         )
@@ -176,12 +181,13 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot = Snapshot(
-                key = key,
-                id = "clientId".asId(),
-                metadata = mockMetadata,
-                options = Client.Options(),
-            )
+            snapshot =
+                Snapshot(
+                    key = key,
+                    id = "clientId".asId(),
+                    metadata = mockMetadata,
+                    options = Client.Options(),
+                ),
         )
 
         assertTrue(lokksmith.exists(key.value))
@@ -214,14 +220,12 @@ class LokksmithTest {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 
         val key = "key".asKey()
-        val client = lokksmith.create(key.value) {
-            id = "clientId"
-            discoveryUrl = "https://example.com/.well-known/openid-configuration"
-            options = Client.Options(
-                leewaySeconds = 5,
-                preemptiveRefreshSeconds = 30,
-            )
-        }
+        val client =
+            lokksmith.create(key.value) {
+                id = "clientId"
+                discoveryUrl = "https://example.com/.well-known/openid-configuration"
+                options = Client.Options(leewaySeconds = 5, preemptiveRefreshSeconds = 30)
+            }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
 
@@ -236,15 +240,13 @@ class LokksmithTest {
             snapshotStore.setCalls,
             SetCall(
                 key = key,
-                snapshot = Snapshot(
-                    key = key,
-                    id = "clientId".asId(),
-                    metadata = mockMetadata,
-                    options = Client.Options(
-                        leewaySeconds = 5,
-                        preemptiveRefreshSeconds = 30,
+                snapshot =
+                    Snapshot(
+                        key = key,
+                        id = "clientId".asId(),
+                        metadata = mockMetadata,
+                        options = Client.Options(leewaySeconds = 5, preemptiveRefreshSeconds = 30),
                     ),
-                )
             ),
             "SnapshotStore.set() not called",
         )
@@ -263,12 +265,13 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot = Snapshot(
-                key = key,
-                id = "clientId".asId(),
-                metadata = mockMetadata,
-                options = Client.Options(),
-            )
+            snapshot =
+                Snapshot(
+                    key = key,
+                    id = "clientId".asId(),
+                    metadata = mockMetadata,
+                    options = Client.Options(),
+                ),
         )
 
         assertFailsWith<IllegalArgumentException> {
@@ -292,12 +295,13 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot = Snapshot(
-                key = key,
-                id = "clientId".asId(),
-                metadata = mockMetadata,
-                options = Client.Options(),
-            )
+            snapshot =
+                Snapshot(
+                    key = key,
+                    id = "clientId".asId(),
+                    metadata = mockMetadata,
+                    options = Client.Options(),
+                ),
         )
 
         assertTrue(lokksmith.delete(key.value))
@@ -336,13 +340,10 @@ class LokksmithTest {
 
 private data class TestContainer(
     override val coroutineScope: CoroutineScope,
-    override val httpClient: HttpClient = createHttpClient(engine = MockEngine { respondBadRequest() }),
-    override val snapshotStore: SnapshotStoreSpy = SnapshotStoreSpy(
-        SnapshotStoreImpl(
-            persistence = PersistenceFake(),
-            serializer = Json,
-        )
-    ),
+    override val httpClient: HttpClient =
+        createHttpClient(engine = MockEngine { respondBadRequest() }),
+    override val snapshotStore: SnapshotStoreSpy =
+        SnapshotStoreSpy(SnapshotStoreImpl(persistence = PersistenceFake(), serializer = Json)),
     override val metadataDiscoveryRequest: MetadataDiscoveryRequest =
         MetadataDiscoveryRequestImpl(httpClient),
     override val clientProviderFactory: () -> InternalClient.Provider = {
@@ -357,18 +358,20 @@ private data class TestContainer(
     override val serializer = Json
 }
 
-private val mockMetadata = Client.Metadata(
-    issuer = "issuer",
-    authorizationEndpoint = "https://example.com/authorizationEndpoint",
-    tokenEndpoint = "https://example.com/tokenEndpoint",
-    endSessionEndpoint = "https://example.com/endSessionEndpoint",
-)
+private val mockMetadata =
+    Client.Metadata(
+        issuer = "issuer",
+        authorizationEndpoint = "https://example.com/authorizationEndpoint",
+        tokenEndpoint = "https://example.com/tokenEndpoint",
+        endSessionEndpoint = "https://example.com/endSessionEndpoint",
+    )
 
 private fun TestScope.createTestLokksmith(): Pair<Lokksmith, SnapshotStoreSpy> {
-    val container = TestContainer(
-        coroutineScope = backgroundScope,
-        metadataDiscoveryRequest = MetadataDiscoveryRequestFake { mockMetadata },
-    )
+    val container =
+        TestContainer(
+            coroutineScope = backgroundScope,
+            metadataDiscoveryRequest = MetadataDiscoveryRequestFake { mockMetadata },
+        )
 
     return Lokksmith(container) to container.snapshotStore
 }

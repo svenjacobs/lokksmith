@@ -16,7 +16,8 @@
 package dev.lokksmith.client.request.parameter
 
 /**
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication Request</a>
+ * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest">Authentication
+ *   Request</a>
  */
 public object Parameter {
 

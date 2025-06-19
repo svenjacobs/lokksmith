@@ -22,15 +22,12 @@ import dev.lokksmith.client.request.token.TokenResponseValidator
 import kotlinx.serialization.json.Json
 
 /**
- * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponseValidation">Token Response Validation</a>
+ * @see <a
+ *   href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponseValidation">Token
+ *   Response Validation</a>
  */
-public class AuthorizationCodeFlowTokenResponseValidator(
-    serializer: Json,
-    client: InternalClient,
-) : TokenResponseValidator<IdToken>(
-    serializer = serializer,
-    client = client,
-) {
+public class AuthorizationCodeFlowTokenResponseValidator(serializer: Json, client: InternalClient) :
+    TokenResponseValidator<IdToken>(serializer = serializer, client = client) {
 
     override fun getIdToken(response: TokenResponse): IdToken {
         val rawIdToken = requireNotNull(response.idToken) { "ID Token is null" }

@@ -17,34 +17,34 @@ package dev.lokksmith.client
 
 import dev.lokksmith.client.jwt.Jwt
 import dev.lokksmith.client.jwt.JwtEncoder
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runCurrent
-import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runCurrent
+import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MigrationTest {
 
     private val migration = Migration(serializer = Json)
     private val jwtEncoder = JwtEncoder(serializer = Json)
-    private val idToken = Jwt(
-        header = Jwt.Header(
-            alg = "none",
-        ),
-        payload = Jwt.Payload(
-            iss = "issuer",
-            sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
-            aud = listOf("clientId"),
-            exp = TEST_INSTANT + 600,
-            iat = TEST_INSTANT,
-        ),
-    )
+    private val idToken =
+        Jwt(
+            header = Jwt.Header(alg = "none"),
+            payload =
+                Jwt.Payload(
+                    iss = "issuer",
+                    sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                    aud = listOf("clientId"),
+                    exp = TEST_INSTANT + 600,
+                    iat = TEST_INSTANT,
+                ),
+        )
 
     @Test
     fun `setTokens should set tokens on client`() = runTest {
@@ -75,9 +75,7 @@ class MigrationTest {
 
     @Test
     fun `setTokens should throw exception on migrated client`() = runTest {
-        val client = createTestClient {
-            copy(migrated = true)
-        }
+        val client = createTestClient { copy(migrated = true) }
 
         assertFailsWith<IllegalStateException> {
             migration.setTokens(

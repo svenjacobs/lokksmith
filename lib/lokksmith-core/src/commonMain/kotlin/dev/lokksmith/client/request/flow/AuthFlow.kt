@@ -38,14 +38,10 @@ import dev.drewhamilton.poko.Poko
  */
 public interface AuthFlow {
 
-    /**
-     * Common request attributes required by all flow kinds.
-     */
+    /** Common request attributes required by all flow kinds. */
     public interface Request {
 
-        /**
-         * Redirect URI to which the response is sent by the OpenID provider.
-         */
+        /** Redirect URI to which the response is sent by the OpenID provider. */
         public val redirectUri: String
 
         /**
@@ -82,12 +78,13 @@ public interface AuthFlow {
 
     /**
      * Prepares the flow and returns an [Initiation] result which contains the request URL to
-     * initiate the flow by opening it in a browser (e.g., a Custom Tab) on a mobile device.
-     * The returned result can be either used to manually call the URL and handle the result or to
-     * pass it to client-specific helper methods that simplify executing a flow.
+     * initiate the flow by opening it in a browser (e.g., a Custom Tab) on a mobile device. The
+     * returned result can be either used to manually call the URL and handle the result or to pass
+     * it to client-specific helper methods that simplify executing a flow.
      *
      * @return A result containing the URL to initiate the authentication or authorization flow.
-     * @throws dev.lokksmith.client.request.RequestException if the request URL cannot be constructed.
+     * @throws dev.lokksmith.client.request.RequestException if the request URL cannot be
+     *   constructed.
      */
     public suspend fun prepare(): Initiation
 
@@ -95,14 +92,13 @@ public interface AuthFlow {
      * Handles the redirect URI received from the OpenID provider after user authentication.
      *
      * Call this method exactly once after the user completes authentication and the app receives
-     * the full redirect URI (including query parameters). Calling [onResponse] multiple times is
-     * an error and might invalidate the whole flow.
+     * the full redirect URI (including query parameters). Calling [onResponse] multiple times is an
+     * error and might invalidate the whole flow.
      *
      * When this method returns without throwing an exception, the flow has completed successfully
      * and the [dev.lokksmith.client.Client] state has been updated.
      *
      * @param redirectUri The complete redirect URI returned by the OpenID provider.
-     *
      * @throws dev.lokksmith.client.request.ResponseException
      * @throws dev.lokksmith.client.request.OAuthResponseException
      * @throws dev.lokksmith.client.request.token.TokenValidationException

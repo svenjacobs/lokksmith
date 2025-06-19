@@ -43,13 +43,16 @@ public interface LokksmithContextProvider {
  * [LokksmithContextProvider].
  *
  * @return The singleton [dev.lokksmith.Lokksmith] instance used by the application.
- * @throws kotlin.IllegalArgumentException if the application context does not implement [LokksmithContextProvider].
+ * @throws kotlin.IllegalArgumentException if the application context does not implement
+ *   [LokksmithContextProvider].
  */
 public val Context.lokksmith: Lokksmith
     get() = requireLokksmithContext(this).lokksmith
 
 internal fun requireLokksmithContext(context: Context): LokksmithContext {
     val context = context.applicationContext
-    require(context is LokksmithContextProvider) { "Application must implement LokksmithContextProvider" }
+    require(context is LokksmithContextProvider) {
+        "Application must implement LokksmithContextProvider"
+    }
     return context.lokksmithContext
 }
