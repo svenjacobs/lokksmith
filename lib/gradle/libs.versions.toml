@@ -16,8 +16,6 @@ androidx-activity = { module = "androidx.activity:activity", version.ref = "andr
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androix-activity" }
 androidx-browser = "androidx.browser:browser:1.8.0"
 androidx-compose-bom = "androidx.compose:compose-bom:2025.06.01"
-androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
-androidx-compose-runtime-saveable = { module = "androidx.compose.runtime:runtime-saveable" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptography" }

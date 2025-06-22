@@ -51,8 +51,6 @@ dependencies {
     api(project(":lokksmith-core"))
     api(libs.androidx.activity.compose)
     api(libs.androidx.browser)
-    api(libs.androidx.compose.runtime)
-    api(libs.androidx.compose.runtime.saveable)
     api(libs.androidx.compose.ui)
 }
 
