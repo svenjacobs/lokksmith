@@ -15,11 +15,11 @@
  */
 package dev.lokksmith.client.usecase
 
-import dev.lokksmith.LokksmithException
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.Client.Tokens
 import dev.lokksmith.client.request.OAuthError
 import dev.lokksmith.client.request.OAuthResponseException
+import dev.lokksmith.client.usecase.RunWithTokensOrResetUseCase.RunWithTokensOrResetScope
 
 /**
  * Executes a block with valid tokens, and logs out the client locally if the OpenID provider
@@ -51,26 +51,40 @@ public class RunWithTokensOrResetUseCase(
     private val errors: List<OAuthError> = DEFAULT_ERRORS,
 ) {
 
-    public class ResetClientStateException : LokksmithException()
+    public interface RunWithTokensOrResetScope {
+
+        public suspend fun resetTokens()
+    }
+
+    private inner class RunWithTokensOrResetScopeImpl : RunWithTokensOrResetScope {
+
+        var didCallResetTokens = false
+
+        override suspend fun resetTokens() {
+            didCallResetTokens = true
+            client.resetTokens()
+        }
+    }
 
     /**
      * See [class documentation][RunWithTokensOrResetUseCase] for details.
      *
      * Token- or session-related exceptions that occur in your code provided via [body] cannot be
-     * detected automatically. To force a reset from your own code, throw a
-     * [ResetClientStateException].
+     * detected automatically. To force a reset from your own code, use
+     * [RunWithTokensOrResetScope.resetTokens] provided as the context of [body].
      *
      * @return `true` if [body] was executed successfully; `false` if the client was logged out
      *   locally.
      * @see RunWithTokensOrResetUseCase
      */
-    public suspend operator fun invoke(body: suspend (Tokens) -> Unit): Boolean {
+    public suspend operator fun invoke(
+        body: suspend RunWithTokensOrResetScope.(Tokens) -> Unit
+    ): Boolean {
+        val scope = RunWithTokensOrResetScopeImpl()
+
         try {
-            client.runWithTokens(body)
-            return true
-        } catch (_: ResetClientStateException) {
-            client.resetTokens()
-            return false
+            client.runWithTokens { tokens -> scope.body(tokens) }
+            return !scope.didCallResetTokens
         } catch (e: OAuthResponseException) {
             if (errors.contains(e.error)) {
                 client.resetTokens()
@@ -88,7 +102,7 @@ public class RunWithTokensOrResetUseCase(
  */
 public suspend fun Client.runWithTokensOrReset(
     errors: List<OAuthError> = DEFAULT_ERRORS,
-    body: suspend (Tokens) -> Unit,
+    body: suspend RunWithTokensOrResetScope.(Tokens) -> Unit,
 ): Boolean = RunWithTokensOrResetUseCase(this, errors)(body)
 
 private val DEFAULT_ERRORS = listOf(OAuthError.InvalidGrant)
