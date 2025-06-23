@@ -13,6 +13,7 @@ nav:
       - Usage: getting-started/usage.md
       - Demo: getting-started/demo.md
   - Migration: migration.md
+  - FAQ: faq.md
   - Comparison: comparison.md
   - Contributing: contributing.md
   - Resources: resources.md
