@@ -94,14 +94,10 @@ class RunWithTokensOrResetUseCaseTest {
     }
 
     @Test
-    fun `invoke should reset tokens when ResetClientStateException is thrown`() = runTest {
+    fun `invoke should reset tokens when resetTokens is called`() = runTest {
         val client = createTestClient(initialSnapshot = { copy(tokens = SAMPLE_TOKENS) })
 
-        assertFalse {
-            client.runWithTokensOrReset {
-                throw RunWithTokensOrResetUseCase.ResetClientStateException()
-            }
-        }
+        assertFalse { client.runWithTokensOrReset { resetTokens() } }
         runCurrent()
         assertNull(client.tokens.value)
     }
