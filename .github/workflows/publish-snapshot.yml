@@ -35,7 +35,7 @@ jobs:
       - name: Create snapshot VERSION
         run: echo "VERSION=$(date -u +%Y%m%d%H%M)-SNAPSHOT" >> $GITHUB_ENV
       - name: Publish snapshot release
-        run: ./gradlew publishAllPublicationsToMavenCentralRepository -PVERSION_NAME="$VERSION" --no-configuration-cache
+        run: ./gradlew publishToMavenCentral -PVERSION_NAME="$VERSION" --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
