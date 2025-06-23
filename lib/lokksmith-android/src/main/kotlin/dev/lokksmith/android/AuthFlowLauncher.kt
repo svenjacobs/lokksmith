@@ -159,8 +159,7 @@ internal constructor(
                         .distinctUntilChanged()
                         .collect { responseUri ->
                             // We're catching all exceptions here because we assume that in case of
-                            // an
-                            // error the client's result state has been updated accordingly.
+                            // an error the client's result state has been updated accordingly.
                             try {
                                 AuthFlowStateResponseHandler(context.lokksmith)
                                     .onResponse(responseUri)

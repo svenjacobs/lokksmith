@@ -87,8 +87,6 @@ public abstract class AbstractAuthFlowResponseHandler(
             setResult(FlowResult.Error(state = state, type = Type.Generic, message = e.message))
 
             throw e
-        } finally {
-            stateFinalizer.finalize()
         }
     }
 
@@ -118,6 +116,6 @@ public abstract class AbstractAuthFlowResponseHandler(
     }
 
     private suspend fun setResult(result: FlowResult) {
-        client.updateSnapshot { copy(flowResult = result) }
+        stateFinalizer.finalize { copy(flowResult = result) }
     }
 }
