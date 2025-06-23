@@ -82,6 +82,8 @@ public data class Snapshot(
                 TemporalValidation,
             }
         }
+
+        @Serializable public data object Consumed : FlowResult
     }
 
     @Serializable

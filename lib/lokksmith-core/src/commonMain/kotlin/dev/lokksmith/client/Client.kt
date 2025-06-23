@@ -473,9 +473,7 @@ private constructor(
     override suspend fun resetTokens(): Boolean {
         if (snapshots.value.tokens == null) return false
 
-        updateSnapshot {
-            copy(tokens = null, nonce = null, flowResult = null, ephemeralFlowState = null)
-        }
+        updateSnapshot { copy(tokens = null, nonce = null, ephemeralFlowState = null) }
 
         return true
     }
@@ -509,8 +507,10 @@ private constructor(
                 when (val state = ephemeralFlowState) {
                     is Snapshot.EphemeralAuthorizationCodeFlowState ->
                         state.copy(responseUri = responseUri)
+
                     is Snapshot.EphemeralEndSessionFlowState ->
                         state.copy(responseUri = responseUri)
+
                     null -> throw IllegalStateException("ephemeralFlowState is null")
                 }
 
@@ -526,6 +526,7 @@ private constructor(
             when (ephemeralFlowState) {
                 is Snapshot.EphemeralAuthorizationCodeFlowState ->
                     ::AuthorizationCodeFlowCancellation
+
                 is Snapshot.EphemeralEndSessionFlowState -> ::EndSessionFlowCancellation
             }(this)
 

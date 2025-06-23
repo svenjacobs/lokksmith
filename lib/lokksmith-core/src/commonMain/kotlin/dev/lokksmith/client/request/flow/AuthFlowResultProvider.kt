@@ -19,10 +19,13 @@ import dev.drewhamilton.poko.Poko
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Error.Type
+import dev.lokksmith.client.request.flow.AuthFlowResultProvider.confirmConsumed
+import dev.lokksmith.client.request.flow.AuthFlowResultProvider.forClient
 import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error.Type as FlowResultErrorType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 
 /**
@@ -67,7 +70,11 @@ public object AuthFlowResultProvider {
      * can be used to display some progression in the UI layer of an application. Returns
      * [Result.Undefined] if no auth flow is currently being processed.
      *
+     * Note: The `Flow` might be blocking and not immediately and always return a value, especially
+     * when a previous result has been confirmed.
+     *
      * @see authFlowResult
+     * @see confirmConsumed
      */
     public fun forClient(client: Client): Flow<Result> =
         (client as InternalClient)
@@ -77,8 +84,10 @@ public object AuthFlowResultProvider {
                 when {
                     flowResult is Snapshot.FlowResult.Success ->
                         Result.Success(state = flowResult.state)
+
                     flowResult is Snapshot.FlowResult.Cancelled ->
                         Result.Cancelled(state = flowResult.state)
+
                     flowResult is Snapshot.FlowResult.Error ->
                         Result.Error(
                             state = flowResult.state,
@@ -94,30 +103,36 @@ public object AuthFlowResultProvider {
                             code = flowResult.code,
                         )
 
+                    flowResult is Snapshot.FlowResult.Consumed -> null
+
                     snapshot.ephemeralFlowState != null ->
                         Result.Processing(state = snapshot.ephemeralFlowState.state)
 
                     else -> Result.Undefined
                 }
             }
+            .filterNotNull()
             .distinctUntilChanged()
 
     /**
-     * Confirms that the result has been consumed and displayed to the user. Resets the internal
-     * result state so that it does not reappear.
+     * Confirms that the result has been consumed and displayed to the user so that it does not
+     * reappear. The `Flow` provided via [forClient] does not produce a new value until a new auth
+     * flow was initiated.
      *
      * @see confirmAuthFlowResultConsumed
      */
     public suspend fun confirmConsumed(client: Client) {
-        (client as InternalClient).updateSnapshot { copy(flowResult = null) }
+        (client as InternalClient).updateSnapshot {
+            copy(flowResult = Snapshot.FlowResult.Consumed)
+        }
     }
 }
 
 /** @see AuthFlowResultProvider.forClient */
 public val Client.authFlowResult: Flow<AuthFlowResultProvider.Result>
-    get() = AuthFlowResultProvider.forClient(this)
+    get() = forClient(this)
 
 /** @see AuthFlowResultProvider.confirmConsumed */
 public suspend fun Client.confirmAuthFlowResultConsumed() {
-    AuthFlowResultProvider.confirmConsumed(this)
+    confirmConsumed(this)
 }

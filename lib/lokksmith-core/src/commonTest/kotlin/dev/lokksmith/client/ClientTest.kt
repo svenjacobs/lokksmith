@@ -207,7 +207,7 @@ class ClientTest {
 
         assertNull(client.snapshots.value.tokens)
         assertNull(client.snapshots.value.nonce)
-        assertNull(client.snapshots.value.flowResult)
+        assertEquals(FlowResult.Success(state = "f3SSmdwW"), client.snapshots.value.flowResult)
     }
 
     @Test
