@@ -14,6 +14,7 @@ nav:
       - Demo: getting-started/demo.md
   - Migration: migration.md
   - FAQ: faq.md
+  - Dependency Matrix: dependency-matrix.md
   - Comparison: comparison.md
   - Contributing: contributing.md
   - Resources: resources.md
