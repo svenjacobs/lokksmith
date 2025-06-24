@@ -21,6 +21,8 @@ import dev.lokksmith.client.request.Random
 import dev.lokksmith.client.request.RequestException
 import dev.lokksmith.client.request.flow.AbstractAuthFlow
 import dev.lokksmith.client.request.flow.AuthFlow
+import dev.lokksmith.client.request.flow.addAdditionalParameters
+import dev.lokksmith.client.request.flow.addOptionalParameter
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.snapshot.Snapshot
 import io.ktor.http.URLParserException
@@ -64,6 +66,19 @@ internal constructor(
          * minimum or maximum length, Lokksmith enforces a minimum of 16 characters for security.
          */
         override val stateLength: Int = Defaults.STATE_MIN_LENGTH,
+
+        /** Hint to the Authorization Server about the End-User that is logging out. */
+        val logoutHint: String? = null,
+
+        /** List of language tag values (RFC5646), ordered by preference. */
+        override val uiLocales: List<String> = emptyList(),
+
+        /**
+         * Additional parameters (key/value pairs) appended to the request URI. The use of any
+         * standard OAuth/OIDC parameters is an error and will throw an [IllegalArgumentException].
+         * Values must not be URL-encoded!
+         */
+        override val additionalParameters: Map<String, String> = emptyMap(),
     ) : AuthFlow.Request
 
     override val ephemeralFlowState: Snapshot.EphemeralFlowState
@@ -77,11 +92,18 @@ internal constructor(
                     parameters[Parameter.STATE] = state
                     parameters[Parameter.POST_LOGOUT_REDIRECT_URI] = request.redirectUri
                     parameters[Parameter.CLIENT_ID] = client.id.value
-                    client.snapshots.value.tokens?.idToken?.raw?.let { idToken ->
-                        parameters[Parameter.ID_TOKEN_HINT] = idToken
-                    }
+
+                    addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
+                    addOptionalParameter(
+                        Parameter.ID_TOKEN_HINT,
+                        client.snapshots.value.tokens?.idToken?.raw,
+                    )
+                    addOptionalParameter(Parameter.LOGOUT_HINT, request.logoutHint)
+                    addAdditionalParameters(request.additionalParameters)
                 }
                 .toString()
+        } catch (e: IllegalArgumentException) {
+            throw e
         } catch (e: URLParserException) {
             throw RequestException(cause = e, reason = RequestException.Reason.UrlParsing)
         } catch (e: Exception) {
@@ -100,6 +122,7 @@ internal constructor(
                     when {
                         request.stateLength >= Defaults.STATE_MIN_LENGTH ->
                             random.randomAsciiString(request.stateLength)
+
                         else ->
                             throw IllegalArgumentException(
                                 "stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}"

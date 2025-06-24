@@ -28,6 +28,7 @@ import dev.lokksmith.client.jwt.JwtEncoder
 import dev.lokksmith.client.request.OAuthError
 import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.parameter.CodeChallengeMethod
+import dev.lokksmith.client.request.parameter.Display
 import dev.lokksmith.client.request.parameter.GrantType
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.request.parameter.Prompt
@@ -56,6 +57,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
@@ -136,6 +138,109 @@ class AuthorizationCodeFlowTest {
             assertIs<EphemeralAuthorizationCodeFlowState>(client.snapshots.value.ephemeralFlowState)
         assertNull(flowState.codeVerifier)
     }
+
+    @Test
+    fun `prepare should append display parameter`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        display = Display.Page,
+                    )
+            )
+
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertEquals("page", requestUrl.parameters["display"])
+    }
+
+    @Test
+    fun `prepare should append max_age parameter`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        maxAge = 600,
+                    )
+            )
+
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertEquals("600", requestUrl.parameters["max_age"])
+    }
+
+    @Test
+    fun `prepare should append ui_locales parameter`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        uiLocales = listOf("de-DE", "de", "en-GB"),
+                    )
+            )
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertEquals("de-DE de en-GB", requestUrl.parameters["ui_locales"])
+    }
+
+    @Test
+    fun `prepare should append login_hint parameter`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        loginHint = "loginHint",
+                    )
+            )
+
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertEquals("loginHint", requestUrl.parameters["login_hint"])
+    }
+
+    @Test
+    fun `prepare should append additional parameters`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        additionalParameters = mapOf("param1" to "value 1", "param2" to "value 2"),
+                    )
+            )
+
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertTrue(requestUrl.encodedQuery.contains("value+1"), requestUrl.encodedQuery)
+        assertEquals("value 1", requestUrl.parameters["param1"])
+        assertEquals("value 2", requestUrl.parameters["param2"])
+    }
+
+    @Test
+    fun `prepare should throw exception when additional parameters contain known OAuth parameters`() =
+        runTest {
+            val (flow, _) =
+                createFlow(
+                    request =
+                        AuthorizationCodeFlow.Request(
+                            redirectUri = "https://example.com/app/redirect",
+                            additionalParameters = mapOf(Parameter.CLIENT_ID to "clientId"),
+                        )
+                )
+
+            val e = assertFailsWith<IllegalArgumentException> { flow.prepare() }
+
+            assertEquals("Parameter \"client_id\" is a known OAuth/OIDC parameter", e.message)
+        }
 
     @Test
     fun `onResponse should handle successful response`() = runTest {

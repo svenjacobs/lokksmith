@@ -35,6 +35,8 @@ internal constructor(
     internal open fun onPrepareUpdateSnapshot(snapshot: Snapshot): Snapshot = snapshot
 
     override suspend fun prepare(): Initiation {
+        val requestUrl = onPrepare()
+
         client.updateSnapshot {
             onPrepareUpdateSnapshot(
                 copy(
@@ -44,7 +46,7 @@ internal constructor(
             )
         }
 
-        return Initiation(state = state, requestUrl = onPrepare(), clientKey = client.key.value)
+        return Initiation(state = state, requestUrl = requestUrl, clientKey = client.key.value)
     }
 
     override suspend fun onResponse(redirectUri: String) {
