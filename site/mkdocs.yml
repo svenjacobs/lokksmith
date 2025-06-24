@@ -65,7 +65,7 @@ extra:
       link: https://androiddev.social/@svenjacobs
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/svenjacobs81/
-  version: "0.2.0"
+  version: "0.2.1"
   version_date: Jun 24, 2025
 markdown_extensions:
   - abbr
