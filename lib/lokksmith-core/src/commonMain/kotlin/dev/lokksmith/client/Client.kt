@@ -86,7 +86,6 @@ public interface Client {
     )
 
     /** Options to configure the behaviour of this client. */
-    @Serializable
     public data class Options(
         /**
          * The number of seconds of clock skew to allow when validating time-based claims in tokens,
@@ -380,6 +379,7 @@ public interface InternalClient : Client {
 internal class ClientImpl
 private constructor(
     override val key: Key,
+    override var options: Client.Options,
     override val tokens: StateFlow<Tokens?>,
     override val provider: Provider,
     private val snapshotContract: SnapshotContract,
@@ -423,12 +423,6 @@ private constructor(
         get() = snapshots.value.metadata
         set(value) {
             coroutineScope.launch { updateSnapshot { copy(metadata = value) } }
-        }
-
-    override var options: Client.Options
-        get() = snapshots.value.options
-        set(value) {
-            coroutineScope.launch { updateSnapshot { copy(options = value) } }
         }
 
     override suspend fun refresh(): Tokens {
@@ -547,6 +541,7 @@ private constructor(
          */
         internal suspend fun create(
             key: Key,
+            options: Client.Options,
             coroutineScope: CoroutineScope,
             snapshotStore: SnapshotStore,
             provider: Provider,
@@ -569,6 +564,7 @@ private constructor(
 
             return ClientImpl(
                 key = key,
+                options = options,
                 tokens = tokens,
                 provider = provider,
                 snapshotContract = snapshotContract,

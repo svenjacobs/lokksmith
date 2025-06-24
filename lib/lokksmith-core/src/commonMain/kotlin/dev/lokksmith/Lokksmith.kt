@@ -113,12 +113,16 @@ internal constructor(
      *
      * Calling [get] multiple times with the same key returns new [Client] instances that share
      * synchronized state. However, it's recommended to use a single instance per unique key.
+     *
+     * @param key Key of new client
+     * @param options Options for configuring the behaviour of the client
      */
-    public suspend fun get(key: String): Client? {
+    public suspend fun get(key: String, options: Client.Options = Client.Options()): Client? {
         if (!exists(key)) return null
         val key = key.asKey()
         return ClientImpl.create(
                 key = key,
+                options = options,
                 coroutineScope = container.coroutineScope,
                 snapshotStore = container.snapshotStore,
                 provider = container.clientProviderFactory(),
@@ -133,15 +137,14 @@ internal constructor(
      * Calling [getOrCreate] multiple times with the same key returns new [Client] instances that
      * share synchronized state. However, it's recommended to use a single instance per unique key.
      *
-     * The passed [CreateContext.options] in the provided [builder] lambda are only applied to newly
-     * created clients. For adjusting the configuration of an existing client see [Client.options].
-     *
      * @param key Key of new client
-     * @param options Options for configuring the behaviour of the client **if** the client was
-     *   newly created
+     * @param options Options for configuring the behaviour of the client
      */
-    public suspend fun getOrCreate(key: String, builder: CreateContext.() -> Unit): Client =
-        get(key) ?: create(key, builder)
+    public suspend fun getOrCreate(
+        key: String,
+        options: Client.Options = Client.Options(),
+        builder: CreateContext.() -> Unit,
+    ): Client = get(key, options) ?: create(key, options, builder)
 
     /** Returns `true` if a client for the given [key] exists. */
     public suspend fun exists(key: String): Boolean = container.snapshotStore.exists(key.asKey())
@@ -151,8 +154,13 @@ internal constructor(
      * [builder] for initial configuration.
      *
      * @param key Key of new client
+     * @param options Options for configuring the behaviour of the client
      */
-    public suspend fun create(key: String, builder: CreateContext.() -> Unit): Client {
+    public suspend fun create(
+        key: String,
+        options: Client.Options = Client.Options(),
+        builder: CreateContext.() -> Unit,
+    ): Client {
         require(!exists(key)) { "client with key \"$key\" already exists" }
 
         val context =
@@ -170,12 +178,12 @@ internal constructor(
         // Create initial snapshot
         container.snapshotStore.set(
             key = key,
-            snapshot =
-                Snapshot(key = key, id = id, metadata = metadata, options = context.props.options),
+            snapshot = Snapshot(key = key, id = id, metadata = metadata),
         )
 
         return ClientImpl.create(
             key = key,
+            options = options,
             coroutineScope = container.coroutineScope,
             snapshotStore = container.snapshotStore,
             provider = container.clientProviderFactory(),

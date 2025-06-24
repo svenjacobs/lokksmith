@@ -20,8 +20,7 @@ import dev.lokksmith.client.Client
 /**
  * Context for creating a new [Client].
  *
- * [id] must be specified as well as one of [discoveryUrl] or [metadata]. [options] can be used to
- * tweak the behaviour of the client.
+ * [id] must be specified as well as one of [discoveryUrl] or [metadata].
  *
  * @see Lokksmith.create
  * @see Lokksmith.getOrCreate
@@ -31,7 +30,6 @@ public class CreateContext internal constructor(internal val props: Properties =
         var id: String? = null,
         var metadata: Client.Metadata? = null,
         var discoveryUrl: String? = null,
-        var options: Client.Options = Client.Options(),
     )
 
     internal fun validate() {
@@ -58,11 +56,4 @@ public var CreateContext.metadata: Client.Metadata
     get() = throw UnsupportedOperationException("metadata cannot be read")
     set(value) {
         props.metadata = value
-    }
-
-/** Options for configuring the behaviour of the client. */
-public var CreateContext.options: Client.Options
-    get() = throw UnsupportedOperationException("options cannot be read")
-    set(value) {
-        props.options = value
     }

@@ -162,7 +162,6 @@ private fun newSnapshot(key: Key, state: String? = null): Snapshot {
                 authorizationEndpoint = "authorizationEndpoint",
                 tokenEndpoint = "tokenEndpoint",
             ),
-        options = Client.Options(),
         ephemeralFlowState = ephemeralFlowState,
     )
 }
