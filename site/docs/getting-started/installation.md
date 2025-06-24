@@ -118,6 +118,14 @@ entry for App Links, so you must manually update your `AndroidManifest.xml` as f
   by serving the Digital Asset Links JSON file at `https://example.com/.well-known/assetlinks.json`.
 - This configuration ensures only your app can handle the redirect, improving security against malicious interception.
 
+### R8 / ProGuard
+
+Lokksmith uses Kotlin Serialization internally and depends on the ProGuard configuration
+[provided by the library](https://github.com/Kotlin/kotlinx.serialization?tab=readme-ov-file#android).
+Usually this configuration is applied automatically. However, if you manually configure ProGuard
+you must ensure to apply the Kotlin Serialization rules or else Lokksmith will fail at
+(de)serialization.
+
 ## iOS
 
 The iOS integration is not yet available.  
