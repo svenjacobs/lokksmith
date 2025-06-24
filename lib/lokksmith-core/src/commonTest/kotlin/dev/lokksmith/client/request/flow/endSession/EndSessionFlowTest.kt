@@ -37,6 +37,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
@@ -71,6 +72,80 @@ class EndSessionFlowTest {
             assertIs<EphemeralEndSessionFlowState>(client.snapshots.value.ephemeralFlowState)
         assertEquals(flow.state, flowState.state)
     }
+
+    @Test
+    fun `prepare should append ui_locales parameter`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    EndSessionFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        uiLocales = listOf("de-DE", "de", "en-GB"),
+                    )
+            )
+
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertEquals("de-DE de en-GB", requestUrl.parameters["ui_locales"])
+    }
+
+    @Test
+    fun `prepare should append logout_hint parameter`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    EndSessionFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        logoutHint = "logoutHint",
+                    )
+            )
+
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertEquals("logoutHint", requestUrl.parameters["logout_hint"])
+    }
+
+    @Test
+    fun `prepare should append additional parameters`() = runTest {
+        val (flow, _) =
+            createFlow(
+                request =
+                    EndSessionFlow.Request(
+                        redirectUri = "https://example.com/app/redirect",
+                        additionalParameters = mapOf("param1" to "value 1", "param2" to "value 2"),
+                    )
+            )
+
+        val initiation = flow.prepare()
+        val requestUrl = Url(initiation.requestUrl)
+
+        assertTrue(requestUrl.encodedQuery.contains("value+1"), requestUrl.encodedQuery)
+        assertEquals("value 1", requestUrl.parameters["param1"])
+        assertEquals("value 2", requestUrl.parameters["param2"])
+    }
+
+    @Test
+    fun `prepare should throw exception when additional parameters contain known OAuth parameters`() =
+        runTest {
+            val (flow, _) =
+                createFlow(
+                    request =
+                        EndSessionFlow.Request(
+                            redirectUri = "https://example.com/app/redirect",
+                            additionalParameters =
+                                mapOf(Parameter.POST_LOGOUT_REDIRECT_URI to "postLogoutRedirectUri"),
+                        )
+                )
+
+            val e = assertFailsWith<IllegalArgumentException> { flow.prepare() }
+
+            assertEquals(
+                "Parameter \"post_logout_redirect_uri\" is a known OAuth/OIDC parameter",
+                e.message,
+            )
+        }
 
     @Test
     fun `onResponse should handle successful response`() = runTest {

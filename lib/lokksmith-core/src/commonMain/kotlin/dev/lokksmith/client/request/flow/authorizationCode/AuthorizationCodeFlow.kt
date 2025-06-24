@@ -21,7 +21,10 @@ import dev.lokksmith.client.request.Random
 import dev.lokksmith.client.request.RequestException
 import dev.lokksmith.client.request.flow.AbstractAuthFlow
 import dev.lokksmith.client.request.flow.AuthFlow
+import dev.lokksmith.client.request.flow.addAdditionalParameters
+import dev.lokksmith.client.request.flow.addOptionalParameter
 import dev.lokksmith.client.request.parameter.CodeChallengeMethod
+import dev.lokksmith.client.request.parameter.Display
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.request.parameter.Prompt
 import dev.lokksmith.client.request.parameter.ResponseType
@@ -121,6 +124,34 @@ private constructor(
          *   OAuth Public Clients</a>
          */
         val codeChallengeMethod: CodeChallengeMethod? = CodeChallengeMethod.SHA256,
+
+        /**
+         * Specifies how the Authorization Server displays the authentication and consent user
+         * interface pages to the End-User.
+         */
+        val display: Display? = null,
+
+        /**
+         * Specifies the allowable elapsed time in seconds since the last time the End-User was
+         * actively authenticated by the OP.
+         */
+        val maxAge: Int? = null,
+
+        /** List of language tag values (RFC5646), ordered by preference. */
+        override val uiLocales: List<String> = emptyList(),
+
+        /**
+         * Hint to the Authorization Server about the login identifier the End-User might use to log
+         * in (if necessary).
+         */
+        val loginHint: String? = null,
+
+        /**
+         * Additional parameters (key/value pairs) appended to the request URI. The use of any
+         * standard OAuth/OIDC parameters is an error and will throw an [IllegalArgumentException].
+         * Values must not be URL-encoded!
+         */
+        override val additionalParameters: Map<String, String> = emptyMap(),
     ) : AuthFlow.Request
 
     private val stateVerifierStrategy = VerifierStrategy.forKeyValue(Parameter.STATE, state)
@@ -156,11 +187,20 @@ private constructor(
                     nonceVerifierStrategy.addParameter(this)
                     codeChallengeStrategy.addParameters(this)
 
-                    if (request.prompt.isNotEmpty()) {
-                        parameters[Parameter.PROMPT] = request.prompt.joinToString(" ")
-                    }
+                    addOptionalParameter(Parameter.DISPLAY, request.display)
+                    addOptionalParameter(Parameter.PROMPT, request.prompt)
+                    addOptionalParameter(Parameter.MAX_AGE, request.maxAge)
+                    addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
+                    addOptionalParameter(
+                        Parameter.ID_TOKEN_HINT,
+                        client.snapshots.value.tokens?.idToken?.raw,
+                    )
+                    addOptionalParameter(Parameter.LOGIN_HINT, request.loginHint)
+                    addAdditionalParameters(request.additionalParameters)
                 }
                 .toString()
+        } catch (e: IllegalArgumentException) {
+            throw e
         } catch (e: URLParserException) {
             throw RequestException(cause = e, reason = RequestException.Reason.UrlParsing)
         } catch (e: Exception) {
@@ -181,6 +221,7 @@ private constructor(
                 when {
                     request.stateLength >= Defaults.STATE_MIN_LENGTH ->
                         random.randomAsciiString(request.stateLength)
+
                     else ->
                         throw IllegalArgumentException(
                             "stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}"
@@ -192,6 +233,7 @@ private constructor(
                     request.nonceLength == 0 -> null
                     request.nonceLength >= Defaults.NONCE_MIN_LENGTH ->
                         random.randomAsciiString(request.nonceLength)
+
                     else ->
                         throw IllegalArgumentException(
                             "nonceLength must not be less than ${Defaults.NONCE_MIN_LENGTH}"

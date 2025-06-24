@@ -56,6 +56,16 @@ public interface AuthFlow {
          * minimum or maximum length, Lokksmith enforces a minimum of 16 characters for security.
          */
         public val stateLength: Int
+
+        /** List of language tag values (RFC5646), ordered by preference. */
+        public val uiLocales: List<String>
+
+        /**
+         * Additional parameters (key/value pairs) appended to the request URI. The use of any
+         * standard OAuth/OIDC parameters is an error and will throw an [IllegalArgumentException].
+         * Values must not be URL-encoded!
+         */
+        public val additionalParameters: Map<String, String>
     }
 
     /**

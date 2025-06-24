@@ -26,8 +26,12 @@ public object Parameter {
     public const val CODE_CHALLENGE: String = "code_challenge"
     public const val CODE_CHALLENGE_METHOD: String = "code_challenge_method"
     public const val CODE_VERIFIER: String = "code_verifier"
+    public const val DISPLAY: String = "display"
     public const val GRANT_TYPE: String = "grant_type"
     public const val ID_TOKEN_HINT: String = "id_token_hint"
+    public const val LOGIN_HINT: String = "login_hint"
+    public const val LOGOUT_HINT: String = "logout_hint"
+    public const val MAX_AGE: String = "max_age"
     public const val NONCE: String = "nonce"
     public const val POST_LOGOUT_REDIRECT_URI: String = "post_logout_redirect_uri"
     public const val PROMPT: String = "prompt"
@@ -36,10 +40,38 @@ public object Parameter {
     public const val RESPONSE_TYPE: String = "response_type"
     public const val SCOPE: String = "scope"
     public const val STATE: String = "state"
+    public const val UI_LOCALES: String = "ui_locales"
 
     // Response
     public const val CODE: String = "code"
     public const val ERROR: String = "error"
     public const val ERROR_DESCRIPTION: String = "error_description"
     public const val ERROR_URI: String = "error_uri"
+
+    internal val KNOWN_PARAMETERS =
+        listOf(
+            CLIENT_ID,
+            CODE,
+            CODE_CHALLENGE,
+            CODE_CHALLENGE_METHOD,
+            CODE_VERIFIER,
+            DISPLAY,
+            ERROR,
+            ERROR_DESCRIPTION,
+            ERROR_URI,
+            GRANT_TYPE,
+            ID_TOKEN_HINT,
+            LOGIN_HINT,
+            LOGOUT_HINT,
+            MAX_AGE,
+            NONCE,
+            POST_LOGOUT_REDIRECT_URI,
+            PROMPT,
+            REDIRECT_URI,
+            REFRESH_TOKEN,
+            RESPONSE_TYPE,
+            SCOPE,
+            STATE,
+            UI_LOCALES,
+        )
 }
