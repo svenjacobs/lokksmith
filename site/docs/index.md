@@ -13,7 +13,7 @@ We prioritize adherence to secure, recommended standards and patterns.
 - Compatibility with the legacy Android view system (though developers may implement their own
   integration if needed)
 
-[^1]: This means we use libraries such as KotlinX Serialization, Ktor, and DataStore, and do not 
+[^1]: This means we use libraries such as Kotlin Serialization, Ktor, and DataStore, and do not 
       intend to make them interchangeable with other solutions.
 
 *[OIDC]: OpenID Connect
