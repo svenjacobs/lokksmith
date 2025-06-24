@@ -130,7 +130,10 @@ class AppViewModel(
         url: String,
     ) {
         viewModelScope.launch(exceptionHandler) {
-            val client = lokksmith.getOrCreate(clientId) {
+            val client = lokksmith.getOrCreate(
+                key = clientId,
+                options = Client.Options(leewaySeconds = 30),
+            ) {
                 id = clientId
                 discoveryUrl = url
             }

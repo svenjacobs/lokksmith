@@ -19,19 +19,22 @@ import dev.drewhamilton.poko.Poko
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.Id
 import dev.lokksmith.client.Key
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonIgnoreUnknownKeys
 
 internal const val CURRENT_SCHEMA_VERSION = 2
 
 /** A [Snapshot] represents the persistable state of a [Client]. */
 @Serializable
+@JsonIgnoreUnknownKeys
+@OptIn(ExperimentalSerializationApi::class)
 public data class Snapshot(
     val schemaVersion: Int = CURRENT_SCHEMA_VERSION,
     val key: Key,
     val id: Id,
     val metadata: Client.Metadata,
-    val options: Client.Options,
     val tokens: Client.Tokens? = null,
 
     /**

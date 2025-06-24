@@ -353,17 +353,17 @@ suspend fun TestScope.createTestClient(
                         tokenEndpoint = "https://example.com/tokenEndpoint",
                         endSessionEndpoint = "https://example.com/endSessionEndpoint",
                     ),
-                options = Client.Options(),
             ),
     )
 
     val client =
         ClientImpl.create(
             key = key,
+            options = Client.Options(),
             coroutineScope = backgroundScope,
             snapshotStore = snapshotStore,
             provider = provider,
-        ) as InternalClient
+        )
 
     client.updateSnapshot(initialSnapshot)
     runCurrent()

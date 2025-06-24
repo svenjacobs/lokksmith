@@ -59,13 +59,7 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot =
-                Snapshot(
-                    key = key,
-                    id = "clientId".asId(),
-                    metadata = mockMetadata,
-                    options = Client.Options(),
-                ),
+            snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
         )
 
         val client = assertNotNull(lokksmith.get(key.value))
@@ -95,25 +89,18 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot =
-                Snapshot(
-                    key = key,
-                    id = "clientId".asId(),
-                    metadata = mockMetadata,
-                    options = Client.Options(),
-                ),
+            snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
         )
         snapshotStore.setCalls.clear()
 
         val client =
-            lokksmith.getOrCreate(key.value) {
+            lokksmith.getOrCreate(key = key.value, options = Client.Options(leewaySeconds = 30)) {
                 id = "clientId"
                 discoveryUrl = "https://example.com/.well-known/openid-configuration"
-                options = Client.Options(leewaySeconds = 30)
             }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
-        assertEquals(Client.Options(), client.options)
+        assertEquals(Client.Options(leewaySeconds = 30), client.options)
 
         assertEquals(1, snapshotStore.existsCalls.size)
         assertContains(
@@ -136,10 +123,9 @@ class LokksmithTest {
 
         val key = "key".asKey()
         val client =
-            lokksmith.getOrCreate(key.value) {
+            lokksmith.getOrCreate(key = key.value, options = Client.Options(leewaySeconds = 30)) {
                 id = "clientId"
                 discoveryUrl = "https://example.com/.well-known/openid-configuration"
-                options = Client.Options(leewaySeconds = 30)
             }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
@@ -156,13 +142,7 @@ class LokksmithTest {
             snapshotStore.setCalls,
             SetCall(
                 key = key,
-                snapshot =
-                    Snapshot(
-                        key = key,
-                        id = "clientId".asId(),
-                        metadata = mockMetadata,
-                        options = Client.Options(leewaySeconds = 30),
-                    ),
+                snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
             ),
             "SnapshotStore.set() not called",
         )
@@ -181,13 +161,7 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot =
-                Snapshot(
-                    key = key,
-                    id = "clientId".asId(),
-                    metadata = mockMetadata,
-                    options = Client.Options(),
-                ),
+            snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
         )
 
         assertTrue(lokksmith.exists(key.value))
@@ -221,10 +195,12 @@ class LokksmithTest {
 
         val key = "key".asKey()
         val client =
-            lokksmith.create(key.value) {
+            lokksmith.create(
+                key = key.value,
+                options = Client.Options(leewaySeconds = 5, preemptiveRefreshSeconds = 30),
+            ) {
                 id = "clientId"
                 discoveryUrl = "https://example.com/.well-known/openid-configuration"
-                options = Client.Options(leewaySeconds = 5, preemptiveRefreshSeconds = 30)
             }
         assertEquals("clientId".asId(), client.id)
         assertEquals(mockMetadata, client.metadata)
@@ -240,13 +216,7 @@ class LokksmithTest {
             snapshotStore.setCalls,
             SetCall(
                 key = key,
-                snapshot =
-                    Snapshot(
-                        key = key,
-                        id = "clientId".asId(),
-                        metadata = mockMetadata,
-                        options = Client.Options(leewaySeconds = 5, preemptiveRefreshSeconds = 30),
-                    ),
+                snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
             ),
             "SnapshotStore.set() not called",
         )
@@ -265,13 +235,7 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot =
-                Snapshot(
-                    key = key,
-                    id = "clientId".asId(),
-                    metadata = mockMetadata,
-                    options = Client.Options(),
-                ),
+            snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
         )
 
         assertFailsWith<IllegalArgumentException> {
@@ -295,13 +259,7 @@ class LokksmithTest {
         val key = "key".asKey()
         snapshotStore.set(
             key = key,
-            snapshot =
-                Snapshot(
-                    key = key,
-                    id = "clientId".asId(),
-                    metadata = mockMetadata,
-                    options = Client.Options(),
-                ),
+            snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
         )
 
         assertTrue(lokksmith.delete(key.value))
