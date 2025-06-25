@@ -39,7 +39,6 @@ import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result
 import dev.lokksmith.client.request.flow.AuthFlowStateResponseHandler
-import dev.lokksmith.client.snapshot.Snapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -119,25 +118,8 @@ internal constructor(
      */
     internal suspend fun cancelPendingFlow(errorMessage: String?) {
         val initiation = initiation ?: return
-        val client = getClient(initiation.clientKey)
 
-        if (client.snapshots.value.flowResult != null) return
-
-        client.updateSnapshot {
-            copy(
-                flowResult =
-                    when (errorMessage) {
-                        null -> Snapshot.FlowResult.Cancelled(state = initiation.state)
-                        else ->
-                            Snapshot.FlowResult.Error(
-                                state = initiation.state,
-                                type = Snapshot.FlowResult.Error.Type.Generic,
-                                message = errorMessage,
-                            )
-                    },
-                ephemeralFlowState = null,
-            )
-        }
+        AuthFlowStateResponseHandler(context.lokksmith).cancelPendingFlow(initiation, errorMessage)
     }
 
     private fun cancel() {
