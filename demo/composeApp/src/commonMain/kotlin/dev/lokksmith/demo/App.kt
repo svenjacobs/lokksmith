@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package dev.lokksmith.demo
 
 import androidx.compose.foundation.Image
@@ -59,15 +61,16 @@ import dev.lokksmith.demo.resources.check
 import dev.lokksmith.demo.resources.missing
 import dev.lokksmith.demo.resources.question
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeComponents
 import kotlinx.datetime.offsetAt
 import kotlinx.datetime.periodUntil
 import org.jetbrains.compose.resources.painterResource
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
