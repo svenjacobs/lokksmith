@@ -17,16 +17,30 @@ package dev.lokksmith
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSURL
+import platform.Foundation.NSUserDomainMask
 
 internal actual object PlatformContext
 
+@OptIn(ExperimentalForeignApi::class)
 internal actual fun createDataStore(
     fileName: String,
     platformContext: PlatformContext,
 ): DataStore<Preferences> =
     createDataStore(fileName) { name ->
-        // https://developer.android.com/kotlin/multiplatform/datastore#ios
-        TODO()
+        val documentDirectory: NSURL? =
+            NSFileManager.defaultManager.URLForDirectory(
+                directory = NSDocumentDirectory,
+                inDomain = NSUserDomainMask,
+                appropriateForURL = null,
+                create = false,
+                error = null,
+            )
+
+        requireNotNull(documentDirectory?.path) + "/$name"
     }
 
 internal actual val platformUserAgentSuffix = "iOS"
