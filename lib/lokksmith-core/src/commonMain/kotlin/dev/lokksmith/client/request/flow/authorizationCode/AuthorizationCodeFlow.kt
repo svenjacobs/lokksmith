@@ -183,9 +183,9 @@ private constructor(
                     parameters[Parameter.CLIENT_ID] = client.id.value
                     parameters[Parameter.REDIRECT_URI] = request.redirectUri
 
-                    stateVerifierStrategy.addParameter(this)
-                    nonceVerifierStrategy.addParameter(this)
-                    codeChallengeStrategy.addParameters(this)
+                    stateVerifierStrategy.addParameter()
+                    nonceVerifierStrategy.addParameter()
+                    codeChallengeStrategy.addParameters()
 
                     addOptionalParameter(Parameter.DISPLAY, request.display)
                     addOptionalParameter(Parameter.PROMPT, request.prompt)

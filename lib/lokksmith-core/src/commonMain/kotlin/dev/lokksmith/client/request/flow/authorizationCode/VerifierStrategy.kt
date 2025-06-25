@@ -29,14 +29,9 @@ import io.ktor.http.URLBuilder
  */
 internal sealed interface VerifierStrategy {
 
-    /**
-     * Adds the relevant parameter (e.g., "state" or "nonce") to the given [URLBuilder].
-     *
-     * @param builder The [URLBuilder] to which the parameter will be added.
-     *
-     * TODO: Use case for context parameters :)
-     */
-    fun addParameter(builder: URLBuilder)
+    /** Adds the relevant parameter (e.g., "state" or "nonce") to the given [URLBuilder]. */
+    context(builder: URLBuilder)
+    fun addParameter()
 
     /**
      * Verifies the actual value (from the response) against the expected value.
@@ -54,7 +49,8 @@ internal sealed interface VerifierStrategy {
      */
     class Default(val key: String, val value: String) : VerifierStrategy {
 
-        override fun addParameter(builder: URLBuilder) {
+        context(builder: URLBuilder)
+        override fun addParameter() {
             builder.parameters[key] = value
         }
 
@@ -67,7 +63,8 @@ internal sealed interface VerifierStrategy {
      */
     object None : VerifierStrategy {
 
-        override fun addParameter(builder: URLBuilder) {}
+        context(builder: URLBuilder)
+        override fun addParameter() {}
 
         override fun verify(actualValue: String?) = true
     }

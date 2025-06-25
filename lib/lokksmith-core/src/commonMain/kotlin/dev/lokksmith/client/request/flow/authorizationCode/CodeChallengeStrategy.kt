@@ -32,14 +32,9 @@ import io.ktor.http.URLBuilder
  */
 internal sealed interface CodeChallengeStrategy {
 
-    /**
-     * Adds PKCE code challenge parameters to the given [URLBuilder].
-     *
-     * @param builder The [URLBuilder] to which PKCE parameters will be added.
-     *
-     * TODO: Use case for context parameters :)
-     */
-    fun addParameters(builder: URLBuilder)
+    /** Adds PKCE code challenge parameters to the given [URLBuilder]. */
+    context(builder: URLBuilder)
+    fun addParameters()
 
     /**
      * Default implementation that adds the code challenge and method parameters.
@@ -50,7 +45,8 @@ internal sealed interface CodeChallengeStrategy {
     class Default(val method: CodeChallengeMethod, val codeChallenge: String) :
         CodeChallengeStrategy {
 
-        override fun addParameters(builder: URLBuilder) {
+        context(builder: URLBuilder)
+        override fun addParameters() {
             builder.parameters[Parameter.CODE_CHALLENGE_METHOD] = method.toString()
             builder.encodedParameters[Parameter.CODE_CHALLENGE] = codeChallenge
         }
@@ -59,7 +55,8 @@ internal sealed interface CodeChallengeStrategy {
     /** Implementation for cases where no PKCE code challenge is required. */
     object None : CodeChallengeStrategy {
 
-        override fun addParameters(builder: URLBuilder) {}
+        context(builder: URLBuilder)
+        override fun addParameters() {}
     }
 
     companion object {
