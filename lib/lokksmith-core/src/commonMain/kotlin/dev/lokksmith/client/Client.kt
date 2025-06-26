@@ -22,9 +22,7 @@ import dev.lokksmith.client.InternalClient.Provider
 import dev.lokksmith.client.InternalClient.SnapshotContract
 import dev.lokksmith.client.request.flow.AuthFlow
 import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow
-import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowCancellation
 import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
-import dev.lokksmith.client.request.flow.endSession.EndSessionFlowCancellation
 import dev.lokksmith.client.request.refresh.RefreshTokenRequest
 import dev.lokksmith.client.request.refresh.RefreshTokenRequestImpl
 import dev.lokksmith.client.snapshot.InternalSnapshotStore
@@ -370,10 +368,6 @@ public interface InternalClient : Client {
     public val snapshots: StateFlow<Snapshot>
 
     public suspend fun updateSnapshot(body: Snapshot.() -> Snapshot): Snapshot
-
-    public suspend fun updatePendingFlowResponse(responseUri: String)
-
-    public suspend fun cancelPendingFlow()
 }
 
 internal class ClientImpl
@@ -494,38 +488,6 @@ private constructor(
 
     override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) =
         snapshotContract.updateSnapshot(body)
-
-    override suspend fun updatePendingFlowResponse(responseUri: String) {
-        updateSnapshot {
-            val updatedFlowState =
-                when (val state = ephemeralFlowState) {
-                    is Snapshot.EphemeralAuthorizationCodeFlowState ->
-                        state.copy(responseUri = responseUri)
-
-                    is Snapshot.EphemeralEndSessionFlowState ->
-                        state.copy(responseUri = responseUri)
-
-                    null -> throw IllegalStateException("ephemeralFlowState is null")
-                }
-
-            copy(ephemeralFlowState = updatedFlowState)
-        }
-    }
-
-    override suspend fun cancelPendingFlow() {
-        val ephemeralFlowState =
-            checkNotNull(snapshots.value.ephemeralFlowState) { "ephemeral flow state is null" }
-
-        val cancellation =
-            when (ephemeralFlowState) {
-                is Snapshot.EphemeralAuthorizationCodeFlowState ->
-                    ::AuthorizationCodeFlowCancellation
-
-                is Snapshot.EphemeralEndSessionFlowState -> ::EndSessionFlowCancellation
-            }(this)
-
-        cancellation.cancel(ephemeralFlowState.state)
-    }
 
     override fun dispose() {
         coroutineScope.cancel()

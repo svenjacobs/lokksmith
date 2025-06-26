@@ -462,14 +462,16 @@ class AuthorizationCodeFlowTest {
             client.snapshots.value.ephemeralFlowState,
             "ephemeralFlowState must not be null",
         )
-        assertNotNull(client.snapshots.value.nonce, "nonce must not be null")
+        val nonce = assertNotNull(client.snapshots.value.nonce, "nonce must not be null")
         assertNull(client.snapshots.value.flowResult, "flowResult must be null")
 
         flow.cancel()
         runCurrent()
 
         assertNull(client.snapshots.value.ephemeralFlowState)
-        assertNull(client.snapshots.value.nonce)
+        // The nonce must not be nulled. If a user aborts an Authorization Code Flow the nonce must
+        // persist because the user is still authenticated.
+        assertEquals(nonce, client.snapshots.value.nonce)
         assertEquals(FlowResult.Cancelled(state = flow.state), client.snapshots.value.flowResult)
     }
 }

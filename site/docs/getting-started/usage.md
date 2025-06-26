@@ -67,6 +67,21 @@ or `client.runWithTokens()`.
     The `tokens` Flow does not automatically refresh tokens when they expire.
     Use `runWithTokens()` to ensure fresh tokens when required.
 
+## Singleton
+
+A singleton `Lokksmith` instance must be provided during application startup as soon as possible via 
+`SingletonLokksmithProvider`. This provider ensures that platform-specific response handling, which
+is decoupled from the initiation of an auth flow and is launched by the system implicitly, is able 
+to retrieve the `Lokksmith` instance. On Android this should be executed in the `Application`
+class, for example.
+
+```kotlin
+SingletonLokksmithProvider.set(
+    lokksmith = createLokksmith(),
+    coroutineScope = MainScope(),
+)
+```
+
 ## Platform implementations
 
 Calling the system browser and handling the authentication response on mobile platforms involves
@@ -75,7 +90,7 @@ experience, it is essential to persist and restore authentication state as neede
 provides platform-specific implementations that abstract these complexities, making it easier to
 integrate secure authentication flows in your application.
 
-### Android
+### Compose Multiplatform
 
 Once you receive the `Initiation` object, use `AuthFlowLauncher` to start the authentication flow
 from your Composable. For example:
@@ -102,5 +117,12 @@ the user interface accordingly or use `Client.authFlowResult`(1) from your busin
 
 ### iOS
 
-The iOS framework implementation is not yet available.  
-Contributions are welcome!
+The iOS integration is currently usable from a Kotlin Multiplatform or Compose Multiplatform
+application. A dedicated Swift package for use in a native iOS app is still pending.
+
+To launch an authentication flow from the iOS platform code of a Kotlin Multiplatform application,
+use `launchAuthFlow()`:
+
+```kotlin
+lokksmith.launchAuthFlow(initiation)
+```

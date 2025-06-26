@@ -2,9 +2,8 @@ import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
+    id("multiplatform-conventions")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.android.library)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.dokka)
     alias(libs.plugins.poko)
@@ -14,28 +13,6 @@ plugins {
 }
 
 kotlin {
-    explicitApi()
-
-    // targets
-    jvm()
-    androidTarget {
-        publishLibraryVariants("release")
-    }
-    iosArm64()
-    iosSimulatorArm64()
-    iosX64()
-
-    targets.configureEach {
-        compilations.configureEach {
-            compileTaskProvider.get().compilerOptions {
-                freeCompilerArgs.addAll(
-                    "-Xexpect-actual-classes",
-                    "-Xcontext-parameters",
-                )
-            }
-        }
-    }
-
     sourceSets {
         commonMain.dependencies {
             //api(libs.kotlinx.collections.immutable)
@@ -59,13 +36,9 @@ kotlin {
             implementation(libs.ktor.client.mock)
         }
 
-        jvmMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.cryptography.provider.jdk)
-        }
-
         androidMain.dependencies {
             api(libs.androidx.activity)
+            api(libs.androidx.browser)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.cryptography.provider.jdk)
         }
@@ -78,11 +51,10 @@ kotlin {
 }
 
 android {
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    namespace = "dev.lokksmith"
+    namespace = "dev.lokksmith.android"
 
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 

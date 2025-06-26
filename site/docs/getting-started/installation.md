@@ -45,26 +45,27 @@ kotlin {
 }
 ```
 
-## Android
+## Compose
 
-Lokksmith provides an additional artifact, `lokksmith-android`, for seamless integration with Android
-and Jetpack Compose. It includes an `Activity` for handling OAuth responses and an `AuthFlowLauncher`
-for launching authentication flows from Compose.
+Lokksmith provides an additional artifact, `lokksmith-compose`, for seamless integration with Jetpack
+Compose and Compose Multiplatform for Android and iOS.
 
-### Add the Android Artifact
+### Add the Compose Artifact
 
 ```toml title="gradle/libs.versions.toml"
 [libraries]
-lokksmith-android = { module = "dev.lokksmith:lokksmith-android", version.ref = "lokksmith" }
+lokksmith-compose = { module = "dev.lokksmith:lokksmith-compose", version.ref = "lokksmith" }
 ```
 
-### Add Android Dependency to Source Set
+### Add Compose Dependency to Source Set
 
 ```title="build.gradle.kts"
-androidMain.dependencies {
-    implementation(libs.lokksmith.android)
+commonMain.dependencies {
+    implementation(libs.lokksmith.compose)
 }
 ```
+
+## Android
 
 ### Specify Redirect Scheme
 
@@ -111,7 +112,7 @@ entry for App Links, so you must manually update your `AndroidManifest.xml` as f
 1. Optional: Removes any existing intent filters added by Lokksmith
 2. Update host and path to match your redirect URI
 
-#### Note
+<h4>Note</h4>
 
 - Replace `example.com` and `/redirect` with the actual host and path used in your OIDC redirect URI.
 - Ensure your website is properly configured for [App Links verification](https://developer.android.com/training/app-links/verify-android-applinks)
@@ -125,10 +126,5 @@ Lokksmith uses Kotlin Serialization internally and depends on the ProGuard confi
 Usually this configuration is applied automatically. However, if you manually configure ProGuard
 you must ensure to apply the Kotlin Serialization rules or else Lokksmith will fail at
 (de)serialization.
-
-## iOS
-
-The iOS integration is not yet available.  
-Contributions are welcome!
 
 *[OIDC]: OpenID Connect

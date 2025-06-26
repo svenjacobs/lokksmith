@@ -9,12 +9,12 @@ with other (minor) versions of transitive dependencies, use them with caution.
 |---------|--------------|------------|---------------|-------|
 | 0.1.x   | 2.1.21       | 1.10.2     | 1.8.1         | 3.1.3 | 
 | 0.2.x   | ⬆️ **2.2.0** | 1.10.2     | 1.8.1         | 3.1.3 | 
+| 0.3.0   | 2.2.0        | 1.10.2     | 1.8.1         | 3.1.3 | 
 
-## lokksmith-android
+## lokksmith-compose
 
 Includes all dependencies from `lokksmith-core` plus:
 
-| Version  | [Compose BOM](https://developer.android.com/develop/ui/compose/bom) |
-|----------|---------------------------------------------------------------------|
-| ≤ 0.1.5  | 2025.06.00                                                          | 
-| ≥ 0.1.6  | 2025.06.01                                                          | 
+| Version | Compose Multiplatform |
+|---------|-----------------------| 
+| 0.3.0   | 1.8.2                 | 

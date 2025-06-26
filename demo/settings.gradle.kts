@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 rootProject.name = "demo"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
@@ -38,6 +40,6 @@ include(":composeApp")
 includeBuild("../lib") {
     dependencySubstitution {
         substitute(module("dev.lokksmith:lokksmith-core")).using(project(":lokksmith-core"))
-        substitute(module("dev.lokksmith:lokksmith-android")).using(project(":lokksmith-android"))
+        substitute(module("dev.lokksmith:lokksmith-compose")).using(project(":lokksmith-compose"))
     }
 }

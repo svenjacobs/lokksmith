@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.Serializable
 
 /**
  * Provides an observable [Result] of the current or last known progress of an auth flow which can
@@ -38,16 +39,18 @@ import kotlinx.coroutines.flow.map
  */
 public object AuthFlowResultProvider {
 
+    @Serializable
     public sealed interface Result {
 
-        public data object Undefined : Result
+        @Serializable public data object Undefined : Result
 
-        @Poko public class Processing(public val state: String) : Result
+        @Serializable @Poko public class Processing(public val state: String) : Result
 
-        @Poko public class Success(public val state: String) : Result
+        @Serializable @Poko public class Success(public val state: String) : Result
 
-        @Poko public class Cancelled(public val state: String) : Result
+        @Serializable @Poko public class Cancelled(public val state: String) : Result
 
+        @Serializable
         @Poko
         public class Error(
             public val state: String,

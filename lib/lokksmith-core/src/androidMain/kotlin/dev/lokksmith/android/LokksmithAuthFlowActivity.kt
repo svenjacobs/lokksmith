@@ -25,12 +25,12 @@ import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import dev.lokksmith.Lokksmith
-import dev.lokksmith.client.InternalClient
+import dev.lokksmith.SingletonLokksmithProvider.coroutineScope
+import dev.lokksmith.SingletonLokksmithProvider.lokksmith
+import dev.lokksmith.client.request.flow.AuthFlowUserAgentResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
 import io.ktor.http.Url
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -77,13 +77,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                 }
 
             coroutineScope.launch(exceptionHandler { "Error cancelling flow" }) {
-                val client =
-                    checkNotNull(lokksmith.get(clientKey)) {
-                        "Client with key $clientKey not found"
-                    }
-                        as InternalClient
-
-                client.cancelPendingFlow()
+                AuthFlowUserAgentResponseHandler(lokksmith).onCancel(clientKey)
             }
 
             setResult(RESULT_CANCELED)
@@ -124,14 +118,11 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                         "No client snapshot found for state"
                     }
 
-                val client =
-                    checkNotNull(lokksmith.get(snapshot.key.value)) { "No client found for state" }
-                        as InternalClient
-
                 // Update the pending flow state with the response URI and let the UI layer do the
                 // handling so that this Activity is closed as fast as possible. We don't want to
                 // do network calls etc. here.
-                client.updatePendingFlowResponse(data)
+                AuthFlowUserAgentResponseHandler(lokksmith)
+                    .onResponse(key = snapshot.key.value, responseUri = data)
 
                 withContext(Dispatchers.Main.immediate) {
                     setResult(RESULT_OK)
@@ -158,18 +149,6 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
             )
             finish()
         }
-
-    private val lokksmith: Lokksmith
-        get() = lokksmithContext.lokksmith
-
-    private val coroutineScope: CoroutineScope
-        get() = lokksmithContext.coroutineScope
-
-    private val lokksmithContext: LokksmithContext by lazy {
-        checkNotNull((applicationContext as? LokksmithContextProvider)?.lokksmithContext) {
-            "Application class must implement LokksmithContextProvider"
-        }
-    }
 
     public companion object {
 
@@ -203,7 +182,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
         internal fun createErrorResultIntent(errorMessage: String): Intent =
             Intent().apply { putExtra(RESULT_EXTRA_ERROR_MESSAGE, errorMessage) }
 
-        internal fun getErrorMessageFromIntent(intent: Intent?): String? =
+        public fun getErrorMessageFromIntent(intent: Intent?): String? =
             intent?.getStringExtra(RESULT_EXTRA_ERROR_MESSAGE)
 
         private const val EXTRA_LOKKSMITH_URL = "EXTRA_LOKKSMITH_URL"

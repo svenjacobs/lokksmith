@@ -17,7 +17,6 @@ package dev.lokksmith.client.request.flow
 
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.InternalClient
-import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowResponseHandler
 import dev.lokksmith.client.request.flow.endSession.EndSessionFlowResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
@@ -29,6 +28,8 @@ import io.ktor.http.Url
  *
  * This handler is designed for scenarios where the initiation of an OAuth flow and the handling of
  * its response are decoupled, such as on mobile platforms.
+ *
+ * @see AuthFlowUserAgentResponseHandler
  */
 public class AuthFlowStateResponseHandler(private val lokksmith: Lokksmith) {
 
@@ -67,30 +68,5 @@ public class AuthFlowStateResponseHandler(private val lokksmith: Lokksmith) {
             }
 
         handler.onResponse(responseUri)
-    }
-
-    public suspend fun cancelPendingFlow(initiation: Initiation, errorMessage: String? = null) {
-        val client =
-            checkNotNull(lokksmith.get(initiation.clientKey) as InternalClient) {
-                "Client with key \"${initiation.clientKey}\" not found"
-            }
-
-        if (client.snapshots.value.flowResult != null) return
-
-        client.updateSnapshot {
-            copy(
-                flowResult =
-                    when (errorMessage) {
-                        null -> Snapshot.FlowResult.Cancelled(state = initiation.state)
-                        else ->
-                            Snapshot.FlowResult.Error(
-                                state = initiation.state,
-                                type = Snapshot.FlowResult.Error.Type.Generic,
-                                message = errorMessage,
-                            )
-                    },
-                ephemeralFlowState = null,
-            )
-        }
     }
 }

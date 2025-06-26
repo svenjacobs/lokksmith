@@ -9,8 +9,8 @@ library.
 | Current Release                                 | `{{ version }}`<br/>{{ version_date }} | `0.11.1`<br/>Dec 22, 2021                                                                                     |
 | Kotlin                                          | Yes                                    | No                                                                                                            |
 | Coroutines &amp; Flows                          | Yes                                    | No                                                                                                            |
-| Multiplatform                                   | Yes, but iOS still pending             | No, separate [iOS library](https://github.com/openid/AppAuth-iOS)                                             |
-| Jetpack Compose                                 | Yes                                    | No                                                                                                            |
+| Multiplatform                                   | Yes (Android &amp; iOS)                | No, separate [iOS library](https://github.com/openid/AppAuth-iOS)                                             |
+| Compose Multiplatform                           | Yes                                    | No                                                                                                            |
 | Core Functionality independent<br/>of Mobile OS | Yes                                    | No                                                                                                            |
 | Client State Persistence                        | Yes                                    | No                                                                                                            |
 | Multiple Clients Management                     | Yes                                    | No                                                                                                            |
