@@ -54,8 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import co.touchlab.kermit.Logger
 import dev.lokksmith.client.Client
-import dev.lokksmith.demo.AppViewModel.UiState
+import dev.lokksmith.compose.rememberAuthFlowLauncher
 import dev.lokksmith.demo.resources.Res
 import dev.lokksmith.demo.resources.check
 import dev.lokksmith.demo.resources.missing
@@ -76,11 +77,15 @@ import kotlin.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 fun App(
     viewModel: AppViewModel = viewModel { AppViewModel() },
-    onStartAuthFlow: (UiState.AuthFlow) -> Unit,
     onCopyToClipboard: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }
+    val launcher = rememberAuthFlowLauncher()
+
+    LaunchedEffect(launcher.result) {
+        Logger.d("App") { "Received auth flow result: ${launcher.result}" }
+    }
 
     LifecycleStartEffect(Unit) {
         viewModel.onStart()
@@ -89,7 +94,7 @@ fun App(
 
     LaunchedEffect(uiState.authFlow) {
         uiState.authFlow?.let {
-            onStartAuthFlow(it)
+            launcher.launch(it.initiation)
         }
         viewModel.onConfirmAuthFlow()
     }

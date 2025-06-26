@@ -2,21 +2,19 @@ package dev.lokksmith.demo
 
 import androidx.compose.ui.window.ComposeUIViewController
 import dev.lokksmith.createLokksmith
-import dev.lokksmith.demo.Container.lokksmith
-import dev.lokksmith.demo.Container.mainScope
-import dev.lokksmith.ios.launchAuthFlow
-import kotlinx.coroutines.launch
+import platform.UIKit.UIPasteboard
 
 @Suppress("unused", "FunctionName")
 fun MainViewController() = ComposeUIViewController(
-    configure = { lokksmith = createLokksmith() }
+    configure = {
+        setupApp(
+            lokksmith = createLokksmith()
+        )
+    }
 ) {
     App(
-        onStartAuthFlow = { authFlow ->
-            mainScope.launch {
-                lokksmith.launchAuthFlow(authFlow.initiation)
-            }
+        onCopyToClipboard = { text ->
+            UIPasteboard.generalPasteboard.string = text
         },
-        onCopyToClipboard = { /* TODO */ },
     )
 }

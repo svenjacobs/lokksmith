@@ -24,5 +24,5 @@ rootProject.name = "lokksmith"
 includeBuild("build-logic")
 include(
     ":lokksmith-core",
-    ":lokksmith-android",
+    ":lokksmith-compose",
 )

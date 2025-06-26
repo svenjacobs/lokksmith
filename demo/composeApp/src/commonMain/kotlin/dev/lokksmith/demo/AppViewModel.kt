@@ -3,7 +3,7 @@ package dev.lokksmith.demo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import dev.lokksmith.Lokksmith
+import dev.lokksmith.SingletonLokksmithProvider.lokksmith
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
@@ -32,9 +32,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AppViewModel(
-    private val lokksmith: Lokksmith = Container.lokksmith,
-) : ViewModel() {
+class AppViewModel : ViewModel() {
 
     data class UiState(
         val isInitialized: Boolean = false,

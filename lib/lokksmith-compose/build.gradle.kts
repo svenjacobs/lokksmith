@@ -1,30 +1,37 @@
-import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
 
 plugins {
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.android.library)
+    id("multiplatform-conventions")
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.maven.publish)
+    alias(libs.plugins.dokka)
     id("kotlin-parcelize")
     id("testlogger-conventions")
     id("spotless-conventions")
 }
 
 kotlin {
-    explicitApi()
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
+    sourceSets {
+        commonMain.dependencies {
+            api(project(":lokksmith-core"))
+            api(compose.ui)
+            implementation(compose.components.uiToolingPreview)
+        }
+
+        androidMain.dependencies {
+            api(libs.androidx.activity.compose)
+            api(libs.androidx.browser)
+            implementation(compose.preview)
+        }
     }
 }
 
 android {
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
     namespace = "dev.lokksmith.android"
 
     defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -45,21 +52,12 @@ android {
     }
 }
 
-dependencies {
-    val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-    api(project(":lokksmith-core"))
-    api(libs.androidx.activity.compose)
-    api(libs.androidx.browser)
-    api(libs.androidx.compose.ui)
-}
-
 mavenPublishing {
     configure(
-        AndroidSingleVariantLibrary(
-            variant = "release",
+        KotlinMultiplatform(
             sourcesJar = true,
-            publishJavadocJar = true,
+            javadocJar = JavadocJar.Dokka("dokkaGenerate"),
+            androidVariantsToPublish = listOf("release"),
         )
     )
 }

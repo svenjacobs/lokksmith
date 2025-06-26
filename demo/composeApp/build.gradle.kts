@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -10,7 +9,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -28,14 +26,14 @@ kotlin {
     }
 
     sourceSets {
-
         androidMain.dependencies {
-            implementation(libs.lokksmith.android)
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
+
         commonMain.dependencies {
             implementation(libs.lokksmith.core)
+            implementation(libs.lokksmith.compose)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -48,6 +46,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kermit)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }

@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.buildconfig) apply false
     alias(libs.plugins.dokka) apply false
     alias(libs.plugins.poko) apply false
+    alias(libs.plugins.maven.publish) apply false
     alias(libs.plugins.ben.manes.versions)
 }
 

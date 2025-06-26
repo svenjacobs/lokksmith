@@ -30,7 +30,7 @@ multiplatform-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-
 kermit = "co.touchlab:kermit:2.0.6"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.0"
 lokksmith-core = { module = "dev.lokksmith:lokksmith-core" }
-lokksmith-android = { module = "dev.lokksmith:lokksmith-android" }
+lokksmith-compose = { module = "dev.lokksmith:lokksmith-compose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

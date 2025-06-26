@@ -17,7 +17,7 @@ package dev.lokksmith.ios
 
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
-import dev.lokksmith.client.request.flow.AuthFlowStateResponseHandler
+import dev.lokksmith.client.request.flow.AuthFlowUserAgentResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
 import io.ktor.http.Url
 import kotlin.coroutines.resume
@@ -40,7 +40,7 @@ public suspend fun Lokksmith.launchAuthFlow(
     prefersEphemeralWebBrowserSession: Boolean = false,
     additionalHeaderFields: Map<Any?, *>? = null,
 ) {
-    val responseHandler = AuthFlowStateResponseHandler(this)
+    val responseHandler = AuthFlowUserAgentResponseHandler(this)
 
     try {
         val responseUri =
@@ -50,14 +50,16 @@ public suspend fun Lokksmith.launchAuthFlow(
                 additionalHeaderFields = additionalHeaderFields,
             )
 
-        when (responseUri) {
-            null -> responseHandler.cancelPendingFlow(initiation)
-            else -> responseHandler.onResponse(responseUri)
+        with(responseHandler) {
+            when (responseUri) {
+                null -> onCancel(initiation.clientKey)
+                else -> onResponse(key = initiation.clientKey, responseUri = responseUri)
+            }
         }
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
-        responseHandler.cancelPendingFlow(initiation, e.message)
+        responseHandler.onError(initiation.clientKey, e.message)
     }
 }
 

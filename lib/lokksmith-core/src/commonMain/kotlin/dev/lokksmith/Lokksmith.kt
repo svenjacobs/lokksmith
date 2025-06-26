@@ -17,6 +17,7 @@ package dev.lokksmith
 
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.ClientImpl
+import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.asId
 import dev.lokksmith.client.asKey
 import dev.lokksmith.client.snapshot.Snapshot
@@ -212,6 +213,9 @@ internal constructor(
         container.coroutineScope.cancel()
     }
 }
+
+internal suspend fun Lokksmith.getInternal(key: String): InternalClient =
+    checkNotNull(get(key)) { "client with key \"$key\" not found" } as InternalClient
 
 /** @see Lokksmith.Options.httpClientEngine */
 internal expect val platformHttpClientEngine: HttpClientEngine
