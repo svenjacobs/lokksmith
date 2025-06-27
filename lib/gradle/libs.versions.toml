@@ -45,6 +45,6 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildconfig = "com.github.gmazzo.buildconfig:5.6.7"
 dokka = "org.jetbrains.dokka:2.0.0"
-poko = "dev.drewhamilton.poko:0.18.7"
+poko = "dev.drewhamilton.poko:0.19.0"
 maven-publish = "com.vanniktech.maven.publish:0.33.0"
 ben-manes-versions = "com.github.ben-manes.versions:0.52.0"
