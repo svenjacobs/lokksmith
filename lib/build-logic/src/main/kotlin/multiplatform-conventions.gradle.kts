@@ -19,17 +19,11 @@ kotlin {
     iosSimulatorArm64()
     iosX64()
 
-    targets.configureEach {
-        compilations.configureEach {
-            compileTaskProvider.configure {
-                compilerOptions {
-                    freeCompilerArgs.addAll(
-                        "-Xexpect-actual-classes",
-                        "-Xcontext-parameters",
-                    )
-                }
-            }
-        }
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xexpect-actual-classes",
+            "-Xcontext-parameters",
+        )
     }
 }
 
