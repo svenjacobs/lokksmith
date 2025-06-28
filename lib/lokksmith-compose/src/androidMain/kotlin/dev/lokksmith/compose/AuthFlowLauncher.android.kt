@@ -85,6 +85,7 @@ private class AndroidPlatformLauncher(
                     url = initiation.requestUrl,
                     clientKey = initiation.clientKey,
                     headers = headers,
+                    ephemeralBrowsing = options.android.ephemeralBrowsing,
                 )
 
             activityLauncher.launch(intent)
