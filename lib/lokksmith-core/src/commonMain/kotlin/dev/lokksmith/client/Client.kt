@@ -99,8 +99,8 @@ public interface Client {
          * Commonly referred to as "clock skew" or "leeway" in OAuth 2.0 and OpenID Connect
          * specifications.
          *
-         * Setting this to a very large value will effectively bypass token validity and expiration
-         * checks, which is highly discouraged.
+         * Setting this to a very large value will effectively bypass token validity checks, which
+         * is highly discouraged.
          *
          * @see <a
          *   href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">OpenID
@@ -127,7 +127,7 @@ public interface Client {
          *
          * @see leewaySeconds
          */
-        val preemptiveRefreshSeconds: Int = 60 + leewaySeconds,
+        val preemptiveRefreshSeconds: Int = 60,
     ) {
         init {
             require(leewaySeconds >= 0) { "leewaySeconds must be a positive value" }
@@ -448,7 +448,6 @@ private constructor(
             when {
                 currentTokens.areExpired(
                     preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-                    leewaySeconds = options.leewaySeconds,
                     instantProvider = provider.instantProvider,
                 ) -> refresh()
 
@@ -475,14 +474,12 @@ private constructor(
     override fun isExpired(token: Tokens.Token) =
         token.isExpired(
             preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-            leewaySeconds = options.leewaySeconds,
             instantProvider = provider.instantProvider,
         )
 
     override fun isExpired(token: Tokens.IdToken) =
         token.isExpired(
             preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-            leewaySeconds = options.leewaySeconds,
             instantProvider = provider.instantProvider,
         )
 
