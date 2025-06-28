@@ -19,7 +19,7 @@ import dev.lokksmith.SingletonLokksmithProvider.set
 import kotlinx.coroutines.CoroutineScope
 
 /**
- * Provides a singleton [Lokksmith] instance and a [CoroutineScope] which for example are used by
+ * Provides a singleton [Lokksmith] instance and optionally a [CoroutineScope] which are used by
  * Lokksmith in response handlers. This object must be initialized with [set] as soon as possible
  * during application startup, e.g. in the `Application` class of an Android app.
  *
@@ -37,12 +37,15 @@ public object SingletonLokksmithProvider {
             }
 
     public val coroutineScope: CoroutineScope
-        get() =
-            checkNotNull(_coroutineScope) {
-                "SingletonLokksmithProvider must be initialized via SingletonLokksmithProvider.set()"
-            }
+        get() = _coroutineScope ?: lokksmith.container.coroutineScope
 
-    public fun set(lokksmith: Lokksmith, coroutineScope: CoroutineScope) {
+    /**
+     * @param lokksmith The [Lokksmith] instance to use for response handlers.
+     * @param coroutineScope An optional [CoroutineScope] which is used for calling Lokksmith
+     *   methods in response handlers. When not defined the coroutine scope provided via
+     *   [Lokksmith.Options.coroutineScope] is used.
+     */
+    public fun set(lokksmith: Lokksmith, coroutineScope: CoroutineScope? = null) {
         _lokksmith = lokksmith
         _coroutineScope = coroutineScope
     }
