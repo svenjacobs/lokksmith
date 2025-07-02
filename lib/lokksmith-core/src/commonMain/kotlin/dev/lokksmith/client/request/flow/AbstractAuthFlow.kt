@@ -24,7 +24,6 @@ internal constructor(
     internal val client: InternalClient,
     internal val state: String,
     private val responseHandler: AuthFlowResponseHandler,
-    private val cancellation: AuthFlowCancellation,
 ) : AuthFlow {
 
     internal abstract val ephemeralFlowState: Snapshot.EphemeralFlowState
@@ -54,6 +53,6 @@ internal constructor(
     }
 
     override suspend fun cancel() {
-        cancellation.cancel(state)
+        AuthFlowCancellation(client).cancel(state)
     }
 }

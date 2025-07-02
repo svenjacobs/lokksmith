@@ -52,8 +52,14 @@ public actual fun rememberAuthFlowLauncher(): AuthFlowLauncher {
 
                     with(responseHandler) {
                         when (errorMessage) {
-                            null -> onCancel(initiation.clientKey)
-                            else -> onError(initiation.clientKey, errorMessage)
+                            null -> onCancel(key = initiation.clientKey, state = initiation.state)
+
+                            else ->
+                                onError(
+                                    key = initiation.clientKey,
+                                    state = initiation.state,
+                                    message = errorMessage,
+                                )
                         }
                     }
                 }
@@ -82,8 +88,7 @@ private class AndroidPlatformLauncher(
             val intent =
                 LokksmithAuthFlowActivity.createCustomTabsIntent(
                     context = context,
-                    url = initiation.requestUrl,
-                    clientKey = initiation.clientKey,
+                    initiation = initiation,
                     headers = headers,
                 )
 

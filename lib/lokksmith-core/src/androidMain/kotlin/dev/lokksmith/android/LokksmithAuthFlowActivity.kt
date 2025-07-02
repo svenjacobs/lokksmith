@@ -27,6 +27,7 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import dev.lokksmith.SingletonLokksmithProvider.coroutineScope
 import dev.lokksmith.SingletonLokksmithProvider.lokksmith
+import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.AuthFlowUserAgentResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
 import io.ktor.http.Url
@@ -73,11 +74,16 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
         if (intent.data == null) {
             val clientKey =
                 checkNotNull(intent.getStringExtra(EXTRA_LOKKSMITH_CLIENT_KEY)) {
-                    "$EXTRA_LOKKSMITH_CLIENT_KEY missing from Intent extras"
+                    "\"$EXTRA_LOKKSMITH_CLIENT_KEY\" missing from Intent extras"
+                }
+
+            val state =
+                checkNotNull(intent.getStringExtra(EXTRA_LOKKSMITH_STATE)) {
+                    "\"$EXTRA_LOKKSMITH_STATE\" missing from Intent extras"
                 }
 
             coroutineScope.launch(exceptionHandler { "Error cancelling flow" }) {
-                AuthFlowUserAgentResponseHandler(lokksmith).onCancel(clientKey)
+                AuthFlowUserAgentResponseHandler(lokksmith).onCancel(clientKey, state)
             }
 
             setResult(RESULT_CANCELED)
@@ -156,20 +162,19 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
          * Creates [Intent] for opening a Custom Tab for authentication via
          * [LokksmithAuthFlowActivity].
          *
-         * @param clientKey Key of client
-         * @param url URL to open in Custom Tab
+         * @param initiation Initiation object of auth flow
          * @param headers Extra headers that are passed to Custom Tab. See documentation of Custom
          *   Tabs, especially regarding CORS.
          */
         public fun createCustomTabsIntent(
             context: Context,
-            clientKey: String,
-            url: String,
+            initiation: Initiation,
             headers: Map<String, String> = emptyMap(),
         ): Intent =
             Intent(context, LokksmithAuthFlowActivity::class.java).apply {
-                putExtra(EXTRA_LOKKSMITH_CLIENT_KEY, clientKey)
-                putExtra(EXTRA_LOKKSMITH_URL, url)
+                putExtra(EXTRA_LOKKSMITH_CLIENT_KEY, initiation.clientKey)
+                putExtra(EXTRA_LOKKSMITH_STATE, initiation.state)
+                putExtra(EXTRA_LOKKSMITH_URL, initiation.requestUrl)
                 putExtra(EXTRA_LOKKSMITH_HEADERS, bundleOf(*headers.toList().toTypedArray()))
             }
 
@@ -187,6 +192,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
 
         private const val EXTRA_LOKKSMITH_URL = "EXTRA_LOKKSMITH_URL"
         private const val EXTRA_LOKKSMITH_CLIENT_KEY = "EXTRA_LOKKSMITH_CLIENT_KEY"
+        private const val EXTRA_LOKKSMITH_STATE = "EXTRA_LOKKSMITH_STATE"
         private const val EXTRA_LOKKSMITH_HEADERS = "EXTRA_LOKKSMITH_HEADERS"
 
         private const val RESULT_EXTRA_ERROR_MESSAGE = "RESULT_EXTRA_ERROR_MESSAGE"

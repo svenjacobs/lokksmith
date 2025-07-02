@@ -53,13 +53,7 @@ private constructor(
     private val request: Request,
     internal val nonce: String?,
     internal val codeVerifier: String?,
-) :
-    AbstractAuthFlow(
-        client = client,
-        state = state,
-        responseHandler = responseHandler,
-        cancellation = AuthorizationCodeFlowCancellation(client),
-    ) {
+) : AbstractAuthFlow(client = client, state = state, responseHandler = responseHandler) {
 
     /**
      * @see <a

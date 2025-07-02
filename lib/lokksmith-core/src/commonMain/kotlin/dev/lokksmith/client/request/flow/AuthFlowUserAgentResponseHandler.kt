@@ -16,9 +16,6 @@
 package dev.lokksmith.client.request.flow
 
 import dev.lokksmith.Lokksmith
-import dev.lokksmith.client.InternalClient
-import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowCancellation
-import dev.lokksmith.client.request.flow.endSession.EndSessionFlowCancellation
 import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult
 import dev.lokksmith.getInternal
@@ -54,41 +51,22 @@ public class AuthFlowUserAgentResponseHandler(private val lokksmith: Lokksmith) 
     }
 
     /** Marks the flow result as cancelled. */
-    public suspend fun onCancel(key: String) {
+    public suspend fun onCancel(key: String, state: String) {
         val client = lokksmith.getInternal(key)
-        val ephemeralFlowState = client.requireEphemeralFlowState
-        val cancellation =
-            when (ephemeralFlowState) {
-                is Snapshot.EphemeralAuthorizationCodeFlowState ->
-                    ::AuthorizationCodeFlowCancellation
-
-                is Snapshot.EphemeralEndSessionFlowState -> ::EndSessionFlowCancellation
-            }(client)
-
-        cancellation.cancel(ephemeralFlowState.state)
+        AuthFlowCancellation(client).cancel(state)
     }
 
     /** Marks the flow result as erroneous. */
     public suspend fun onError(
         key: String,
+        state: String,
         message: String?,
         type: FlowResult.Error.Type = FlowResult.Error.Type.Generic,
     ) {
         val client = lokksmith.getInternal(key)
-        val ephemeralFlowState = client.requireEphemeralFlowState
 
         client.updateSnapshot {
-            copy(
-                flowResult =
-                    FlowResult.Error(
-                        state = ephemeralFlowState.state,
-                        type = type,
-                        message = message,
-                    )
-            )
+            copy(flowResult = FlowResult.Error(state = state, type = type, message = message))
         }
     }
-
-    private val InternalClient.requireEphemeralFlowState: Snapshot.EphemeralFlowState
-        get() = checkNotNull(snapshots.value.ephemeralFlowState) { "ephemeral flow state is null" }
 }

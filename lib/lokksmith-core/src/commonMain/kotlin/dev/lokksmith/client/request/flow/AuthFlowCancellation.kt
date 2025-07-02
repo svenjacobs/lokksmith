@@ -15,8 +15,16 @@
  */
 package dev.lokksmith.client.request.flow
 
-/** Performs necessary cleanup when an auth flow was cancelled. */
-public interface AuthFlowCancellation {
+import dev.lokksmith.client.InternalClient
+import dev.lokksmith.client.snapshot.Snapshot.FlowResult
 
-    public suspend fun cancel(state: String)
+/** Performs necessary cleanup when an auth flow was cancelled. */
+internal class AuthFlowCancellation(
+    client: InternalClient,
+    private val stateFinalizer: AuthFlowStateFinalizer = AuthFlowStateFinalizer(client),
+) {
+
+    suspend fun cancel(state: String) {
+        stateFinalizer.finalize { copy(flowResult = FlowResult.Cancelled(state = state)) }
+    }
 }

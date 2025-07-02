@@ -46,7 +46,6 @@ internal constructor(
         client = client,
         state = state,
         responseHandler = EndSessionFlowResponseHandler(state, client),
-        cancellation = EndSessionFlowCancellation(client),
     ) {
 
     public data class Request(

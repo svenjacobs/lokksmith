@@ -52,14 +52,18 @@ public suspend fun Lokksmith.launchAuthFlow(
 
         with(responseHandler) {
             when (responseUri) {
-                null -> onCancel(initiation.clientKey)
+                null -> onCancel(key = initiation.clientKey, state = initiation.state)
                 else -> onResponse(key = initiation.clientKey, responseUri = responseUri)
             }
         }
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
-        responseHandler.onError(initiation.clientKey, e.message)
+        responseHandler.onError(
+            key = initiation.clientKey,
+            state = initiation.state,
+            message = e.message,
+        )
     }
 }
 
