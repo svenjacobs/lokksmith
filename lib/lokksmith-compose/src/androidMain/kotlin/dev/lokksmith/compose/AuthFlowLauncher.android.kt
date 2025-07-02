@@ -90,6 +90,7 @@ private class AndroidPlatformLauncher(
                     context = context,
                     initiation = initiation,
                     headers = headers,
+                    ephemeralBrowsing = options.android.ephemeralBrowsing,
                 )
 
             activityLauncher.launch(intent)
