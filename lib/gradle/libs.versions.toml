@@ -3,7 +3,7 @@ agp = "8.11.0"
 androidx-datastore = "1.1.7"
 androix-activity = "1.10.1"
 compose-multiplatform = "1.8.2"
-cryptography = "0.4.0"
+cryptography = "0.5.0"
 kotlin = "2.2.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serializaton = "1.9.0"
@@ -16,8 +16,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-browser = "androidx.browser:browser:1.8.0"
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptography" }
-cryptography-provider-apple = { module = "dev.whyoleg.cryptography:cryptography-provider-apple", version.ref = "cryptography" }
-cryptography-provider-jdk = { module = "dev.whyoleg.cryptography:cryptography-provider-jdk", version.ref = "cryptography" }
+cryptography-provider-optimal = { module = "dev.whyoleg.cryptography:cryptography-provider-optimal", version.ref = "cryptography" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0"

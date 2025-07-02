@@ -17,7 +17,6 @@ package dev.lokksmith.client.jwt
 
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.Base64.PaddingOption
-import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
@@ -25,7 +24,6 @@ import kotlinx.serialization.json.decodeFromJsonElement
 /** TODO: Signature verification */
 public class JwtDecoder(private val json: Json) {
 
-    @OptIn(ExperimentalEncodingApi::class)
     public fun decode(raw: String): Jwt {
         val parts = raw.split(".")
         require(parts.size == 3) { "Illegal JWT format" }
