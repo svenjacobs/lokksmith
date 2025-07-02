@@ -44,7 +44,7 @@ internal class CodeChallengeFactory(private val algorithmId: CryptographyAlgorit
      */
     @OptIn(ExperimentalEncodingApi::class)
     suspend operator fun invoke(codeVerifier: String): String {
-        val hasher = CryptographyProvider.Companion.Default.get(algorithmId).hasher()
+        val hasher = CryptographyProvider.Default.get(algorithmId).hasher()
         val hash = hasher.hash(codeVerifier.encodeToByteArray())
         return Base64.Default.UrlSafe.withPadding(Base64.PaddingOption.ABSENT).encode(hash)
     }

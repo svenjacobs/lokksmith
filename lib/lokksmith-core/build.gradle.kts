@@ -23,6 +23,7 @@ kotlin {
 
             implementation(libs.androidx.datastore.preferences)
             implementation(libs.cryptography.core)
+            implementation(libs.cryptography.provider.optimal)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
 
@@ -39,12 +40,10 @@ kotlin {
             api(libs.androidx.activity)
             api(libs.androidx.browser)
             implementation(libs.ktor.client.okhttp)
-            implementation(libs.cryptography.provider.jdk)
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
-            implementation(libs.cryptography.provider.apple)
         }
     }
 }
