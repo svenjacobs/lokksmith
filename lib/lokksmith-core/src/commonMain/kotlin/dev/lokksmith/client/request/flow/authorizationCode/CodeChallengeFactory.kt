@@ -21,7 +21,6 @@ import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.Digest
 import dev.whyoleg.cryptography.algorithms.SHA256
 import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 /**
  * Factory for generating PKCE (Proof Key for Code Exchange) code challenges.
@@ -42,7 +41,6 @@ internal class CodeChallengeFactory(private val algorithmId: CryptographyAlgorit
      * @param codeVerifier The original code verifier string.
      * @return The code challenge as a Base64 URL-safe encoded string.
      */
-    @OptIn(ExperimentalEncodingApi::class)
     suspend operator fun invoke(codeVerifier: String): String {
         val hasher = CryptographyProvider.Default.get(algorithmId).hasher()
         val hash = hasher.hash(codeVerifier.encodeToByteArray())

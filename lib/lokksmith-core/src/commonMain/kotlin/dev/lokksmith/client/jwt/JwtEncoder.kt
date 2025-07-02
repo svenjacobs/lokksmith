@@ -17,7 +17,6 @@ package dev.lokksmith.client.jwt
 
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.Base64.PaddingOption
-import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.encodeToJsonElement
@@ -25,7 +24,6 @@ import kotlinx.serialization.json.encodeToJsonElement
 internal class JwtEncoder(private val serializer: Json) {
 
     /** Note: currently can only encode unsecured tokens */
-    @OptIn(ExperimentalEncodingApi::class)
     fun encode(jwt: Jwt): String {
         val headerJson = serializer.encodeToString(jwt.header)
         val header =
