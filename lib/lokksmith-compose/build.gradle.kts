@@ -29,7 +29,7 @@ kotlin {
 }
 
 android {
-    namespace = "dev.lokksmith.android"
+    namespace = "dev.lokksmith.compose.android"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
