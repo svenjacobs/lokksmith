@@ -46,9 +46,8 @@ internal constructor(
     internal val resultState: MutableState<Result>,
     internal var initiation: Initiation? = null,
 ) {
-    public data class PlatformOptions(val android: Android = Android, val iOS: Ios = Ios()) {
-        /** Android currently doesn't have any options. */
-        public data object Android
+    public data class PlatformOptions(val android: Android = Android(), val iOS: Ios = Ios()) {
+        public data class Android(public val ephemeralBrowsing: Boolean = false)
 
         public data class Ios(public val prefersEphemeralWebBrowserSession: Boolean = false)
     }
