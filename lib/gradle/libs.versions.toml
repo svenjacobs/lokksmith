@@ -31,7 +31,7 @@ ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 skydoves-compose-stable-marker = "com.github.skydoves:compose-stable-marker:1.0.6"
-spotless-gradle-plugin = "com.diffplug.spotless:spotless-plugin-gradle:7.2.0"
+spotless-gradle-plugin = "com.diffplug.spotless:spotless-plugin-gradle:7.2.1"
 test-logger-gradle-plugin = "com.adarshr.test-logger:com.adarshr.test-logger.gradle.plugin:4.0.0"
 
 [plugins]
