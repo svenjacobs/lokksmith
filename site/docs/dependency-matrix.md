@@ -5,16 +5,19 @@ with other (minor) versions of transitive dependencies, use them with caution.
 
 ## lokksmith-core
 
-| Version | Kotlin       | Coroutines | Serialization | Ktor  |
-|---------|--------------|------------|---------------|-------|
-| 0.1.x   | 2.1.21       | 1.10.2     | 1.8.1         | 3.1.3 | 
-| 0.2.x   | ⬆️ **2.2.0** | 1.10.2     | 1.8.1         | 3.1.3 | 
-| 0.3.0   | 2.2.0        | 1.10.2     | 1.8.1         | 3.1.3 | 
+| Version |  Kotlin   | Coroutines | Serialization |   Ktor    |
+|---------|:---------:|:----------:|:-------------:|:---------:|
+| 0.1.x   |  2.1.21   | **1.10.2** |     1.8.1     |   3.1.3   | 
+| 0.2.x   | **2.2.0** |     "      |       "       |     "     | 
+| 0.3.0   |     "     |     "      |       "       |     "     | 
+| 0.3.1   |     "     |     "      |   **1.9.0**   |     "     | 
+| 0.3.2   |     "     |     "      |       "       |     "     | 
+| 0.3.3   |     "     |     "      |       "       | **3.2.1** | 
 
 ## lokksmith-compose
 
 Includes all dependencies from `lokksmith-core` plus:
 
 | Version | Compose Multiplatform |
-|---------|-----------------------| 
-| 0.3.0   | 1.8.2                 | 
+|---------|:---------------------:| 
+| 0.3.x   |       **1.8.2**       | 
