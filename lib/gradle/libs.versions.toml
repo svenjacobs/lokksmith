@@ -13,7 +13,7 @@ ktor = "3.2.2"
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androix-activity" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androix-activity" }
-androidx-browser = "androidx.browser:browser:1.8.0"
+androidx-browser = "androidx.browser:browser:1.9.0"
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptography" }
 cryptography-provider-optimal = { module = "dev.whyoleg.cryptography:cryptography-provider-optimal", version.ref = "cryptography" }
