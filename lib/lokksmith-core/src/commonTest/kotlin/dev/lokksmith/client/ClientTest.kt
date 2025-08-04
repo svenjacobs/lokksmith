@@ -247,14 +247,14 @@ class ClientTest {
                 initialSnapshot = {
                     copy(
                         tokens =
-                            Client.Tokens(
+                            Tokens(
                                 accessToken =
-                                    Client.Tokens.AccessToken(
+                                    Tokens.AccessToken(
                                         token = "sjrgCu2Elk4",
                                         expiresAt = TEST_INSTANT - 60,
                                     ),
                                 refreshToken =
-                                    Client.Tokens.RefreshToken(token = "zMyQZqI", expiresAt = null),
+                                    Tokens.RefreshToken(token = "zMyQZqI", expiresAt = null),
                                 idToken =
                                     SAMPLE_TOKENS.idToken.copy(
                                         expiration = TEST_INSTANT - 60,

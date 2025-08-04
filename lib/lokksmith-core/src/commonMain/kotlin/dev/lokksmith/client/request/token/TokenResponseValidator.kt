@@ -49,9 +49,6 @@ public abstract class TokenResponseValidator<T : IdToken?>(
             require(idToken.audiences.sorted() == previousIdToken.audiences.sorted()) {
                 "aud mismatch with previous token"
             }
-            requireTemporal(idToken.issuedAt > previousIdToken.issuedAt) {
-                "iat not greater than previous token"
-            }
         }
 
         if (idToken != null) {
@@ -69,8 +66,8 @@ public abstract class TokenResponseValidator<T : IdToken?>(
                     Tokens.RefreshToken(
                         token = it,
                         expiresAt =
-                            response.refreshExpiresIn?.let {
-                                it + client.provider.instantProvider()
+                            response.refreshExpiresIn?.let { refreshExpiresIn ->
+                                refreshExpiresIn + client.provider.instantProvider()
                             },
                     )
                 },
