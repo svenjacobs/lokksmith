@@ -29,3 +29,11 @@ jobs:
           restore-keys: ${{ runner.os }}-konan
       - run: ./gradlew check
         working-directory: ./demo
+      - name: Store reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            **/build/reports/
+            **/build/test-results/
