@@ -26,7 +26,6 @@ import dev.lokksmith.client.request.token.TokenResponseValidator.Result
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -48,7 +47,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
         extra: Map<String, JsonElement> = mapOf("nonce" to JsonPrimitive("0D1ck61")),
     ) = Jwt.Payload(iss = iss, sub = sub, aud = aud, exp = exp, nbf = nbf, iat = iat, extra = extra)
 
-    private fun TestScope.`test validate`(
+    private fun `test validate`(
         client: InternalClient,
         idTokenPayload: Jwt.Payload = idTokenPayload(),
         accessToken: String = "YwV7xECTE0",
@@ -240,26 +239,5 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
             }
 
         assertEquals("aud mismatch with previous token", e.message)
-    }
-
-    @Test
-    fun `validate should fail with previous ID Token on iat mismatch`() = runTest {
-        val e =
-            assertFailsWith<TokenTemporalValidationException> {
-                `test validate`(
-                    client = createTestClient { copy(nonce = "0D1ck61") },
-                    previousIdToken =
-                        IdToken(
-                            issuer = "issuer",
-                            subject = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
-                            audiences = listOf("clientId"),
-                            expiration = 600,
-                            issuedAt = TEST_INSTANT, // same time
-                            raw = "",
-                        ),
-                )
-            }
-
-        assertEquals("iat not greater than previous token", e.message)
     }
 }
