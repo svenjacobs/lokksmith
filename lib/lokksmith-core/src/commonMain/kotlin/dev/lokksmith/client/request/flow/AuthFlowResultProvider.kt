@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -54,7 +55,7 @@ public object AuthFlowResultProvider {
         @Poko
         public class Error(
             public val state: String,
-            public val type: Type,
+            @SerialName("errorType") public val type: Type,
             public val message: String?,
             public val code: String? = null,
         ) : Result {
