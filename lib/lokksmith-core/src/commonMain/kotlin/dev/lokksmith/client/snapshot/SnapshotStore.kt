@@ -23,17 +23,14 @@ import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.Key
 import dev.lokksmith.client.snapshot.InternalSnapshotStore.Persistence
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 /** (De)serializes and persists [Snapshot] instances. */
@@ -74,11 +71,10 @@ internal interface InternalSnapshotStore : SnapshotStore {
     /** This Mutex ensures that no concurrent write operations occur here and in [contract]. */
     val writeMutex: Mutex
 
-    suspend fun internalSet(key: Key, snapshot: Snapshot): Snapshot =
-        withContext(Dispatchers.Default) {
-            persistence.set(key, serializer.encodeToString(snapshot))
-            snapshot
-        }
+    suspend fun internalSet(key: Key, snapshot: Snapshot): Snapshot {
+        persistence.set(key, serializer.encodeToString(snapshot))
+        return snapshot
+    }
 }
 
 internal class SnapshotStoreImpl(
@@ -97,28 +93,22 @@ internal class SnapshotStoreImpl(
         persistence.observe(key).map { it?.let(serializer::decodeFromString) }
 
     override suspend fun getForState(state: String): Snapshot? =
-        withContext(Dispatchers.Default) {
-            persistence.data
-                .firstOrNull()
-                ?.values
-                ?.mapNotNull {
-                    runCatching { serializer.decodeFromString<Snapshot>(it) }.getOrNull()
-                }
-                ?.find { it.ephemeralFlowState?.state == state }
-        }
+        persistence.data
+            .first()
+            .values
+            .mapNotNull { runCatching { serializer.decodeFromString<Snapshot>(it) }.getOrNull() }
+            .find { it.ephemeralFlowState?.state == state }
 
     override suspend fun set(key: Key, snapshot: Snapshot): Snapshot =
         writeMutex.withLock { internalSet(key, snapshot) }
 
-    override suspend fun delete(key: Key): Boolean =
-        withContext(Dispatchers.Default) {
-            if (!exists(key)) return@withContext false
-            persistence.delete(key)
-            true
-        }
+    override suspend fun delete(key: Key): Boolean {
+        if (!exists(key)) return false
+        persistence.delete(key)
+        return true
+    }
 
-    override suspend fun exists(key: Key): Boolean =
-        withContext(Dispatchers.Default) { persistence.contains(key) }
+    override suspend fun exists(key: Key): Boolean = persistence.contains(key)
 
     private class DataStorePersistence(private val dataStore: DataStore<Preferences>) :
         Persistence {
@@ -132,7 +122,7 @@ internal class SnapshotStoreImpl(
         override fun observe(key: Key): Flow<String?> =
             dataStore.data.map { prefs -> prefs[key.prefKey] }
 
-        override suspend fun get(key: Key): String? = prefs()?.get(key.prefKey)
+        override suspend fun get(key: Key): String? = prefs()[key.prefKey]
 
         override suspend fun set(key: Key, snapshot: String) {
             dataStore.edit { prefs -> prefs[key.prefKey] = snapshot }
@@ -142,9 +132,9 @@ internal class SnapshotStoreImpl(
             dataStore.edit { prefs -> prefs.remove(key.prefKey) }
         }
 
-        override suspend fun contains(key: Key): Boolean = prefs()?.contains(key.prefKey) == true
+        override suspend fun contains(key: Key): Boolean = prefs().contains(key.prefKey)
 
-        private suspend fun prefs() = dataStore.data.firstOrNull()
+        private suspend fun prefs() = dataStore.data.first()
 
         private val Key.prefKey: Preferences.Key<String>
             get() = stringPreferencesKey(value)
