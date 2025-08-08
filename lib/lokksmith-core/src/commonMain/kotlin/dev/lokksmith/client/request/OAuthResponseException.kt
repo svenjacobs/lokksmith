@@ -61,7 +61,7 @@ private fun toString(
     errorUri: String? = null,
     statusCode: Int? = null,
 ): String =
-    StringBuilder("OAuthResponseException(error=\"${error.code}")
+    StringBuilder("OAuthResponseException(error=\"${error.code}\"")
         .apply {
             if (!errorDescription.isNullOrBlank())
                 append(", errorDescription=\"$errorDescription\"")
