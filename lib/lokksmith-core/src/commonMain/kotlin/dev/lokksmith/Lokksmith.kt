@@ -145,7 +145,15 @@ internal constructor(
         key: String,
         options: Client.Options = Client.Options(),
         builder: CreateContext.() -> Unit,
-    ): Client = get(key, options) ?: create(key, options, builder)
+    ): Client =
+        try {
+            get(key, options) ?: create(key, options, builder)
+        } catch (_: ClientAlreadyExistsException) {
+            // We're catching the exception here because both get() and create() are suspending
+            // functions. A suspension point between those two calls could lead to race conditions.
+            // In case the client was already created in the meantime we will return it here.
+            get(key, options)!!
+        }
 
     /** Returns `true` if a client for the given [key] exists. */
     public suspend fun exists(key: String): Boolean = container.snapshotStore.exists(key.asKey())
@@ -156,13 +164,15 @@ internal constructor(
      *
      * @param key Key of new client
      * @param options Options for configuring the behaviour of the client
+     * @throws ClientAlreadyExistsException if client with key already exists
      */
     public suspend fun create(
         key: String,
         options: Client.Options = Client.Options(),
         builder: CreateContext.() -> Unit,
     ): Client {
-        require(!exists(key)) { "client with key \"$key\" already exists" }
+        if (exists(key))
+            throw ClientAlreadyExistsException("client with key \"$key\" already exists")
 
         val context =
             CreateContext().apply {
