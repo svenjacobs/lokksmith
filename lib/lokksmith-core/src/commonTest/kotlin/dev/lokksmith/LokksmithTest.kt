@@ -238,7 +238,7 @@ class LokksmithTest {
             snapshot = Snapshot(key = key, id = "clientId".asId(), metadata = mockMetadata),
         )
 
-        assertFailsWith<IllegalArgumentException> {
+        assertFailsWith<ClientAlreadyExistsException> {
             lokksmith.create(key.value) {
                 id = "clientId"
                 discoveryUrl = "https://example.com/.well-known/openid-configuration"
