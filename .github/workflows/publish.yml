@@ -10,7 +10,7 @@ jobs:
     timeout-minutes: 30
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -45,7 +45,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Strip leading v from VERSION
         run: echo "VERSION=${VERSION#v}" >> $GITHUB_ENV
         env:
