@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import co.touchlab.kermit.Logger
 import dev.lokksmith.client.Client
+import dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions
 import dev.lokksmith.compose.rememberAuthFlowLauncher
 import dev.lokksmith.demo.resources.Res
 import dev.lokksmith.demo.resources.check
@@ -94,7 +95,14 @@ fun App(
 
     LaunchedEffect(uiState.authFlow) {
         uiState.authFlow?.let {
-            launcher.launch(it.initiation)
+            launcher.launch(
+                initiation = it.initiation,
+                options = PlatformOptions(
+                    android = PlatformOptions.Android(
+                        method = PlatformOptions.Android.Method.AuthTab(),
+                    ),
+                )
+            )
         }
         viewModel.onConfirmAuthFlow()
     }
