@@ -106,6 +106,11 @@ LaunchedEffect(uiState.initiation) {
 }
 ```
 
+!!! tip
+    `launch` accepts an optional `options` argument that allows you to customize Lokksmith's
+    behavior. For example, on Android, you can choose between authentication using a Custom Tab or
+    an [Auth Tab](https://developer.chrome.com/docs/android/custom-tabs/guide-auth-tab).
+
 1. `data class UiState(val initiation: Initiation? = null)`
 
 You can either use `authFlowLauncher.result` to observe the current state of the process and update

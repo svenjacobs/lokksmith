@@ -46,11 +46,56 @@ internal constructor(
     internal val resultState: MutableState<Result>,
     internal var initiation: Initiation? = null,
 ) {
-    public data class PlatformOptions(val android: Android = Android, val iOS: Ios = Ios()) {
-        /** Android currently doesn't have any options. */
-        public data object Android
+    public data class PlatformOptions(val android: Android = Android(), val iOS: Ios = Ios()) {
+        public data class Android(
+            /**
+             * Method to be used.
+             *
+             * Either Custom Tab or Auth Tab. See Android documentation of Custom Tab / Auth Tab for
+             * more details. Note that Auth Tab might not be supported on all smartphones.
+             */
+            public val method: Method = Method.CustomTab,
 
-        public data class Ios(public val prefersEphemeralWebBrowserSession: Boolean = false)
+            /**
+             * Specifies whether to use an Ephemeral Tab which launches a fully isolated web browser
+             * within the app, which doesn't retain any data (cookies) and does not sync them with
+             * the system browser. Just like a private browsing session.
+             */
+            public val ephemeralBrowsing: Boolean = false,
+        ) {
+            public sealed interface Method {
+
+                /** Opens authentication in a (Chrome) Custom Tab. */
+                public data object CustomTab : Method
+
+                /**
+                 * Opens authentication in an
+                 * [Auth Tab](https://developer.chrome.com/docs/android/custom-tabs/guide-auth-tab).
+                 *
+                 * Please note that on devices which don't support Auth Tab, a Custom Tab will be
+                 * used as a
+                 * [fallback solution](https://developer.chrome.com/docs/android/custom-tabs/guide-auth-tab#fallback_to_custom_tabs).
+                 * Hence the app setup/configuration regarding Custom Tab must be present.
+                 */
+                public data class AuthTab(public val redirect: Redirect = Redirect.CustomScheme) :
+                    Method {
+
+                    public enum class Redirect {
+                        CustomScheme,
+                        Https,
+                    }
+                }
+            }
+        }
+
+        public data class Ios(
+            /**
+             * Specifies whether to use an ephemeral browsing session which launches a fully
+             * isolated web browser within the app, which doesn't retain any data (cookies) and does
+             * not sync them with the system browser. Just like a private browsing session.
+             */
+            public val prefersEphemeralWebBrowserSession: Boolean = false
+        )
     }
 
     internal interface PlatformLauncher {
