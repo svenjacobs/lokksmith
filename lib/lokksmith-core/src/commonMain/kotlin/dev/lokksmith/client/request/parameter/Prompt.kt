@@ -23,7 +23,13 @@ public enum class Prompt(internal val value: String) {
     None("none"),
     Login("login"),
     Consent("consent"),
-    SelectAccount("select_account");
+    SelectAccount("select_account"),
+
+    /**
+     * @see <a href="https://openid.net/specs/openid-connect-prompt-create-1_0.html">Initiating User
+     *   Registration via OpenID Connect 1.0</a>
+     */
+    Create("create");
 
     override fun toString(): String = value
 }
