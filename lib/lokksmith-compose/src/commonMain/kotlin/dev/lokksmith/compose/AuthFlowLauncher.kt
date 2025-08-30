@@ -62,6 +62,13 @@ internal constructor(
              * the system browser. Just like a private browsing session.
              */
             public val ephemeralBrowsing: Boolean = false,
+
+            /**
+             * Called after the `Intent` for launching the Auth / Custom Tab is created and before
+             * it is executed. Allows customization of the `Intent` if needed. The parameter is
+             * [Any] due to multiplatform constraints and must be cast to `Intent` on Android.
+             */
+            public val onIntentCreated: (Any) -> Unit = {},
         ) {
             public sealed interface Method {
 
