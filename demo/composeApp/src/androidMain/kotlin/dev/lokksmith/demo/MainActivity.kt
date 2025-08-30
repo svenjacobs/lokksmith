@@ -1,6 +1,7 @@
 package dev.lokksmith.demo
 
 import android.content.ClipData
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +22,14 @@ class MainActivity : ComponentActivity() {
             val clipboard = LocalClipboard.current
 
             App(
+                onIntentCreated = { intent ->
+                    /**
+                     * Example of how we can force the authentication to be run in a specific
+                     * browser even when another browser is set as standard. Note, this will crash
+                     * the app if Chrome is not installed.
+                     */
+                    (intent as Intent).`package` = "com.android.chrome"
+                },
                 onCopyToClipboard = {
                     scope.launch {
                         clipboard.setClipEntry(
