@@ -34,7 +34,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class RunWithTokensOrResetUseCaseTest {
+class RefreshTokensOrResetUseCaseTest {
 
     @Test
     fun `invoke should reset tokens on expected error when refreshing`() = runTest {
@@ -59,7 +59,7 @@ class RunWithTokensOrResetUseCaseTest {
                 },
             )
 
-        assertFalse { client.runWithTokensOrReset {} }
+        assertFalse { client.refreshOrReset() }
         runCurrent()
         assertNull(client.tokens.value)
     }
@@ -87,38 +87,14 @@ class RunWithTokensOrResetUseCaseTest {
                 },
             )
 
-        val exception = assertFailsWith<OAuthResponseException> { client.runWithTokensOrReset {} }
+        val exception = assertFailsWith<OAuthResponseException> { client.refreshOrReset() }
         assertEquals(OAuthError.ServerError, exception.error)
         runCurrent()
         assertNotNull(client.tokens.value)
     }
 
     @Test
-    fun `invoke should reset tokens when resetTokens is called`() = runTest {
-        val client = createTestClient(initialSnapshot = { copy(tokens = SAMPLE_TOKENS) })
-
-        assertFalse { client.runWithTokensOrReset { resetTokens() } }
-        runCurrent()
-        assertNull(client.tokens.value)
-    }
-
-    @Test
-    fun `invoke should run lambda when tokens are valid`() = runTest {
-        val client = createTestClient(initialSnapshot = { copy(tokens = SAMPLE_TOKENS) })
-
-        var bodyWasCalled = false
-
-        assertTrue {
-            client.runWithTokensOrReset { tokens ->
-                assertEquals(SAMPLE_TOKENS, tokens)
-                bodyWasCalled = true
-            }
-        }
-        assertTrue(bodyWasCalled)
-    }
-
-    @Test
-    fun `invoke should run lambda with refreshed tokens`() = runTest {
+    fun `invoke should return true when token refresh was successful`() = runTest {
         var refreshCalled = false
         val client =
             createTestClient(
@@ -135,29 +111,10 @@ class RunWithTokensOrResetUseCaseTest {
                             }
                         }
                     ),
-                initialSnapshot = {
-                    copy(
-                        tokens =
-                            SAMPLE_TOKENS.copy(
-                                accessToken =
-                                    SAMPLE_TOKENS.accessToken.copy(
-                                        token = "iQUiRkB",
-                                        expiresAt = TEST_INSTANT - 60,
-                                    )
-                            )
-                    )
-                },
+                initialSnapshot = { copy(tokens = SAMPLE_TOKENS) },
             )
 
-        var bodyWasCalled = false
-
-        assertTrue {
-            client.runWithTokensOrReset { tokens ->
-                assertEquals(SAMPLE_TOKENS, tokens)
-                bodyWasCalled = true
-            }
-        }
+        assertTrue { client.refreshOrReset() }
         assertTrue(refreshCalled)
-        assertTrue(bodyWasCalled)
     }
 }
