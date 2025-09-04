@@ -45,6 +45,7 @@ import dev.lokksmith.client.usecase.RunWithTokensOrResetUseCase.RunWithTokensOrR
  * @see Client.runWithTokensOrReset
  * @see Client.runWithTokens
  * @see Client.resetTokens
+ * @see RefreshTokensOrResetUseCase
  */
 public class RunWithTokensOrResetUseCase(
     private val client: Client,
@@ -98,11 +99,10 @@ public class RunWithTokensOrResetUseCase(
 /**
  * Convenience function for [RunWithTokensOrResetUseCase].
  *
+ * @return `true` if [body] was executed successfully; `false` if the client was logged out locally.
  * @see RunWithTokensOrResetUseCase.invoke
  */
 public suspend fun Client.runWithTokensOrReset(
     errors: List<OAuthError> = DEFAULT_ERRORS,
     body: suspend RunWithTokensOrResetScope.(Tokens) -> Unit,
 ): Boolean = RunWithTokensOrResetUseCase(this, errors)(body)
-
-private val DEFAULT_ERRORS = listOf(OAuthError.InvalidGrant)

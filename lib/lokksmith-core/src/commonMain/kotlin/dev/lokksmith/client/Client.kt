@@ -240,6 +240,7 @@ public interface Client {
      * @throws dev.lokksmith.client.request.token.TokenValidationException if the tokens could not
      *   be validated
      * @see runWithTokens
+     * @see dev.lokksmith.client.usecase.RefreshTokensOrResetUseCase
      */
     public suspend fun refresh(): Tokens
 
