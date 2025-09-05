@@ -296,7 +296,7 @@ class LokksmithTest {
     }
 }
 
-private data class TestContainer(
+internal data class TestContainer(
     override val coroutineScope: CoroutineScope,
     override val httpClient: HttpClient =
         createHttpClient(engine = MockEngine { respondBadRequest() }),
@@ -316,7 +316,7 @@ private data class TestContainer(
     override val serializer = Json
 }
 
-private val mockMetadata =
+internal val mockMetadata =
     Client.Metadata(
         issuer = "issuer",
         authorizationEndpoint = "https://example.com/authorizationEndpoint",
@@ -324,12 +324,16 @@ private val mockMetadata =
         endSessionEndpoint = "https://example.com/endSessionEndpoint",
     )
 
-private fun TestScope.createTestLokksmith(): Pair<Lokksmith, SnapshotStoreSpy> {
+internal fun TestScope.createTestLokksmith(
+    onTestContainerCreated: TestScope.(TestContainer) -> TestContainer = { it }
+): Pair<Lokksmith, SnapshotStoreSpy> {
     val container =
         TestContainer(
             coroutineScope = backgroundScope,
             metadataDiscoveryRequest = MetadataDiscoveryRequestFake { mockMetadata },
         )
 
-    return Lokksmith(container) to container.snapshotStore
+    return onTestContainerCreated(container).let { container ->
+        Lokksmith(container) to container.snapshotStore
+    }
 }

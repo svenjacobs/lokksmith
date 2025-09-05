@@ -64,8 +64,9 @@ public class AuthFlowUserAgentResponseHandler(private val lokksmith: Lokksmith) 
         type: FlowResult.Error.Type = FlowResult.Error.Type.Generic,
     ) {
         val client = lokksmith.getInternal(key)
+        val stateFinalizer = AuthFlowStateFinalizer(client)
 
-        client.updateSnapshot {
+        stateFinalizer.finalize {
             copy(flowResult = FlowResult.Error(state = state, type = type, message = message))
         }
     }
