@@ -17,6 +17,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -33,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
           restore-keys: ${{ runner.os }}-konan
       - name: Create snapshot VERSION
-        run: echo "VERSION=$(date -u +%Y%m%d%H%M)-SNAPSHOT" >> $GITHUB_ENV
+        run: echo "VERSION=$(git describe --tags --abbrev=0 --match="v*" | sed 's/^v//')-SNAPSHOT" >> $GITHUB_ENV
       - name: Publish snapshot release
         run: ./gradlew publishToMavenCentral -PVERSION_NAME="$VERSION"
         env:
