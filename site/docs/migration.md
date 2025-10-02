@@ -25,9 +25,8 @@ lokksmith.migration.setTokens(
 ```
 
 !!! tip
-    If you're migrating tokens from AppAuth, please note that AppAuth doesn't know the concept
-    of expiring refresh tokens. Hence take the access token expiration for
-    `refreshTokenExpiresAt` and perform a refresh afterwards.
+    If you're migrating tokens from AppAuth, note that AppAuth does not provide a refresh token expiration value.
+    Use the access token's expiration time for `refreshTokenExpiresAt`, and then perform a token refresh immediately afterward.
 
     ```kotlin
     lokksmith.migration.setTokens(
