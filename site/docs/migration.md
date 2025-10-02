@@ -23,3 +23,20 @@ lokksmith.migration.setTokens(
     idToken = "ID TOKEN",
 )
 ```
+
+!!! tip
+    If you're migrating tokens from AppAuth, note that AppAuth does not provide a refresh token expiration value.
+    Use the access token's expiration time for `refreshTokenExpiresAt`, and then perform a token refresh immediately afterward.
+
+    ```kotlin
+    lokksmith.migration.setTokens(
+        client = client,
+        accessToken = appAuthState.accessToken!!,
+        accessTokenExpiresAt = appAuthState.accessTokenExpirationTime,
+        refreshToken = appAuthState.refreshToken,
+        refreshTokenExpiresAt = appAuthState.accessTokenExpirationTime, // access token refresh
+        idToken = appAuthState.idToken!!,
+    )
+
+    client.refresh() // perform token refresh
+    ```
