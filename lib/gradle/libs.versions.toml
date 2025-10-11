@@ -41,7 +41,7 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-m
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-buildconfig = "com.github.gmazzo.buildconfig:5.6.8"
+buildconfig = "com.github.gmazzo.buildconfig:5.7.0"
 dokka = "org.jetbrains.dokka:2.0.0"
 poko = "dev.drewhamilton.poko:0.20.0"
 maven-publish = "com.vanniktech.maven.publish:0.34.0"
