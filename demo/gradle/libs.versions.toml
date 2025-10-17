@@ -26,7 +26,7 @@ androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
-multiplatform-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4"
+multiplatform-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.9.5"
 kermit = "co.touchlab:kermit:2.0.8"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.7.1"
 lokksmith-core = { module = "dev.lokksmith:lokksmith-core" }
