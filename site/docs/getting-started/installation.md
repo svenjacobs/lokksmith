@@ -9,7 +9,7 @@ Add the current version of Lokksmith to your `gradle/libs.versions.toml`:
 
 ```toml title="gradle/libs.versions.toml"
 [versions]
-lokksmith = "{{ version }}"
+lokksmith = "{{ lokksmith_version }}"
 
 [libraries]
 lokksmith-core = { module = "dev.lokksmith:lokksmith-core", version.ref = "lokksmith" }
@@ -29,7 +29,7 @@ maven {
 ```
 
 !!! tip
-    You'll find the newest snapshot version [here](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/dev/lokksmith/).
+You'll find the newest snapshot version [here](https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/dev/lokksmith/).
 
 ## Add Lokksmith to Project Dependencies
 
@@ -100,8 +100,8 @@ entry for App Links, so you must manually update your `AndroidManifest.xml` as f
 
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        
-        <data 
+
+        <data
             android:scheme="https"
             android:host="example.com"
             android:path="/redirect" /> <!-- (2)! -->
@@ -127,4 +127,4 @@ Usually this configuration is applied automatically. However, if you manually co
 you must ensure to apply the Kotlin Serialization rules or else Lokksmith will fail at
 (de)serialization.
 
-*[OIDC]: OpenID Connect
+\*[OIDC]: OpenID Connect

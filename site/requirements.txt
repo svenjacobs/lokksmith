@@ -1,2 +1,1 @@
-mkdocs-material [recommended] ~= 9.6.14
-mkdocs-macros-plugin ~=1.4.0
+zensical ~= 0.0.6

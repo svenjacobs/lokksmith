@@ -5,8 +5,8 @@ if [ ! -d .venv ]; then
   python3 -m venv .venv
 fi
 
-if [ ! -f .venv/bin/mkdocs ]; then
-  echo "Installing mkdocs-material…"
+if [ ! -f .venv/bin/zensical ]; then
+  echo "Installing zensical…"
   source .venv/bin/activate
   pip install -r requirements.txt
 fi

@@ -30,7 +30,7 @@ and describe your idea clearly.
 ## Reporting Bugs
 
 Before reporting a bug please ensure that you can reproduce the issue with the latest version
-`{{ version }}` of Lokksmith. If this is the case, please [open an issue]({{ config.repo_url }}/issues/new?template=bug_report.md)
+`{{ lokksmith_version }}` of Lokksmith. If this is the case, please [open an issue]({{ config.repo_url }}/issues/new?template=bug_report.md)
 with the following information:
 
 - Environment
