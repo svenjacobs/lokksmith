@@ -1,2 +1,2 @@
-mkdocs-material [recommended] ~= 9.6.14
+mkdocs-material [recommended] ~=9.7.0
 mkdocs-macros-plugin ~=1.4.0
