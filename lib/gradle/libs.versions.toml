@@ -1,7 +1,7 @@
 [versions]
 agp = "8.13.1"
 androidx-datastore = "1.1.7"
-androix-activity = "1.11.0"
+androidx-activity = "1.12.0"
 compose-multiplatform = "1.9.3"
 cryptography = "0.5.0"
 kotlin = "2.2.21"
@@ -11,8 +11,8 @@ ktor = "3.3.2"
 
 [libraries]
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
-androidx-activity = { module = "androidx.activity:activity", version.ref = "androix-activity" }
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androix-activity" }
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-browser = "androidx.browser:browser:1.9.0"
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx-datastore" }
 cryptography-core = { module = "dev.whyoleg.cryptography:cryptography-core", version.ref = "cryptography" }
