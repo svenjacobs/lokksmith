@@ -13,7 +13,8 @@ with other (minor) versions of transitive dependencies, use them with caution.
 | 0.3.3         |     "      |     "      |       "       |   3.2.1   |
 | 0.3.4 - 0.3.7 |     "      |     "      |       "       |   3.2.3   |
 | 0.3.8 - 0.4.3 |   2.2.10   |     "      |       "       |     "     |
-| 0.5.x         | **2.2.20** |     "      |       "       | **3.3.0** |
+| 0.5.0         |   2.2.20   |     "      |       "       |   3.3.0   |
+| 0.6.x         | **2.2.21** |     "      |       "       | **3.3.2** |
 
 ## lokksmith-compose
 
@@ -22,4 +23,5 @@ Includes all dependencies from `lokksmith-core` plus:
 | Version       | Compose Multiplatform |
 |---------------|:---------------------:| 
 | 0.3.x - 0.4.3 |         1.8.2         | 
-| 0.5.x         |       **1.9.0**       | 
+| 0.5.0         |         1.9.0         | 
+| 0.6.x         |       **1.9.3**       | 
