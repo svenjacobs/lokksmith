@@ -66,8 +66,8 @@ extra:
       link: https://androiddev.social/@svenjacobs
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/svenjacobs81/
-  version: "0.5.0"
-  version_date: Sep 17, 2025
+  version: "0.6.0"
+  version_date: Nov 20, 2025
 markdown_extensions:
   - abbr
   - admonition
