@@ -9,7 +9,7 @@ Add the current version of Lokksmith to your `gradle/libs.versions.toml`:
 
 ```toml title="gradle/libs.versions.toml"
 [versions]
-lokksmith = "{{ version }}"
+lokksmith = "{{ lokksmith_version }}"
 
 [libraries]
 lokksmith-core = { module = "dev.lokksmith:lokksmith-core", version.ref = "lokksmith" }

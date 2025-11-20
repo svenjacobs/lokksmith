@@ -4,7 +4,7 @@ permissions:
   pull-requests: write
 on:
   release:
-    types: [ published ]
+    types: [published]
 jobs:
   publish:
     timeout-minutes: 30
@@ -15,7 +15,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          cache: 'gradle'
+          cache: "gradle"
           cache-dependency-path: |
             lib/**/*.gradle*
             lib/**/gradle-wrapper.properties
@@ -52,8 +52,8 @@ jobs:
           VERSION: ${{ github.event.release.tag_name }}
       - name: Update documentation
         run: |
-          yq -i ".extra.version = \"$VERSION\"" ./site/mkdocs.yml
-          yq -i ".extra.version_date = \"$(date -u "+%b %d, %Y")\"" ./site/mkdocs.yml
+          yq -i ".extra.lokksmith_version = \"$VERSION\"" ./site/mkdocs.yml
+          yq -i ".extra.lokksmith_version_date = \"$(date -u "+%b %d, %Y")\"" ./site/mkdocs.yml
       - name: Create PR for documentation
         uses: peter-evans/create-pull-request@v7
         with:
