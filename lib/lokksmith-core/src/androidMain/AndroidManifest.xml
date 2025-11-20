@@ -6,7 +6,8 @@
     <application>
         <activity
                 android:name=".LokksmithAuthFlowActivity"
-                android:exported="true"
+                android:configChanges="keyboardHidden|keyboard|orientation|screenLayout|screenSize|smallestScreenSize"
+                android:exported="false"
                 android:launchMode="singleTask" />
 
         <activity
