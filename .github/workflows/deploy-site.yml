@@ -1,6 +1,8 @@
 name: Deploy Site
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 on:
   push:
     branches:
@@ -9,15 +11,23 @@ on:
       - 'site/**'
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/configure-pages@v5
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.14'
+          python-version: '3.x'
           cache: 'pip'
           cache-dependency-path: './site/requirements.txt'
       - run: pip install -r ./site/requirements.txt
-      - run: mkdocs gh-deploy --force
+      - run: zensical build --clean
         working-directory: ./site
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: 'site/site'
+      - uses: actions/deploy-pages@v4
