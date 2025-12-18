@@ -22,7 +22,7 @@ jobs:
             demo/**/gradle-wrapper.properties
             demo/gradle/*.versions.toml
       - name: Cache konan
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('demo/**/*.gradle*', 'demo/gradle/*.versions.toml') }}

@@ -21,7 +21,7 @@ jobs:
             lib/**/gradle-wrapper.properties
             lib/gradle/*.versions.toml
       - name: Cache konan
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.konan
           key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
