@@ -27,9 +27,7 @@ import kotlinx.coroutines.CancellationException
 import platform.AuthenticationServices.ASPresentationAnchor
 import platform.AuthenticationServices.ASWebAuthenticationPresentationContextProvidingProtocol
 import platform.AuthenticationServices.ASWebAuthenticationSession
-import platform.AuthenticationServices.ASWebAuthenticationSessionCompletionHandler
 import platform.AuthenticationServices.ASWebAuthenticationSessionErrorCodeCanceledLogin
-import platform.Foundation.NSError
 import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 import platform.UIKit.UIWindow
@@ -79,26 +77,21 @@ private suspend fun startAuthenticationSession(
         ASWebAuthenticationSession(
             uRL = url,
             callbackURLScheme = redirectScheme,
-            completionHandler =
-                object : ASWebAuthenticationSessionCompletionHandler {
-                    override fun invoke(responseUri: NSURL?, error: NSError?) {
-                        if (responseUri != null) {
-                            cont.resume(responseUri.toString())
-                            return
-                        }
+            completionHandler = { responseUri, error ->
+                if (responseUri != null) {
+                    cont.resume(responseUri.toString())
+                }
 
-                        if (error?.code == ASWebAuthenticationSessionErrorCodeCanceledLogin) {
-                            cont.resume(null)
-                            return
-                        }
+                if (error?.code == ASWebAuthenticationSessionErrorCodeCanceledLogin) {
+                    cont.resume(null)
+                }
 
-                        cont.resumeWithException(
-                            RuntimeException(
-                                message = error?.localizedDescription ?: "No responseUri received"
-                            )
-                        )
-                    }
-                },
+                cont.resumeWithException(
+                    RuntimeException(
+                        message = error?.localizedDescription ?: "No responseUri received"
+                    )
+                )
+            },
         )
 
     session.presentationContextProvider = PresentationContextProvider()
