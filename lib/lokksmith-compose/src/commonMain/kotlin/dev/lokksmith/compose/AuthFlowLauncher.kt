@@ -31,21 +31,27 @@ import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result
 import dev.lokksmith.client.request.flow.AuthFlowStateResponseHandler
 import dev.lokksmith.compose.AuthFlowLauncher.PlatformLauncher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
 @Stable
 public class AuthFlowLauncher
 internal constructor(
     private val platformLauncher: PlatformLauncher,
-    private val scope: CoroutineScope,
     internal val resultState: MutableState<Result>,
     internal var initiation: Initiation? = null,
+    parentScope: CoroutineScope,
 ) {
+    private val scope =
+        CoroutineScope(
+            parentScope.coroutineContext + SupervisorJob(parentScope.coroutineContext.job)
+        )
+
     public data class PlatformOptions(val android: Android = Android(), val iOS: Ios = Ios()) {
         public data class Android(
             /**
@@ -123,10 +129,8 @@ internal constructor(
     public val result: Result
         get() = resultState.value
 
-    private var job: Job? = null
-
     internal fun onStart() {
-        initiation?.let { scope.watchClientState(it) }
+        initiation?.let(::watchClientState)
     }
 
     internal fun onStop() {
@@ -151,7 +155,7 @@ internal constructor(
         options: PlatformOptions = PlatformOptions(),
     ) {
         this.initiation = initiation
-        scope.watchClientState(initiation)
+        watchClientState(initiation)
         platformLauncher.launchBrowser(
             initiation = initiation,
             headers = headers,
@@ -160,40 +164,38 @@ internal constructor(
     }
 
     private fun cancel() {
-        job?.cancel()
-        job = null
+        scope.coroutineContext.cancelChildren()
     }
 
-    private fun CoroutineScope.watchClientState(initiation: Initiation) {
+    private fun watchClientState(initiation: Initiation) {
         cancel()
 
-        job =
-            launch(SupervisorJob()) {
-                val client = getClient(initiation.clientKey)
+        scope.launch {
+            val client = getClient(initiation.clientKey)
 
-                launch {
-                    client.snapshots
-                        .map { it.ephemeralFlowState?.responseUri }
-                        .filterNotNull()
-                        .distinctUntilChanged()
-                        .collect { responseUri ->
-                            // We're catching all exceptions here because we assume that in case of
-                            // an error the client's result state has been updated accordingly.
-                            try {
-                                AuthFlowStateResponseHandler(lokksmith).onResponse(responseUri)
-                            } catch (e: Exception) {
-                                platformLauncher.logException(
-                                    "Received exception in AuthFlowStateResponseHandler.onResponse()",
-                                    e,
-                                )
-                            }
+            launch {
+                client.snapshots
+                    .map { it.ephemeralFlowState?.responseUri }
+                    .filterNotNull()
+                    .distinctUntilChanged()
+                    .collect { responseUri ->
+                        // We're catching all exceptions here because we assume that in case of
+                        // an error the client's result state has been updated accordingly.
+                        try {
+                            AuthFlowStateResponseHandler(lokksmith).onResponse(responseUri)
+                        } catch (e: Exception) {
+                            platformLauncher.logException(
+                                "Received exception in AuthFlowStateResponseHandler.onResponse()",
+                                e,
+                            )
                         }
-                }
-
-                AuthFlowResultProvider.forClient(client).collect { result ->
-                    resultState.value = result
-                }
+                    }
             }
+
+            AuthFlowResultProvider.forClient(client).collect { result ->
+                resultState.value = result
+            }
+        }
     }
 
     private suspend fun getClient(key: String): InternalClient =
@@ -243,12 +245,12 @@ internal fun rememberAuthFlowLauncher(platformLauncher: PlatformLauncher): AuthF
 
                 AuthFlowLauncher(
                     platformLauncher = platformLauncher,
-                    scope = scope,
                     resultState =
                         mutableStateOf(
                             serializer.decodeFromString<Result>(it[resultKey] as String)
                         ),
                     initiation = initiation,
+                    parentScope = scope,
                 )
             },
         )
@@ -258,8 +260,8 @@ internal fun rememberAuthFlowLauncher(platformLauncher: PlatformLauncher): AuthF
         rememberSaveable(saver = saver) {
             AuthFlowLauncher(
                 platformLauncher = platformLauncher,
-                scope = scope,
                 resultState = mutableStateOf(Result.Undefined),
+                parentScope = scope,
             )
         }
 
