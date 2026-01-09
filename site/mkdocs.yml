@@ -57,7 +57,7 @@ theme:
   icon:
     logo: material/lock-outline
     repo: fontawesome/brands/github
-copyright: Copyright &copy; 2025 Sven Jacobs
+copyright: Copyright &copy; 2025-2026 Sven Jacobs
 extra:
   social:
     - icon: fontawesome/brands/github
