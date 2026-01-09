@@ -73,10 +73,8 @@ public actual fun rememberAuthFlowLauncher(): AuthFlowLauncher {
                         )
                     }
 
-                    Activity.RESULT_CANCELED -> {
-                        val errorMessage = getErrorMessageFromIntent(result.data)
-
-                        when (errorMessage) {
+                    Activity.RESULT_CANCELED ->
+                        when (val errorMessage = getErrorMessageFromIntent(result.data)) {
                             null ->
                                 responseHandler.onCancel(
                                     key = initiation.clientKey,
@@ -90,7 +88,6 @@ public actual fun rememberAuthFlowLauncher(): AuthFlowLauncher {
                                     message = errorMessage,
                                 )
                         }
-                    }
 
                     AuthTabIntent.RESULT_VERIFICATION_FAILED,
                     AuthTabIntent.RESULT_VERIFICATION_TIMED_OUT,
