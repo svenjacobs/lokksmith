@@ -19,12 +19,14 @@ package dev.lokksmith.client.request.parameter
  * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#ScopeClaims">Requesting
  *   Claims using Scope Values</a>
  */
-public enum class Scope(internal val value: String) {
-    OpenId("openid"),
-    Profile("profile"),
-    Email("email"),
-    Address("address"),
-    Phone("phone");
+public sealed class Scope(internal val value: String) {
+    public object OpenId : Scope("openid")
+    public object Profile : Scope("profile")
+    public object Email : Scope("email")
+    public object Address : Scope("address")
+    public object Phone : Scope("phone")
+
+    public class Custom(value: String) : Scope(value)
 
     override fun toString(): String = value
 }
