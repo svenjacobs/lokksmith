@@ -20,13 +20,11 @@ package dev.lokksmith.client.request.parameter
  *   Claims using Scope Values</a>
  */
 public sealed class Scope(internal val value: String) {
-    public object OpenId : Scope("openid")
-    public object Profile : Scope("profile")
-    public object Email : Scope("email")
-    public object Address : Scope("address")
-    public object Phone : Scope("phone")
+    public data object OpenId : Scope("openid")
+    public data object Profile : Scope("profile")
+    public data object Email : Scope("email")
+    public data object Address : Scope("address")
+    public data object Phone : Scope("phone")
 
-    public class Custom(value: String) : Scope(value)
-
-    override fun toString(): String = value
+    public data class Custom(val scope: String) : Scope(scope)
 }
