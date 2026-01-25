@@ -77,11 +77,12 @@ class AuthorizationCodeFlowTest {
                 request =
                     AuthorizationCodeFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
-                        scope = setOf(
-                            Scope.Email,
-                            Scope.Profile,
-                            Scope.Custom("api://my-custom-scope")
-                        ),
+                        scope =
+                            setOf(
+                                Scope.Email,
+                                Scope.Profile,
+                                Scope.Custom("api://my-custom-scope"),
+                            ),
                         prompt = setOf(Prompt.Login),
                     )
             )
@@ -98,7 +99,10 @@ class AuthorizationCodeFlowTest {
         assertEquals("https", requestUrl.protocol.name)
         assertEquals("example.com", requestUrl.host)
         assertEquals("/authorizationEndpoint", requestUrl.encodedPath)
-        assertEquals("email profile api://my-custom-scope openid", requestUrl.parameters[Parameter.SCOPE])
+        assertEquals(
+            "email profile api://my-custom-scope openid",
+            requestUrl.parameters[Parameter.SCOPE],
+        )
         assertEquals("login", requestUrl.parameters[Parameter.PROMPT])
         assertEquals("code", requestUrl.parameters[Parameter.RESPONSE_TYPE])
         assertEquals("clientId", requestUrl.parameters[Parameter.CLIENT_ID])

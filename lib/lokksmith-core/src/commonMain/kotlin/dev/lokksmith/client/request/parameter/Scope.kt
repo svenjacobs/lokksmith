@@ -21,9 +21,13 @@ package dev.lokksmith.client.request.parameter
  */
 public sealed class Scope(internal val value: String) {
     public data object OpenId : Scope("openid")
+
     public data object Profile : Scope("profile")
+
     public data object Email : Scope("email")
+
     public data object Address : Scope("address")
+
     public data object Phone : Scope("phone")
 
     public data class Custom(val scope: String) : Scope(scope)

@@ -151,9 +151,7 @@ private constructor(
     private val stateVerifierStrategy = VerifierStrategy.forKeyValue(Parameter.STATE, state)
     private val nonceVerifierStrategy = VerifierStrategy.forKeyValue(Parameter.NONCE, nonce)
 
-    private val scopes = request.scope
-        .plus(Scope.OpenId)
-        .joinToString(" ") { scope -> scope.value }
+    private val scopes = request.scope.plus(Scope.OpenId).joinToString(" ") { scope -> scope.value }
 
     override val ephemeralFlowState: Snapshot.EphemeralFlowState
         get() =
