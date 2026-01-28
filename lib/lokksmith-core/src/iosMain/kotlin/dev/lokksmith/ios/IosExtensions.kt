@@ -80,10 +80,12 @@ private suspend fun startAuthenticationSession(
             completionHandler = { responseUri, error ->
                 if (responseUri != null) {
                     cont.resume(responseUri.toString())
+                    return@ASWebAuthenticationSession
                 }
 
                 if (error?.code == ASWebAuthenticationSessionErrorCodeCanceledLogin) {
                     cont.resume(null)
+                    return@ASWebAuthenticationSession
                 }
 
                 cont.resumeWithException(
