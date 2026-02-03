@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.0"
 androidx-datastore = "1.2.0"
 androidx-activity = "1.12.3"
 compose-multiplatform = "1.10.0"
