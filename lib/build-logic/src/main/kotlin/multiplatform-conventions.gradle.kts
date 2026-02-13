@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("com.android.library")
+    id("com.android.kotlin.multiplatform.library")
     kotlin("multiplatform")
 }
 
@@ -9,8 +9,9 @@ kotlin {
     explicitApi()
 
     // targets
-    androidTarget {
-        publishLibraryVariants("release")
+    androidLibrary {
+        minSdk = Android.MIN_SDK
+        compileSdk = Android.COMPILE_SDK
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -24,12 +25,5 @@ kotlin {
             "-Xexpect-actual-classes",
             "-Xcontext-parameters",
         )
-    }
-}
-
-android {
-    compileSdk = Android.COMPILE_SDK
-    defaultConfig {
-        minSdk = Android.MIN_SDK
     }
 }
