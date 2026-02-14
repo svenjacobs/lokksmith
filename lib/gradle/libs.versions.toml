@@ -2,7 +2,7 @@
 agp = "9.0.0"
 android-compileSdk = "36"
 androidx-datastore = "1.2.0"
-androidx-activity = "1.12.3"
+androidx-activity = "1.12.4"
 compose-multiplatform = "1.10.1"
 cryptography = "0.5.0"
 kotlin = "2.3.10"
