@@ -1,0 +1,1645 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <lokksmith:lokksmith-core>
+final enum class dev.lokksmith.client.request.parameter/CodeChallengeMethod : kotlin/Enum<dev.lokksmith.client.request.parameter/CodeChallengeMethod> { // dev.lokksmith.client.request.parameter/CodeChallengeMethod|null[0]
+    enum entry SHA256 // dev.lokksmith.client.request.parameter/CodeChallengeMethod.SHA256|null[0]
+
+    final val entries // dev.lokksmith.client.request.parameter/CodeChallengeMethod.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request.parameter/CodeChallengeMethod> // dev.lokksmith.client.request.parameter/CodeChallengeMethod.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/CodeChallengeMethod.toString|toString(){}[0]
+    final fun valueOf(kotlin/String): dev.lokksmith.client.request.parameter/CodeChallengeMethod // dev.lokksmith.client.request.parameter/CodeChallengeMethod.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.lokksmith.client.request.parameter/CodeChallengeMethod> // dev.lokksmith.client.request.parameter/CodeChallengeMethod.values|values#static(){}[0]
+}
+
+final enum class dev.lokksmith.client.request.parameter/Display : kotlin/Enum<dev.lokksmith.client.request.parameter/Display> { // dev.lokksmith.client.request.parameter/Display|null[0]
+    enum entry Page // dev.lokksmith.client.request.parameter/Display.Page|null[0]
+    enum entry Popup // dev.lokksmith.client.request.parameter/Display.Popup|null[0]
+    enum entry Touch // dev.lokksmith.client.request.parameter/Display.Touch|null[0]
+    enum entry Wap // dev.lokksmith.client.request.parameter/Display.Wap|null[0]
+
+    final val entries // dev.lokksmith.client.request.parameter/Display.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request.parameter/Display> // dev.lokksmith.client.request.parameter/Display.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Display.toString|toString(){}[0]
+    final fun valueOf(kotlin/String): dev.lokksmith.client.request.parameter/Display // dev.lokksmith.client.request.parameter/Display.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.lokksmith.client.request.parameter/Display> // dev.lokksmith.client.request.parameter/Display.values|values#static(){}[0]
+}
+
+final enum class dev.lokksmith.client.request.parameter/GrantType : kotlin/Enum<dev.lokksmith.client.request.parameter/GrantType> { // dev.lokksmith.client.request.parameter/GrantType|null[0]
+    enum entry AuthorizationCode // dev.lokksmith.client.request.parameter/GrantType.AuthorizationCode|null[0]
+    enum entry RefreshToken // dev.lokksmith.client.request.parameter/GrantType.RefreshToken|null[0]
+
+    final val entries // dev.lokksmith.client.request.parameter/GrantType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request.parameter/GrantType> // dev.lokksmith.client.request.parameter/GrantType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/GrantType.toString|toString(){}[0]
+    final fun valueOf(kotlin/String): dev.lokksmith.client.request.parameter/GrantType // dev.lokksmith.client.request.parameter/GrantType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.lokksmith.client.request.parameter/GrantType> // dev.lokksmith.client.request.parameter/GrantType.values|values#static(){}[0]
+}
+
+final enum class dev.lokksmith.client.request.parameter/Prompt : kotlin/Enum<dev.lokksmith.client.request.parameter/Prompt> { // dev.lokksmith.client.request.parameter/Prompt|null[0]
+    enum entry Consent // dev.lokksmith.client.request.parameter/Prompt.Consent|null[0]
+    enum entry Create // dev.lokksmith.client.request.parameter/Prompt.Create|null[0]
+    enum entry Login // dev.lokksmith.client.request.parameter/Prompt.Login|null[0]
+    enum entry None // dev.lokksmith.client.request.parameter/Prompt.None|null[0]
+    enum entry SelectAccount // dev.lokksmith.client.request.parameter/Prompt.SelectAccount|null[0]
+
+    final val entries // dev.lokksmith.client.request.parameter/Prompt.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request.parameter/Prompt> // dev.lokksmith.client.request.parameter/Prompt.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Prompt.toString|toString(){}[0]
+    final fun valueOf(kotlin/String): dev.lokksmith.client.request.parameter/Prompt // dev.lokksmith.client.request.parameter/Prompt.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.lokksmith.client.request.parameter/Prompt> // dev.lokksmith.client.request.parameter/Prompt.values|values#static(){}[0]
+}
+
+final enum class dev.lokksmith.client.request.parameter/ResponseType : kotlin/Enum<dev.lokksmith.client.request.parameter/ResponseType> { // dev.lokksmith.client.request.parameter/ResponseType|null[0]
+    enum entry Code // dev.lokksmith.client.request.parameter/ResponseType.Code|null[0]
+
+    final val entries // dev.lokksmith.client.request.parameter/ResponseType.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request.parameter/ResponseType> // dev.lokksmith.client.request.parameter/ResponseType.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/ResponseType.toString|toString(){}[0]
+    final fun valueOf(kotlin/String): dev.lokksmith.client.request.parameter/ResponseType // dev.lokksmith.client.request.parameter/ResponseType.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.lokksmith.client.request.parameter/ResponseType> // dev.lokksmith.client.request.parameter/ResponseType.values|values#static(){}[0]
+}
+
+abstract fun interface dev.lokksmith.client.request.refresh/RefreshTokenRequest { // dev.lokksmith.client.request.refresh/RefreshTokenRequest|null[0]
+    abstract suspend fun invoke(): dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response // dev.lokksmith.client.request.refresh/RefreshTokenRequest.invoke|invoke(){}[0]
+
+    final class Response { // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response|null[0]
+        constructor <init>(dev.lokksmith.client/Client.Tokens.AccessToken, dev.lokksmith.client/Client.Tokens.RefreshToken?, dev.lokksmith.client/Client.Tokens.IdToken?) // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.<init>|<init>(dev.lokksmith.client.Client.Tokens.AccessToken;dev.lokksmith.client.Client.Tokens.RefreshToken?;dev.lokksmith.client.Client.Tokens.IdToken?){}[0]
+
+        final val accessToken // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.accessToken|{}accessToken[0]
+            final fun <get-accessToken>(): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.accessToken.<get-accessToken>|<get-accessToken>(){}[0]
+        final val idToken // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.idToken|{}idToken[0]
+            final fun <get-idToken>(): dev.lokksmith.client/Client.Tokens.IdToken? // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.idToken.<get-idToken>|<get-idToken>(){}[0]
+        final val refreshToken // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.refreshToken|{}refreshToken[0]
+            final fun <get-refreshToken>(): dev.lokksmith.client/Client.Tokens.RefreshToken? // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.refreshToken.<get-refreshToken>|<get-refreshToken>(){}[0]
+
+        final fun component1(): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.component1|component1(){}[0]
+        final fun component2(): dev.lokksmith.client/Client.Tokens.RefreshToken? // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.component2|component2(){}[0]
+        final fun component3(): dev.lokksmith.client/Client.Tokens.IdToken? // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.component3|component3(){}[0]
+        final fun copy(dev.lokksmith.client/Client.Tokens.AccessToken = ..., dev.lokksmith.client/Client.Tokens.RefreshToken? = ..., dev.lokksmith.client/Client.Tokens.IdToken? = ...): dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.copy|copy(dev.lokksmith.client.Client.Tokens.AccessToken;dev.lokksmith.client.Client.Tokens.RefreshToken?;dev.lokksmith.client.Client.Tokens.IdToken?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.refresh/RefreshTokenRequest.Response.toString|toString(){}[0]
+    }
+}
+
+abstract interface dev.lokksmith.client.discovery/MetadataDiscoveryRequest { // dev.lokksmith.client.discovery/MetadataDiscoveryRequest|null[0]
+    abstract suspend fun invoke(kotlin/String): dev.lokksmith.client/Client.Metadata // dev.lokksmith.client.discovery/MetadataDiscoveryRequest.invoke|invoke(kotlin.String){}[0]
+}
+
+abstract interface dev.lokksmith.client.request.flow/AuthFlow { // dev.lokksmith.client.request.flow/AuthFlow|null[0]
+    abstract suspend fun cancel() // dev.lokksmith.client.request.flow/AuthFlow.cancel|cancel(){}[0]
+    abstract suspend fun onResponse(kotlin/String) // dev.lokksmith.client.request.flow/AuthFlow.onResponse|onResponse(kotlin.String){}[0]
+    abstract suspend fun prepare(): dev.lokksmith.client.request.flow/AuthFlow.Initiation // dev.lokksmith.client.request.flow/AuthFlow.prepare|prepare(){}[0]
+
+    abstract interface Request { // dev.lokksmith.client.request.flow/AuthFlow.Request|null[0]
+        abstract val additionalParameters // dev.lokksmith.client.request.flow/AuthFlow.Request.additionalParameters|{}additionalParameters[0]
+            abstract fun <get-additionalParameters>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.client.request.flow/AuthFlow.Request.additionalParameters.<get-additionalParameters>|<get-additionalParameters>(){}[0]
+        abstract val redirectUri // dev.lokksmith.client.request.flow/AuthFlow.Request.redirectUri|{}redirectUri[0]
+            abstract fun <get-redirectUri>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlow.Request.redirectUri.<get-redirectUri>|<get-redirectUri>(){}[0]
+        abstract val stateLength // dev.lokksmith.client.request.flow/AuthFlow.Request.stateLength|{}stateLength[0]
+            abstract fun <get-stateLength>(): kotlin/Int // dev.lokksmith.client.request.flow/AuthFlow.Request.stateLength.<get-stateLength>|<get-stateLength>(){}[0]
+        abstract val uiLocales // dev.lokksmith.client.request.flow/AuthFlow.Request.uiLocales|{}uiLocales[0]
+            abstract fun <get-uiLocales>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client.request.flow/AuthFlow.Request.uiLocales.<get-uiLocales>|<get-uiLocales>(){}[0]
+    }
+
+    final class Initiation { // dev.lokksmith.client.request.flow/AuthFlow.Initiation|null[0]
+        constructor <init>(kotlin/String, kotlin/String, kotlin/String) // dev.lokksmith.client.request.flow/AuthFlow.Initiation.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+
+        final val clientKey // dev.lokksmith.client.request.flow/AuthFlow.Initiation.clientKey|{}clientKey[0]
+            final fun <get-clientKey>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlow.Initiation.clientKey.<get-clientKey>|<get-clientKey>(){}[0]
+        final val requestUrl // dev.lokksmith.client.request.flow/AuthFlow.Initiation.requestUrl|{}requestUrl[0]
+            final fun <get-requestUrl>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlow.Initiation.requestUrl.<get-requestUrl>|<get-requestUrl>(){}[0]
+        final val state // dev.lokksmith.client.request.flow/AuthFlow.Initiation.state|{}state[0]
+            final fun <get-state>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlow.Initiation.state.<get-state>|<get-state>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow/AuthFlow.Initiation.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow/AuthFlow.Initiation.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlow.Initiation.toString|toString(){}[0]
+    }
+}
+
+abstract interface dev.lokksmith.client.snapshot/SnapshotStore { // dev.lokksmith.client.snapshot/SnapshotStore|null[0]
+    abstract fun observe(dev.lokksmith.client/Key): kotlinx.coroutines.flow/Flow<dev.lokksmith.client.snapshot/Snapshot?> // dev.lokksmith.client.snapshot/SnapshotStore.observe|observe(dev.lokksmith.client.Key){}[0]
+    abstract suspend fun delete(dev.lokksmith.client/Key): kotlin/Boolean // dev.lokksmith.client.snapshot/SnapshotStore.delete|delete(dev.lokksmith.client.Key){}[0]
+    abstract suspend fun exists(dev.lokksmith.client/Key): kotlin/Boolean // dev.lokksmith.client.snapshot/SnapshotStore.exists|exists(dev.lokksmith.client.Key){}[0]
+    abstract suspend fun getForState(kotlin/String): dev.lokksmith.client.snapshot/Snapshot? // dev.lokksmith.client.snapshot/SnapshotStore.getForState|getForState(kotlin.String){}[0]
+    abstract suspend fun set(dev.lokksmith.client/Key, dev.lokksmith.client.snapshot/Snapshot): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client.snapshot/SnapshotStore.set|set(dev.lokksmith.client.Key;dev.lokksmith.client.snapshot.Snapshot){}[0]
+}
+
+abstract interface dev.lokksmith.client/Client { // dev.lokksmith.client/Client|null[0]
+    abstract val id // dev.lokksmith.client/Client.id|{}id[0]
+        abstract fun <get-id>(): dev.lokksmith.client/Id // dev.lokksmith.client/Client.id.<get-id>|<get-id>(){}[0]
+    abstract val key // dev.lokksmith.client/Client.key|{}key[0]
+        abstract fun <get-key>(): dev.lokksmith.client/Key // dev.lokksmith.client/Client.key.<get-key>|<get-key>(){}[0]
+    abstract val tokens // dev.lokksmith.client/Client.tokens|{}tokens[0]
+        abstract fun <get-tokens>(): kotlinx.coroutines.flow/StateFlow<dev.lokksmith.client/Client.Tokens?> // dev.lokksmith.client/Client.tokens.<get-tokens>|<get-tokens>(){}[0]
+
+    abstract var metadata // dev.lokksmith.client/Client.metadata|{}metadata[0]
+        abstract fun <get-metadata>(): dev.lokksmith.client/Client.Metadata // dev.lokksmith.client/Client.metadata.<get-metadata>|<get-metadata>(){}[0]
+        abstract fun <set-metadata>(dev.lokksmith.client/Client.Metadata) // dev.lokksmith.client/Client.metadata.<set-metadata>|<set-metadata>(dev.lokksmith.client.Client.Metadata){}[0]
+    abstract var options // dev.lokksmith.client/Client.options|{}options[0]
+        abstract fun <get-options>(): dev.lokksmith.client/Client.Options // dev.lokksmith.client/Client.options.<get-options>|<get-options>(){}[0]
+        abstract fun <set-options>(dev.lokksmith.client/Client.Options) // dev.lokksmith.client/Client.options.<set-options>|<set-options>(dev.lokksmith.client.Client.Options){}[0]
+
+    abstract fun authorizationCodeFlow(dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request): dev.lokksmith.client.request.flow/AuthFlow // dev.lokksmith.client/Client.authorizationCodeFlow|authorizationCodeFlow(dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow.Request){}[0]
+    abstract fun dispose() // dev.lokksmith.client/Client.dispose|dispose(){}[0]
+    abstract fun endSessionFlow(dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request): dev.lokksmith.client.request.flow/AuthFlow? // dev.lokksmith.client/Client.endSessionFlow|endSessionFlow(dev.lokksmith.client.request.flow.endSession.EndSessionFlow.Request){}[0]
+    abstract fun isExpired(dev.lokksmith.client/Client.Tokens.IdToken): kotlin/Boolean // dev.lokksmith.client/Client.isExpired|isExpired(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+    abstract fun isExpired(dev.lokksmith.client/Client.Tokens.Token): kotlin/Boolean // dev.lokksmith.client/Client.isExpired|isExpired(dev.lokksmith.client.Client.Tokens.Token){}[0]
+    abstract suspend fun refresh(): dev.lokksmith.client/Client.Tokens // dev.lokksmith.client/Client.refresh|refresh(){}[0]
+    abstract suspend fun resetTokens(): kotlin/Boolean // dev.lokksmith.client/Client.resetTokens|resetTokens(){}[0]
+    abstract suspend fun runWithTokens(kotlin.coroutines/SuspendFunction1<dev.lokksmith.client/Client.Tokens, kotlin/Unit>) // dev.lokksmith.client/Client.runWithTokens|runWithTokens(kotlin.coroutines.SuspendFunction1<dev.lokksmith.client.Client.Tokens,kotlin.Unit>){}[0]
+
+    final class Metadata { // dev.lokksmith.client/Client.Metadata|null[0]
+        constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // dev.lokksmith.client/Client.Metadata.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+
+        final val authorizationEndpoint // dev.lokksmith.client/Client.Metadata.authorizationEndpoint|{}authorizationEndpoint[0]
+            final fun <get-authorizationEndpoint>(): kotlin/String // dev.lokksmith.client/Client.Metadata.authorizationEndpoint.<get-authorizationEndpoint>|<get-authorizationEndpoint>(){}[0]
+        final val endSessionEndpoint // dev.lokksmith.client/Client.Metadata.endSessionEndpoint|{}endSessionEndpoint[0]
+            final fun <get-endSessionEndpoint>(): kotlin/String? // dev.lokksmith.client/Client.Metadata.endSessionEndpoint.<get-endSessionEndpoint>|<get-endSessionEndpoint>(){}[0]
+        final val issuer // dev.lokksmith.client/Client.Metadata.issuer|{}issuer[0]
+            final fun <get-issuer>(): kotlin/String // dev.lokksmith.client/Client.Metadata.issuer.<get-issuer>|<get-issuer>(){}[0]
+        final val jwksUri // dev.lokksmith.client/Client.Metadata.jwksUri|{}jwksUri[0]
+            final fun <get-jwksUri>(): kotlin/String? // dev.lokksmith.client/Client.Metadata.jwksUri.<get-jwksUri>|<get-jwksUri>(){}[0]
+        final val tokenEndpoint // dev.lokksmith.client/Client.Metadata.tokenEndpoint|{}tokenEndpoint[0]
+            final fun <get-tokenEndpoint>(): kotlin/String // dev.lokksmith.client/Client.Metadata.tokenEndpoint.<get-tokenEndpoint>|<get-tokenEndpoint>(){}[0]
+        final val userInfoEndpoint // dev.lokksmith.client/Client.Metadata.userInfoEndpoint|{}userInfoEndpoint[0]
+            final fun <get-userInfoEndpoint>(): kotlin/String? // dev.lokksmith.client/Client.Metadata.userInfoEndpoint.<get-userInfoEndpoint>|<get-userInfoEndpoint>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith.client/Client.Metadata.component1|component1(){}[0]
+        final fun component2(): kotlin/String // dev.lokksmith.client/Client.Metadata.component2|component2(){}[0]
+        final fun component3(): kotlin/String // dev.lokksmith.client/Client.Metadata.component3|component3(){}[0]
+        final fun component4(): kotlin/String? // dev.lokksmith.client/Client.Metadata.component4|component4(){}[0]
+        final fun component5(): kotlin/String? // dev.lokksmith.client/Client.Metadata.component5|component5(){}[0]
+        final fun component6(): kotlin/String? // dev.lokksmith.client/Client.Metadata.component6|component6(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): dev.lokksmith.client/Client.Metadata // dev.lokksmith.client/Client.Metadata.copy|copy(kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Metadata.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Metadata.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client/Client.Metadata.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Client.Metadata> { // dev.lokksmith.client/Client.Metadata.$serializer|null[0]
+            final val descriptor // dev.lokksmith.client/Client.Metadata.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Client.Metadata.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Client.Metadata.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Client.Metadata // dev.lokksmith.client/Client.Metadata.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Client.Metadata) // dev.lokksmith.client/Client.Metadata.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Client.Metadata){}[0]
+        }
+
+        final object Companion { // dev.lokksmith.client/Client.Metadata.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Client.Metadata> // dev.lokksmith.client/Client.Metadata.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class Options { // dev.lokksmith.client/Client.Options|null[0]
+        constructor <init>(kotlin/Int = ..., kotlin/Int = ...) // dev.lokksmith.client/Client.Options.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+
+        final val leewaySeconds // dev.lokksmith.client/Client.Options.leewaySeconds|{}leewaySeconds[0]
+            final fun <get-leewaySeconds>(): kotlin/Int // dev.lokksmith.client/Client.Options.leewaySeconds.<get-leewaySeconds>|<get-leewaySeconds>(){}[0]
+        final val preemptiveRefreshSeconds // dev.lokksmith.client/Client.Options.preemptiveRefreshSeconds|{}preemptiveRefreshSeconds[0]
+            final fun <get-preemptiveRefreshSeconds>(): kotlin/Int // dev.lokksmith.client/Client.Options.preemptiveRefreshSeconds.<get-preemptiveRefreshSeconds>|<get-preemptiveRefreshSeconds>(){}[0]
+
+        final fun component1(): kotlin/Int // dev.lokksmith.client/Client.Options.component1|component1(){}[0]
+        final fun component2(): kotlin/Int // dev.lokksmith.client/Client.Options.component2|component2(){}[0]
+        final fun copy(kotlin/Int = ..., kotlin/Int = ...): dev.lokksmith.client/Client.Options // dev.lokksmith.client/Client.Options.copy|copy(kotlin.Int;kotlin.Int){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Options.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Options.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client/Client.Options.toString|toString(){}[0]
+    }
+
+    final class Tokens { // dev.lokksmith.client/Client.Tokens|null[0]
+        constructor <init>(dev.lokksmith.client/Client.Tokens.AccessToken, dev.lokksmith.client/Client.Tokens.RefreshToken?, dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client/Client.Tokens.<init>|<init>(dev.lokksmith.client.Client.Tokens.AccessToken;dev.lokksmith.client.Client.Tokens.RefreshToken?;dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+
+        final val accessToken // dev.lokksmith.client/Client.Tokens.accessToken|{}accessToken[0]
+            final fun <get-accessToken>(): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client/Client.Tokens.accessToken.<get-accessToken>|<get-accessToken>(){}[0]
+        final val idToken // dev.lokksmith.client/Client.Tokens.idToken|{}idToken[0]
+            final fun <get-idToken>(): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client/Client.Tokens.idToken.<get-idToken>|<get-idToken>(){}[0]
+        final val refreshToken // dev.lokksmith.client/Client.Tokens.refreshToken|{}refreshToken[0]
+            final fun <get-refreshToken>(): dev.lokksmith.client/Client.Tokens.RefreshToken? // dev.lokksmith.client/Client.Tokens.refreshToken.<get-refreshToken>|<get-refreshToken>(){}[0]
+
+        final fun component1(): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client/Client.Tokens.component1|component1(){}[0]
+        final fun component2(): dev.lokksmith.client/Client.Tokens.RefreshToken? // dev.lokksmith.client/Client.Tokens.component2|component2(){}[0]
+        final fun component3(): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client/Client.Tokens.component3|component3(){}[0]
+        final fun copy(dev.lokksmith.client/Client.Tokens.AccessToken = ..., dev.lokksmith.client/Client.Tokens.RefreshToken? = ..., dev.lokksmith.client/Client.Tokens.IdToken = ...): dev.lokksmith.client/Client.Tokens // dev.lokksmith.client/Client.Tokens.copy|copy(dev.lokksmith.client.Client.Tokens.AccessToken;dev.lokksmith.client.Client.Tokens.RefreshToken?;dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Tokens.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Tokens.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client/Client.Tokens.toString|toString(){}[0]
+
+        abstract interface Token { // dev.lokksmith.client/Client.Tokens.Token|null[0]
+            abstract val expiresAt // dev.lokksmith.client/Client.Tokens.Token.expiresAt|{}expiresAt[0]
+                abstract fun <get-expiresAt>(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.Token.expiresAt.<get-expiresAt>|<get-expiresAt>(){}[0]
+            abstract val token // dev.lokksmith.client/Client.Tokens.Token.token|{}token[0]
+                abstract fun <get-token>(): kotlin/String // dev.lokksmith.client/Client.Tokens.Token.token.<get-token>|<get-token>(){}[0]
+        }
+
+        final class AccessToken : dev.lokksmith.client/Client.Tokens.Token { // dev.lokksmith.client/Client.Tokens.AccessToken|null[0]
+            constructor <init>(kotlin/String, kotlin/Long?) // dev.lokksmith.client/Client.Tokens.AccessToken.<init>|<init>(kotlin.String;kotlin.Long?){}[0]
+
+            final val expiresAt // dev.lokksmith.client/Client.Tokens.AccessToken.expiresAt|{}expiresAt[0]
+                final fun <get-expiresAt>(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.AccessToken.expiresAt.<get-expiresAt>|<get-expiresAt>(){}[0]
+            final val token // dev.lokksmith.client/Client.Tokens.AccessToken.token|{}token[0]
+                final fun <get-token>(): kotlin/String // dev.lokksmith.client/Client.Tokens.AccessToken.token.<get-token>|<get-token>(){}[0]
+
+            final fun component1(): kotlin/String // dev.lokksmith.client/Client.Tokens.AccessToken.component1|component1(){}[0]
+            final fun component2(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.AccessToken.component2|component2(){}[0]
+            final fun copy(kotlin/String = ..., kotlin/Long? = ...): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client/Client.Tokens.AccessToken.copy|copy(kotlin.String;kotlin.Long?){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Tokens.AccessToken.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Tokens.AccessToken.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client/Client.Tokens.AccessToken.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Client.Tokens.AccessToken> { // dev.lokksmith.client/Client.Tokens.AccessToken.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client/Client.Tokens.AccessToken.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Client.Tokens.AccessToken.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Client.Tokens.AccessToken.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client/Client.Tokens.AccessToken.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Client.Tokens.AccessToken) // dev.lokksmith.client/Client.Tokens.AccessToken.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Client.Tokens.AccessToken){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client/Client.Tokens.AccessToken.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Client.Tokens.AccessToken> // dev.lokksmith.client/Client.Tokens.AccessToken.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final class IdToken { // dev.lokksmith.client/Client.Tokens.IdToken|null[0]
+            constructor <init>(kotlin/String, kotlin/String, kotlin.collections/List<kotlin/String>, kotlin/Long, kotlin/Long, kotlin/Long? = ..., kotlin/Long? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String> = ..., kotlin/String? = ..., kotlin.collections/Map<kotlin/String, kotlinx.serialization.json/JsonElement> = ..., kotlin/String) // dev.lokksmith.client/Client.Tokens.IdToken.<init>|<init>(kotlin.String;kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Long;kotlin.Long;kotlin.Long?;kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.String?;kotlin.collections.Map<kotlin.String,kotlinx.serialization.json.JsonElement>;kotlin.String){}[0]
+
+            final val audiences // dev.lokksmith.client/Client.Tokens.IdToken.audiences|{}audiences[0]
+                final fun <get-audiences>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client/Client.Tokens.IdToken.audiences.<get-audiences>|<get-audiences>(){}[0]
+            final val authTime // dev.lokksmith.client/Client.Tokens.IdToken.authTime|{}authTime[0]
+                final fun <get-authTime>(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.IdToken.authTime.<get-authTime>|<get-authTime>(){}[0]
+            final val authenticationContextClassReference // dev.lokksmith.client/Client.Tokens.IdToken.authenticationContextClassReference|{}authenticationContextClassReference[0]
+                final fun <get-authenticationContextClassReference>(): kotlin/String? // dev.lokksmith.client/Client.Tokens.IdToken.authenticationContextClassReference.<get-authenticationContextClassReference>|<get-authenticationContextClassReference>(){}[0]
+            final val authenticationMethodsReferences // dev.lokksmith.client/Client.Tokens.IdToken.authenticationMethodsReferences|{}authenticationMethodsReferences[0]
+                final fun <get-authenticationMethodsReferences>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client/Client.Tokens.IdToken.authenticationMethodsReferences.<get-authenticationMethodsReferences>|<get-authenticationMethodsReferences>(){}[0]
+            final val authorizedParty // dev.lokksmith.client/Client.Tokens.IdToken.authorizedParty|{}authorizedParty[0]
+                final fun <get-authorizedParty>(): kotlin/String? // dev.lokksmith.client/Client.Tokens.IdToken.authorizedParty.<get-authorizedParty>|<get-authorizedParty>(){}[0]
+            final val expiration // dev.lokksmith.client/Client.Tokens.IdToken.expiration|{}expiration[0]
+                final fun <get-expiration>(): kotlin/Long // dev.lokksmith.client/Client.Tokens.IdToken.expiration.<get-expiration>|<get-expiration>(){}[0]
+            final val extra // dev.lokksmith.client/Client.Tokens.IdToken.extra|{}extra[0]
+                final fun <get-extra>(): kotlin.collections/Map<kotlin/String, kotlinx.serialization.json/JsonElement> // dev.lokksmith.client/Client.Tokens.IdToken.extra.<get-extra>|<get-extra>(){}[0]
+            final val issuedAt // dev.lokksmith.client/Client.Tokens.IdToken.issuedAt|{}issuedAt[0]
+                final fun <get-issuedAt>(): kotlin/Long // dev.lokksmith.client/Client.Tokens.IdToken.issuedAt.<get-issuedAt>|<get-issuedAt>(){}[0]
+            final val issuer // dev.lokksmith.client/Client.Tokens.IdToken.issuer|{}issuer[0]
+                final fun <get-issuer>(): kotlin/String // dev.lokksmith.client/Client.Tokens.IdToken.issuer.<get-issuer>|<get-issuer>(){}[0]
+            final val nonce // dev.lokksmith.client/Client.Tokens.IdToken.nonce|{}nonce[0]
+                final fun <get-nonce>(): kotlin/String? // dev.lokksmith.client/Client.Tokens.IdToken.nonce.<get-nonce>|<get-nonce>(){}[0]
+            final val notBefore // dev.lokksmith.client/Client.Tokens.IdToken.notBefore|{}notBefore[0]
+                final fun <get-notBefore>(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.IdToken.notBefore.<get-notBefore>|<get-notBefore>(){}[0]
+            final val raw // dev.lokksmith.client/Client.Tokens.IdToken.raw|{}raw[0]
+                final fun <get-raw>(): kotlin/String // dev.lokksmith.client/Client.Tokens.IdToken.raw.<get-raw>|<get-raw>(){}[0]
+            final val subject // dev.lokksmith.client/Client.Tokens.IdToken.subject|{}subject[0]
+                final fun <get-subject>(): kotlin/String // dev.lokksmith.client/Client.Tokens.IdToken.subject.<get-subject>|<get-subject>(){}[0]
+
+            final fun component1(): kotlin/String // dev.lokksmith.client/Client.Tokens.IdToken.component1|component1(){}[0]
+            final fun component10(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client/Client.Tokens.IdToken.component10|component10(){}[0]
+            final fun component11(): kotlin/String? // dev.lokksmith.client/Client.Tokens.IdToken.component11|component11(){}[0]
+            final fun component12(): kotlin.collections/Map<kotlin/String, kotlinx.serialization.json/JsonElement> // dev.lokksmith.client/Client.Tokens.IdToken.component12|component12(){}[0]
+            final fun component13(): kotlin/String // dev.lokksmith.client/Client.Tokens.IdToken.component13|component13(){}[0]
+            final fun component2(): kotlin/String // dev.lokksmith.client/Client.Tokens.IdToken.component2|component2(){}[0]
+            final fun component3(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client/Client.Tokens.IdToken.component3|component3(){}[0]
+            final fun component4(): kotlin/Long // dev.lokksmith.client/Client.Tokens.IdToken.component4|component4(){}[0]
+            final fun component5(): kotlin/Long // dev.lokksmith.client/Client.Tokens.IdToken.component5|component5(){}[0]
+            final fun component6(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.IdToken.component6|component6(){}[0]
+            final fun component7(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.IdToken.component7|component7(){}[0]
+            final fun component8(): kotlin/String? // dev.lokksmith.client/Client.Tokens.IdToken.component8|component8(){}[0]
+            final fun component9(): kotlin/String? // dev.lokksmith.client/Client.Tokens.IdToken.component9|component9(){}[0]
+            final fun copy(kotlin/String = ..., kotlin/String = ..., kotlin.collections/List<kotlin/String> = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Long? = ..., kotlin/Long? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String> = ..., kotlin/String? = ..., kotlin.collections/Map<kotlin/String, kotlinx.serialization.json/JsonElement> = ..., kotlin/String = ...): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client/Client.Tokens.IdToken.copy|copy(kotlin.String;kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Long;kotlin.Long;kotlin.Long?;kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.String?;kotlin.collections.Map<kotlin.String,kotlinx.serialization.json.JsonElement>;kotlin.String){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Tokens.IdToken.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Tokens.IdToken.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client/Client.Tokens.IdToken.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Client.Tokens.IdToken> { // dev.lokksmith.client/Client.Tokens.IdToken.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client/Client.Tokens.IdToken.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Client.Tokens.IdToken.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Client.Tokens.IdToken.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client/Client.Tokens.IdToken.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client/Client.Tokens.IdToken.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client/Client.Tokens.IdToken.Companion|null[0]
+                final val $childSerializers // dev.lokksmith.client/Client.Tokens.IdToken.Companion.$childSerializers|{}$childSerializers[0]
+
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Client.Tokens.IdToken> // dev.lokksmith.client/Client.Tokens.IdToken.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final class RefreshToken : dev.lokksmith.client/Client.Tokens.Token { // dev.lokksmith.client/Client.Tokens.RefreshToken|null[0]
+            constructor <init>(kotlin/String, kotlin/Long?) // dev.lokksmith.client/Client.Tokens.RefreshToken.<init>|<init>(kotlin.String;kotlin.Long?){}[0]
+
+            final val expiresAt // dev.lokksmith.client/Client.Tokens.RefreshToken.expiresAt|{}expiresAt[0]
+                final fun <get-expiresAt>(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.RefreshToken.expiresAt.<get-expiresAt>|<get-expiresAt>(){}[0]
+            final val token // dev.lokksmith.client/Client.Tokens.RefreshToken.token|{}token[0]
+                final fun <get-token>(): kotlin/String // dev.lokksmith.client/Client.Tokens.RefreshToken.token.<get-token>|<get-token>(){}[0]
+
+            final fun component1(): kotlin/String // dev.lokksmith.client/Client.Tokens.RefreshToken.component1|component1(){}[0]
+            final fun component2(): kotlin/Long? // dev.lokksmith.client/Client.Tokens.RefreshToken.component2|component2(){}[0]
+            final fun copy(kotlin/String = ..., kotlin/Long? = ...): dev.lokksmith.client/Client.Tokens.RefreshToken // dev.lokksmith.client/Client.Tokens.RefreshToken.copy|copy(kotlin.String;kotlin.Long?){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Tokens.RefreshToken.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Tokens.RefreshToken.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client/Client.Tokens.RefreshToken.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Client.Tokens.RefreshToken> { // dev.lokksmith.client/Client.Tokens.RefreshToken.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client/Client.Tokens.RefreshToken.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Client.Tokens.RefreshToken.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Client.Tokens.RefreshToken.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Client.Tokens.RefreshToken // dev.lokksmith.client/Client.Tokens.RefreshToken.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Client.Tokens.RefreshToken) // dev.lokksmith.client/Client.Tokens.RefreshToken.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Client.Tokens.RefreshToken){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client/Client.Tokens.RefreshToken.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Client.Tokens.RefreshToken> // dev.lokksmith.client/Client.Tokens.RefreshToken.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Client.Tokens> { // dev.lokksmith.client/Client.Tokens.$serializer|null[0]
+            final val descriptor // dev.lokksmith.client/Client.Tokens.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Client.Tokens.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Client.Tokens.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Client.Tokens // dev.lokksmith.client/Client.Tokens.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Client.Tokens) // dev.lokksmith.client/Client.Tokens.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Client.Tokens){}[0]
+        }
+
+        final object Companion { // dev.lokksmith.client/Client.Tokens.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Client.Tokens> // dev.lokksmith.client/Client.Tokens.Companion.serializer|serializer(){}[0]
+        }
+    }
+}
+
+abstract interface dev.lokksmith.client/InternalClient : dev.lokksmith.client/Client { // dev.lokksmith.client/InternalClient|null[0]
+    abstract val provider // dev.lokksmith.client/InternalClient.provider|{}provider[0]
+        abstract fun <get-provider>(): dev.lokksmith.client/InternalClient.Provider // dev.lokksmith.client/InternalClient.provider.<get-provider>|<get-provider>(){}[0]
+    abstract val snapshots // dev.lokksmith.client/InternalClient.snapshots|{}snapshots[0]
+        abstract fun <get-snapshots>(): kotlinx.coroutines.flow/StateFlow<dev.lokksmith.client.snapshot/Snapshot> // dev.lokksmith.client/InternalClient.snapshots.<get-snapshots>|<get-snapshots>(){}[0]
+
+    abstract suspend fun updateSnapshot(kotlin/Function1<dev.lokksmith.client.snapshot/Snapshot, dev.lokksmith.client.snapshot/Snapshot>): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client/InternalClient.updateSnapshot|updateSnapshot(kotlin.Function1<dev.lokksmith.client.snapshot.Snapshot,dev.lokksmith.client.snapshot.Snapshot>){}[0]
+
+    abstract interface Provider { // dev.lokksmith.client/InternalClient.Provider|null[0]
+        abstract val authorizationCodeFlow // dev.lokksmith.client/InternalClient.Provider.authorizationCodeFlow|{}authorizationCodeFlow[0]
+            abstract fun <get-authorizationCodeFlow>(): kotlin/Function2<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request, dev.lokksmith.client.request.flow/AuthFlow> // dev.lokksmith.client/InternalClient.Provider.authorizationCodeFlow.<get-authorizationCodeFlow>|<get-authorizationCodeFlow>(){}[0]
+        abstract val endSessionFlow // dev.lokksmith.client/InternalClient.Provider.endSessionFlow|{}endSessionFlow[0]
+            abstract fun <get-endSessionFlow>(): kotlin/Function2<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request, dev.lokksmith.client.request.flow/AuthFlow?> // dev.lokksmith.client/InternalClient.Provider.endSessionFlow.<get-endSessionFlow>|<get-endSessionFlow>(){}[0]
+        abstract val instantProvider // dev.lokksmith.client/InternalClient.Provider.instantProvider|{}instantProvider[0]
+            abstract fun <get-instantProvider>(): kotlin/Function0<kotlin/Long> // dev.lokksmith.client/InternalClient.Provider.instantProvider.<get-instantProvider>|<get-instantProvider>(){}[0]
+        abstract val refreshTokenRequest // dev.lokksmith.client/InternalClient.Provider.refreshTokenRequest|{}refreshTokenRequest[0]
+            abstract fun <get-refreshTokenRequest>(): kotlin/Function1<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.refresh/RefreshTokenRequest> // dev.lokksmith.client/InternalClient.Provider.refreshTokenRequest.<get-refreshTokenRequest>|<get-refreshTokenRequest>(){}[0]
+    }
+
+    abstract interface SnapshotContract { // dev.lokksmith.client/InternalClient.SnapshotContract|null[0]
+        abstract val snapshots // dev.lokksmith.client/InternalClient.SnapshotContract.snapshots|{}snapshots[0]
+            abstract fun <get-snapshots>(): kotlinx.coroutines.flow/StateFlow<dev.lokksmith.client.snapshot/Snapshot> // dev.lokksmith.client/InternalClient.SnapshotContract.snapshots.<get-snapshots>|<get-snapshots>(){}[0]
+
+        abstract suspend fun updateSnapshot(kotlin/Function1<dev.lokksmith.client.snapshot/Snapshot, dev.lokksmith.client.snapshot/Snapshot>): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client/InternalClient.SnapshotContract.updateSnapshot|updateSnapshot(kotlin.Function1<dev.lokksmith.client.snapshot.Snapshot,dev.lokksmith.client.snapshot.Snapshot>){}[0]
+    }
+}
+
+abstract interface dev.lokksmith/Container { // dev.lokksmith/Container|null[0]
+    abstract val clientProviderFactory // dev.lokksmith/Container.clientProviderFactory|{}clientProviderFactory[0]
+        abstract fun <get-clientProviderFactory>(): kotlin/Function0<dev.lokksmith.client/InternalClient.Provider> // dev.lokksmith/Container.clientProviderFactory.<get-clientProviderFactory>|<get-clientProviderFactory>(){}[0]
+    abstract val coroutineScope // dev.lokksmith/Container.coroutineScope|{}coroutineScope[0]
+        abstract fun <get-coroutineScope>(): kotlinx.coroutines/CoroutineScope // dev.lokksmith/Container.coroutineScope.<get-coroutineScope>|<get-coroutineScope>(){}[0]
+    abstract val httpClient // dev.lokksmith/Container.httpClient|{}httpClient[0]
+        abstract fun <get-httpClient>(): io.ktor.client/HttpClient // dev.lokksmith/Container.httpClient.<get-httpClient>|<get-httpClient>(){}[0]
+    abstract val metadataDiscoveryRequest // dev.lokksmith/Container.metadataDiscoveryRequest|{}metadataDiscoveryRequest[0]
+        abstract fun <get-metadataDiscoveryRequest>(): dev.lokksmith.client.discovery/MetadataDiscoveryRequest // dev.lokksmith/Container.metadataDiscoveryRequest.<get-metadataDiscoveryRequest>|<get-metadataDiscoveryRequest>(){}[0]
+    abstract val serializer // dev.lokksmith/Container.serializer|{}serializer[0]
+        abstract fun <get-serializer>(): kotlinx.serialization.json/Json // dev.lokksmith/Container.serializer.<get-serializer>|<get-serializer>(){}[0]
+    abstract val snapshotStore // dev.lokksmith/Container.snapshotStore|{}snapshotStore[0]
+        abstract fun <get-snapshotStore>(): dev.lokksmith.client.snapshot/SnapshotStore // dev.lokksmith/Container.snapshotStore.<get-snapshotStore>|<get-snapshotStore>(){}[0]
+}
+
+sealed interface dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError|null[0]
+    abstract val code // dev.lokksmith.client.request/OAuthError.code|{}code[0]
+        abstract fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.code.<get-code>|<get-code>(){}[0]
+
+    final class Unknown : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.Unknown|null[0]
+        constructor <init>(kotlin/String) // dev.lokksmith.client.request/OAuthError.Unknown.<init>|<init>(kotlin.String){}[0]
+
+        final val code // dev.lokksmith.client.request/OAuthError.Unknown.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.Unknown.code.<get-code>|<get-code>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith.client.request/OAuthError.Unknown.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): dev.lokksmith.client.request/OAuthError.Unknown // dev.lokksmith.client.request/OAuthError.Unknown.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.Unknown.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.Unknown.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.Unknown.toString|toString(){}[0]
+    }
+
+    final object AccessDenied : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.AccessDenied|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.AccessDenied.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.AccessDenied.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.AccessDenied.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.AccessDenied.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.AccessDenied.toString|toString(){}[0]
+    }
+
+    final object AccountSelectionRequired : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.AccountSelectionRequired|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.AccountSelectionRequired.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.AccountSelectionRequired.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.AccountSelectionRequired.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.AccountSelectionRequired.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.AccountSelectionRequired.toString|toString(){}[0]
+    }
+
+    final object ConsentRequired : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.ConsentRequired|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.ConsentRequired.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.ConsentRequired.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.ConsentRequired.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.ConsentRequired.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.ConsentRequired.toString|toString(){}[0]
+    }
+
+    final object InteractionRequired : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.InteractionRequired|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.InteractionRequired.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.InteractionRequired.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.InteractionRequired.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.InteractionRequired.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.InteractionRequired.toString|toString(){}[0]
+    }
+
+    final object InvalidClient : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.InvalidClient|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.InvalidClient.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidClient.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.InvalidClient.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.InvalidClient.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidClient.toString|toString(){}[0]
+    }
+
+    final object InvalidGrant : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.InvalidGrant|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.InvalidGrant.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidGrant.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.InvalidGrant.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.InvalidGrant.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidGrant.toString|toString(){}[0]
+    }
+
+    final object InvalidRequest : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.InvalidRequest|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.InvalidRequest.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidRequest.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.InvalidRequest.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.InvalidRequest.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidRequest.toString|toString(){}[0]
+    }
+
+    final object InvalidRequestObject : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.InvalidRequestObject|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.InvalidRequestObject.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidRequestObject.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.InvalidRequestObject.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.InvalidRequestObject.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidRequestObject.toString|toString(){}[0]
+    }
+
+    final object InvalidRequestUri : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.InvalidRequestUri|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.InvalidRequestUri.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidRequestUri.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.InvalidRequestUri.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.InvalidRequestUri.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidRequestUri.toString|toString(){}[0]
+    }
+
+    final object InvalidScope : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.InvalidScope|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.InvalidScope.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidScope.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.InvalidScope.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.InvalidScope.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.InvalidScope.toString|toString(){}[0]
+    }
+
+    final object LoginRequired : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.LoginRequired|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.LoginRequired.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.LoginRequired.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.LoginRequired.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.LoginRequired.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.LoginRequired.toString|toString(){}[0]
+    }
+
+    final object RegistrationNotSupported : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.RegistrationNotSupported|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.RegistrationNotSupported.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.RegistrationNotSupported.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.RegistrationNotSupported.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.RegistrationNotSupported.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.RegistrationNotSupported.toString|toString(){}[0]
+    }
+
+    final object RequestNotSupported : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.RequestNotSupported|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.RequestNotSupported.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.RequestNotSupported.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.RequestNotSupported.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.RequestNotSupported.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.RequestNotSupported.toString|toString(){}[0]
+    }
+
+    final object RequestUriNotSupported : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.RequestUriNotSupported|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.RequestUriNotSupported.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.RequestUriNotSupported.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.RequestUriNotSupported.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.RequestUriNotSupported.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.RequestUriNotSupported.toString|toString(){}[0]
+    }
+
+    final object ServerError : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.ServerError|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.ServerError.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.ServerError.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.ServerError.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.ServerError.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.ServerError.toString|toString(){}[0]
+    }
+
+    final object TemporarilyUnavailable : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.TemporarilyUnavailable|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.TemporarilyUnavailable.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.TemporarilyUnavailable.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.TemporarilyUnavailable.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.TemporarilyUnavailable.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.TemporarilyUnavailable.toString|toString(){}[0]
+    }
+
+    final object UnauthorizedClient : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.UnauthorizedClient|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.UnauthorizedClient.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.UnauthorizedClient.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.UnauthorizedClient.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.UnauthorizedClient.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.UnauthorizedClient.toString|toString(){}[0]
+    }
+
+    final object UnsupportedGrantType : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.UnsupportedGrantType|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.UnsupportedGrantType.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.UnsupportedGrantType.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.UnsupportedGrantType.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.UnsupportedGrantType.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.UnsupportedGrantType.toString|toString(){}[0]
+    }
+
+    final object UnsupportedResponseType : dev.lokksmith.client.request/OAuthError { // dev.lokksmith.client.request/OAuthError.UnsupportedResponseType|null[0]
+        final val code // dev.lokksmith.client.request/OAuthError.UnsupportedResponseType.code|{}code[0]
+            final fun <get-code>(): kotlin/String // dev.lokksmith.client.request/OAuthError.UnsupportedResponseType.code.<get-code>|<get-code>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request/OAuthError.UnsupportedResponseType.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request/OAuthError.UnsupportedResponseType.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthError.UnsupportedResponseType.toString|toString(){}[0]
+    }
+}
+
+abstract class <#A: dev.lokksmith.client/Client.Tokens.IdToken?> dev.lokksmith.client.request.token/TokenResponseValidator { // dev.lokksmith.client.request.token/TokenResponseValidator|null[0]
+    constructor <init>(kotlinx.serialization.json/Json, dev.lokksmith.client/InternalClient, dev.lokksmith.client.jwt/JwtDecoder = ..., dev.lokksmith.client.token/JwtToIdTokenMapper = ...) // dev.lokksmith.client.request.token/TokenResponseValidator.<init>|<init>(kotlinx.serialization.json.Json;dev.lokksmith.client.InternalClient;dev.lokksmith.client.jwt.JwtDecoder;dev.lokksmith.client.token.JwtToIdTokenMapper){}[0]
+
+    final val client // dev.lokksmith.client.request.token/TokenResponseValidator.client|{}client[0]
+        final fun <get-client>(): dev.lokksmith.client/InternalClient // dev.lokksmith.client.request.token/TokenResponseValidator.client.<get-client>|<get-client>(){}[0]
+
+    abstract fun getIdToken(dev.lokksmith.client.request.token/TokenResponse): #A // dev.lokksmith.client.request.token/TokenResponseValidator.getIdToken|getIdToken(dev.lokksmith.client.request.token.TokenResponse){}[0]
+    abstract fun validateIdTokenNonce(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.request.token/TokenResponseValidator.validateIdTokenNonce|validateIdTokenNonce(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+    final fun decodeIdToken(kotlin/String): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client.request.token/TokenResponseValidator.decodeIdToken|decodeIdToken(kotlin.String){}[0]
+    final fun validate(dev.lokksmith.client.request.token/TokenResponse, dev.lokksmith.client/Client.Tokens.IdToken? = ...): dev.lokksmith.client.request.token/TokenResponseValidator.Result<#A> // dev.lokksmith.client.request.token/TokenResponseValidator.validate|validate(dev.lokksmith.client.request.token.TokenResponse;dev.lokksmith.client.Client.Tokens.IdToken?){}[0]
+
+    final class <#A1: dev.lokksmith.client/Client.Tokens.IdToken?> Result { // dev.lokksmith.client.request.token/TokenResponseValidator.Result|null[0]
+        constructor <init>(dev.lokksmith.client/Client.Tokens.AccessToken, dev.lokksmith.client/Client.Tokens.RefreshToken?, #A1) // dev.lokksmith.client.request.token/TokenResponseValidator.Result.<init>|<init>(dev.lokksmith.client.Client.Tokens.AccessToken;dev.lokksmith.client.Client.Tokens.RefreshToken?;1:0){}[0]
+
+        final val accessToken // dev.lokksmith.client.request.token/TokenResponseValidator.Result.accessToken|{}accessToken[0]
+            final fun <get-accessToken>(): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client.request.token/TokenResponseValidator.Result.accessToken.<get-accessToken>|<get-accessToken>(){}[0]
+        final val idToken // dev.lokksmith.client.request.token/TokenResponseValidator.Result.idToken|{}idToken[0]
+            final fun <get-idToken>(): #A1 // dev.lokksmith.client.request.token/TokenResponseValidator.Result.idToken.<get-idToken>|<get-idToken>(){}[0]
+        final val refreshToken // dev.lokksmith.client.request.token/TokenResponseValidator.Result.refreshToken|{}refreshToken[0]
+            final fun <get-refreshToken>(): dev.lokksmith.client/Client.Tokens.RefreshToken? // dev.lokksmith.client.request.token/TokenResponseValidator.Result.refreshToken.<get-refreshToken>|<get-refreshToken>(){}[0]
+
+        final fun component1(): dev.lokksmith.client/Client.Tokens.AccessToken // dev.lokksmith.client.request.token/TokenResponseValidator.Result.component1|component1(){}[0]
+        final fun component2(): dev.lokksmith.client/Client.Tokens.RefreshToken? // dev.lokksmith.client.request.token/TokenResponseValidator.Result.component2|component2(){}[0]
+        final fun component3(): #A1 // dev.lokksmith.client.request.token/TokenResponseValidator.Result.component3|component3(){}[0]
+        final fun copy(dev.lokksmith.client/Client.Tokens.AccessToken = ..., dev.lokksmith.client/Client.Tokens.RefreshToken? = ..., #A1 = ...): dev.lokksmith.client.request.token/TokenResponseValidator.Result<#A1> // dev.lokksmith.client.request.token/TokenResponseValidator.Result.copy|copy(dev.lokksmith.client.Client.Tokens.AccessToken;dev.lokksmith.client.Client.Tokens.RefreshToken?;1:0){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.token/TokenResponseValidator.Result.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.token/TokenResponseValidator.Result.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.token/TokenResponseValidator.Result.toString|toString(){}[0]
+    }
+}
+
+abstract class dev.lokksmith.client.request.flow/AbstractAuthFlow : dev.lokksmith.client.request.flow/AuthFlow { // dev.lokksmith.client.request.flow/AbstractAuthFlow|null[0]
+    open suspend fun cancel() // dev.lokksmith.client.request.flow/AbstractAuthFlow.cancel|cancel(){}[0]
+    open suspend fun onResponse(kotlin/String) // dev.lokksmith.client.request.flow/AbstractAuthFlow.onResponse|onResponse(kotlin.String){}[0]
+    open suspend fun prepare(): dev.lokksmith.client.request.flow/AuthFlow.Initiation // dev.lokksmith.client.request.flow/AbstractAuthFlow.prepare|prepare(){}[0]
+}
+
+abstract class dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler : dev.lokksmith.client.request.flow/AuthFlowResponseHandler { // dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler|null[0]
+    constructor <init>(kotlin/String, dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow/AuthFlowStateFinalizer = ...) // dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler.<init>|<init>(kotlin.String;dev.lokksmith.client.InternalClient;dev.lokksmith.client.request.flow.AuthFlowStateFinalizer){}[0]
+
+    final val client // dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler.client|{}client[0]
+        final fun <get-client>(): dev.lokksmith.client/InternalClient // dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler.client.<get-client>|<get-client>(){}[0]
+
+    abstract suspend fun onResponse(io.ktor.http/Url) // dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler.onResponse|onResponse(io.ktor.http.Url){}[0]
+    open suspend fun onResponse(kotlin/String) // dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler.onResponse|onResponse(kotlin.String){}[0]
+}
+
+final class dev.lokksmith.client.discovery/MetadataDiscoveryException : dev.lokksmith/LokksmithException // dev.lokksmith.client.discovery/MetadataDiscoveryException|null[0]
+
+final class dev.lokksmith.client.jwt/Jwt { // dev.lokksmith.client.jwt/Jwt|null[0]
+    constructor <init>(dev.lokksmith.client.jwt/Jwt.Header, dev.lokksmith.client.jwt/Jwt.Payload) // dev.lokksmith.client.jwt/Jwt.<init>|<init>(dev.lokksmith.client.jwt.Jwt.Header;dev.lokksmith.client.jwt.Jwt.Payload){}[0]
+
+    final val header // dev.lokksmith.client.jwt/Jwt.header|{}header[0]
+        final fun <get-header>(): dev.lokksmith.client.jwt/Jwt.Header // dev.lokksmith.client.jwt/Jwt.header.<get-header>|<get-header>(){}[0]
+    final val payload // dev.lokksmith.client.jwt/Jwt.payload|{}payload[0]
+        final fun <get-payload>(): dev.lokksmith.client.jwt/Jwt.Payload // dev.lokksmith.client.jwt/Jwt.payload.<get-payload>|<get-payload>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.jwt/Jwt.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.lokksmith.client.jwt/Jwt.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.lokksmith.client.jwt/Jwt.toString|toString(){}[0]
+
+    final class Header { // dev.lokksmith.client.jwt/Jwt.Header|null[0]
+        constructor <init>(kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // dev.lokksmith.client.jwt/Jwt.Header.<init>|<init>(kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+
+        final val alg // dev.lokksmith.client.jwt/Jwt.Header.alg|{}alg[0]
+            final fun <get-alg>(): kotlin/String? // dev.lokksmith.client.jwt/Jwt.Header.alg.<get-alg>|<get-alg>(){}[0]
+        final val kid // dev.lokksmith.client.jwt/Jwt.Header.kid|{}kid[0]
+            final fun <get-kid>(): kotlin/String? // dev.lokksmith.client.jwt/Jwt.Header.kid.<get-kid>|<get-kid>(){}[0]
+        final val typ // dev.lokksmith.client.jwt/Jwt.Header.typ|{}typ[0]
+            final fun <get-typ>(): kotlin/String? // dev.lokksmith.client.jwt/Jwt.Header.typ.<get-typ>|<get-typ>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.jwt/Jwt.Header.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.jwt/Jwt.Header.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.jwt/Jwt.Header.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.jwt/Jwt.Header> { // dev.lokksmith.client.jwt/Jwt.Header.$serializer|null[0]
+            final val descriptor // dev.lokksmith.client.jwt/Jwt.Header.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.jwt/Jwt.Header.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.jwt/Jwt.Header.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.jwt/Jwt.Header // dev.lokksmith.client.jwt/Jwt.Header.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.jwt/Jwt.Header) // dev.lokksmith.client.jwt/Jwt.Header.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.jwt.Jwt.Header){}[0]
+        }
+
+        final object Companion { // dev.lokksmith.client.jwt/Jwt.Header.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.jwt/Jwt.Header> // dev.lokksmith.client.jwt/Jwt.Header.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class Payload { // dev.lokksmith.client.jwt/Jwt.Payload|null[0]
+        constructor <init>(kotlin/String? = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String> = ..., kotlin/Long? = ..., kotlin/Long? = ..., kotlin/Long? = ..., kotlin/String? = ..., kotlin.collections/Map<kotlin/String, kotlinx.serialization.json/JsonElement> = ...) // dev.lokksmith.client.jwt/Jwt.Payload.<init>|<init>(kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.Long?;kotlin.Long?;kotlin.Long?;kotlin.String?;kotlin.collections.Map<kotlin.String,kotlinx.serialization.json.JsonElement>){}[0]
+
+        final val aud // dev.lokksmith.client.jwt/Jwt.Payload.aud|{}aud[0]
+            final fun <get-aud>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client.jwt/Jwt.Payload.aud.<get-aud>|<get-aud>(){}[0]
+        final val exp // dev.lokksmith.client.jwt/Jwt.Payload.exp|{}exp[0]
+            final fun <get-exp>(): kotlin/Long? // dev.lokksmith.client.jwt/Jwt.Payload.exp.<get-exp>|<get-exp>(){}[0]
+        final val extra // dev.lokksmith.client.jwt/Jwt.Payload.extra|{}extra[0]
+            final fun <get-extra>(): kotlin.collections/Map<kotlin/String, kotlinx.serialization.json/JsonElement> // dev.lokksmith.client.jwt/Jwt.Payload.extra.<get-extra>|<get-extra>(){}[0]
+        final val iat // dev.lokksmith.client.jwt/Jwt.Payload.iat|{}iat[0]
+            final fun <get-iat>(): kotlin/Long? // dev.lokksmith.client.jwt/Jwt.Payload.iat.<get-iat>|<get-iat>(){}[0]
+        final val iss // dev.lokksmith.client.jwt/Jwt.Payload.iss|{}iss[0]
+            final fun <get-iss>(): kotlin/String? // dev.lokksmith.client.jwt/Jwt.Payload.iss.<get-iss>|<get-iss>(){}[0]
+        final val jti // dev.lokksmith.client.jwt/Jwt.Payload.jti|{}jti[0]
+            final fun <get-jti>(): kotlin/String? // dev.lokksmith.client.jwt/Jwt.Payload.jti.<get-jti>|<get-jti>(){}[0]
+        final val nbf // dev.lokksmith.client.jwt/Jwt.Payload.nbf|{}nbf[0]
+            final fun <get-nbf>(): kotlin/Long? // dev.lokksmith.client.jwt/Jwt.Payload.nbf.<get-nbf>|<get-nbf>(){}[0]
+        final val sub // dev.lokksmith.client.jwt/Jwt.Payload.sub|{}sub[0]
+            final fun <get-sub>(): kotlin/String? // dev.lokksmith.client.jwt/Jwt.Payload.sub.<get-sub>|<get-sub>(){}[0]
+
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.jwt/Jwt.Payload.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.jwt/Jwt.Payload.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.jwt/Jwt.Payload.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.jwt/Jwt.Payload> { // dev.lokksmith.client.jwt/Jwt.Payload.$serializer|null[0]
+            final val descriptor // dev.lokksmith.client.jwt/Jwt.Payload.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.jwt/Jwt.Payload.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.jwt/Jwt.Payload.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.jwt/Jwt.Payload // dev.lokksmith.client.jwt/Jwt.Payload.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.jwt/Jwt.Payload) // dev.lokksmith.client.jwt/Jwt.Payload.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.jwt.Jwt.Payload){}[0]
+        }
+
+        final object Companion { // dev.lokksmith.client.jwt/Jwt.Payload.Companion|null[0]
+            final val $childSerializers // dev.lokksmith.client.jwt/Jwt.Payload.Companion.$childSerializers|{}$childSerializers[0]
+
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.jwt/Jwt.Payload> // dev.lokksmith.client.jwt/Jwt.Payload.Companion.serializer|serializer(){}[0]
+        }
+    }
+}
+
+final class dev.lokksmith.client.jwt/JwtDecoder { // dev.lokksmith.client.jwt/JwtDecoder|null[0]
+    constructor <init>(kotlinx.serialization.json/Json) // dev.lokksmith.client.jwt/JwtDecoder.<init>|<init>(kotlinx.serialization.json.Json){}[0]
+
+    final fun decode(kotlin/String): dev.lokksmith.client.jwt/Jwt // dev.lokksmith.client.jwt/JwtDecoder.decode|decode(kotlin.String){}[0]
+}
+
+final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow : dev.lokksmith.client.request.flow/AbstractAuthFlow { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow|null[0]
+    final class Request : dev.lokksmith.client.request.flow/AuthFlow.Request { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request|null[0]
+        constructor <init>(kotlin/String, kotlin.collections/Set<dev.lokksmith.client.request.parameter/Scope> = ..., kotlin.collections/Set<dev.lokksmith.client.request.parameter/Prompt> = ..., kotlin/Int = ..., kotlin/Int = ..., dev.lokksmith.client.request.parameter/CodeChallengeMethod? = ..., dev.lokksmith.client.request.parameter/Display? = ..., kotlin/Int? = ..., kotlin.collections/List<kotlin/String> = ..., kotlin/String? = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.<init>|<init>(kotlin.String;kotlin.collections.Set<dev.lokksmith.client.request.parameter.Scope>;kotlin.collections.Set<dev.lokksmith.client.request.parameter.Prompt>;kotlin.Int;kotlin.Int;dev.lokksmith.client.request.parameter.CodeChallengeMethod?;dev.lokksmith.client.request.parameter.Display?;kotlin.Int?;kotlin.collections.List<kotlin.String>;kotlin.String?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+
+        final val additionalParameters // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.additionalParameters|{}additionalParameters[0]
+            final fun <get-additionalParameters>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.additionalParameters.<get-additionalParameters>|<get-additionalParameters>(){}[0]
+        final val codeChallengeMethod // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.codeChallengeMethod|{}codeChallengeMethod[0]
+            final fun <get-codeChallengeMethod>(): dev.lokksmith.client.request.parameter/CodeChallengeMethod? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.codeChallengeMethod.<get-codeChallengeMethod>|<get-codeChallengeMethod>(){}[0]
+        final val display // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.display|{}display[0]
+            final fun <get-display>(): dev.lokksmith.client.request.parameter/Display? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.display.<get-display>|<get-display>(){}[0]
+        final val loginHint // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.loginHint|{}loginHint[0]
+            final fun <get-loginHint>(): kotlin/String? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.loginHint.<get-loginHint>|<get-loginHint>(){}[0]
+        final val maxAge // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.maxAge|{}maxAge[0]
+            final fun <get-maxAge>(): kotlin/Int? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.maxAge.<get-maxAge>|<get-maxAge>(){}[0]
+        final val nonceLength // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.nonceLength|{}nonceLength[0]
+            final fun <get-nonceLength>(): kotlin/Int // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.nonceLength.<get-nonceLength>|<get-nonceLength>(){}[0]
+        final val prompt // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.prompt|{}prompt[0]
+            final fun <get-prompt>(): kotlin.collections/Set<dev.lokksmith.client.request.parameter/Prompt> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.prompt.<get-prompt>|<get-prompt>(){}[0]
+        final val redirectUri // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.redirectUri|{}redirectUri[0]
+            final fun <get-redirectUri>(): kotlin/String // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.redirectUri.<get-redirectUri>|<get-redirectUri>(){}[0]
+        final val scope // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.scope|{}scope[0]
+            final fun <get-scope>(): kotlin.collections/Set<dev.lokksmith.client.request.parameter/Scope> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.scope.<get-scope>|<get-scope>(){}[0]
+        final val stateLength // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.stateLength|{}stateLength[0]
+            final fun <get-stateLength>(): kotlin/Int // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.stateLength.<get-stateLength>|<get-stateLength>(){}[0]
+        final val uiLocales // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.uiLocales|{}uiLocales[0]
+            final fun <get-uiLocales>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.uiLocales.<get-uiLocales>|<get-uiLocales>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component1|component1(){}[0]
+        final fun component10(): kotlin/String? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component10|component10(){}[0]
+        final fun component11(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component11|component11(){}[0]
+        final fun component2(): kotlin.collections/Set<dev.lokksmith.client.request.parameter/Scope> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component2|component2(){}[0]
+        final fun component3(): kotlin.collections/Set<dev.lokksmith.client.request.parameter/Prompt> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component3|component3(){}[0]
+        final fun component4(): kotlin/Int // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component4|component4(){}[0]
+        final fun component5(): kotlin/Int // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component5|component5(){}[0]
+        final fun component6(): dev.lokksmith.client.request.parameter/CodeChallengeMethod? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component6|component6(){}[0]
+        final fun component7(): dev.lokksmith.client.request.parameter/Display? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component7|component7(){}[0]
+        final fun component8(): kotlin/Int? // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component8|component8(){}[0]
+        final fun component9(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.component9|component9(){}[0]
+        final fun copy(kotlin/String = ..., kotlin.collections/Set<dev.lokksmith.client.request.parameter/Scope> = ..., kotlin.collections/Set<dev.lokksmith.client.request.parameter/Prompt> = ..., kotlin/Int = ..., kotlin/Int = ..., dev.lokksmith.client.request.parameter/CodeChallengeMethod? = ..., dev.lokksmith.client.request.parameter/Display? = ..., kotlin/Int? = ..., kotlin.collections/List<kotlin/String> = ..., kotlin/String? = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...): dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.copy|copy(kotlin.String;kotlin.collections.Set<dev.lokksmith.client.request.parameter.Scope>;kotlin.collections.Set<dev.lokksmith.client.request.parameter.Prompt>;kotlin.Int;kotlin.Int;dev.lokksmith.client.request.parameter.CodeChallengeMethod?;dev.lokksmith.client.request.parameter.Display?;kotlin.Int?;kotlin.collections.List<kotlin.String>;kotlin.String?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request.toString|toString(){}[0]
+    }
+}
+
+final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler : dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler|null[0]
+    constructor <init>(kotlinx.serialization.json/Json, kotlin/String, dev.lokksmith.client/InternalClient, io.ktor.client/HttpClient, kotlin/String, kotlin/String?, dev.lokksmith.client.request.token/TokenRequest = ..., dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler.<init>|<init>(kotlinx.serialization.json.Json;kotlin.String;dev.lokksmith.client.InternalClient;io.ktor.client.HttpClient;kotlin.String;kotlin.String?;dev.lokksmith.client.request.token.TokenRequest;dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowTokenResponseValidator){}[0]
+}
+
+final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator : dev.lokksmith.client.request.token/TokenResponseValidator<dev.lokksmith.client/Client.Tokens.IdToken> { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator|null[0]
+    constructor <init>(kotlinx.serialization.json/Json, dev.lokksmith.client/InternalClient) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator.<init>|<init>(kotlinx.serialization.json.Json;dev.lokksmith.client.InternalClient){}[0]
+}
+
+final class dev.lokksmith.client.request.flow.endSession/EndSessionFlow : dev.lokksmith.client.request.flow/AbstractAuthFlow { // dev.lokksmith.client.request.flow.endSession/EndSessionFlow|null[0]
+    final class Request : dev.lokksmith.client.request.flow/AuthFlow.Request { // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request|null[0]
+        constructor <init>(kotlin/String, kotlin/Int = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String> = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...) // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.<init>|<init>(kotlin.String;kotlin.Int;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+
+        final val additionalParameters // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.additionalParameters|{}additionalParameters[0]
+            final fun <get-additionalParameters>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.additionalParameters.<get-additionalParameters>|<get-additionalParameters>(){}[0]
+        final val logoutHint // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.logoutHint|{}logoutHint[0]
+            final fun <get-logoutHint>(): kotlin/String? // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.logoutHint.<get-logoutHint>|<get-logoutHint>(){}[0]
+        final val redirectUri // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.redirectUri|{}redirectUri[0]
+            final fun <get-redirectUri>(): kotlin/String // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.redirectUri.<get-redirectUri>|<get-redirectUri>(){}[0]
+        final val stateLength // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.stateLength|{}stateLength[0]
+            final fun <get-stateLength>(): kotlin/Int // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.stateLength.<get-stateLength>|<get-stateLength>(){}[0]
+        final val uiLocales // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.uiLocales|{}uiLocales[0]
+            final fun <get-uiLocales>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.uiLocales.<get-uiLocales>|<get-uiLocales>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.component1|component1(){}[0]
+        final fun component2(): kotlin/Int // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.component2|component2(){}[0]
+        final fun component3(): kotlin/String? // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.component3|component3(){}[0]
+        final fun component4(): kotlin.collections/List<kotlin/String> // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.component4|component4(){}[0]
+        final fun component5(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.component5|component5(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/Int = ..., kotlin/String? = ..., kotlin.collections/List<kotlin/String> = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...): dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.copy|copy(kotlin.String;kotlin.Int;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request.toString|toString(){}[0]
+    }
+}
+
+final class dev.lokksmith.client.request.flow.endSession/EndSessionFlowResponseHandler : dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler { // dev.lokksmith.client.request.flow.endSession/EndSessionFlowResponseHandler|null[0]
+    constructor <init>(kotlin/String, dev.lokksmith.client/InternalClient) // dev.lokksmith.client.request.flow.endSession/EndSessionFlowResponseHandler.<init>|<init>(kotlin.String;dev.lokksmith.client.InternalClient){}[0]
+}
+
+final class dev.lokksmith.client.request.flow/AuthFlowStateFinalizer { // dev.lokksmith.client.request.flow/AuthFlowStateFinalizer|null[0]
+    constructor <init>(dev.lokksmith.client/InternalClient) // dev.lokksmith.client.request.flow/AuthFlowStateFinalizer.<init>|<init>(dev.lokksmith.client.InternalClient){}[0]
+
+    final suspend fun finalize(kotlin/Function1<dev.lokksmith.client.snapshot/Snapshot, dev.lokksmith.client.snapshot/Snapshot> = ...) // dev.lokksmith.client.request.flow/AuthFlowStateFinalizer.finalize|finalize(kotlin.Function1<dev.lokksmith.client.snapshot.Snapshot,dev.lokksmith.client.snapshot.Snapshot>){}[0]
+}
+
+final class dev.lokksmith.client.request.flow/AuthFlowStateResponseHandler { // dev.lokksmith.client.request.flow/AuthFlowStateResponseHandler|null[0]
+    constructor <init>(dev.lokksmith/Lokksmith) // dev.lokksmith.client.request.flow/AuthFlowStateResponseHandler.<init>|<init>(dev.lokksmith.Lokksmith){}[0]
+
+    final suspend fun onResponse(kotlin/String) // dev.lokksmith.client.request.flow/AuthFlowStateResponseHandler.onResponse|onResponse(kotlin.String){}[0]
+}
+
+final class dev.lokksmith.client.request.flow/AuthFlowUserAgentResponseHandler { // dev.lokksmith.client.request.flow/AuthFlowUserAgentResponseHandler|null[0]
+    constructor <init>(dev.lokksmith/Lokksmith) // dev.lokksmith.client.request.flow/AuthFlowUserAgentResponseHandler.<init>|<init>(dev.lokksmith.Lokksmith){}[0]
+
+    final suspend fun onCancel(kotlin/String, kotlin/String) // dev.lokksmith.client.request.flow/AuthFlowUserAgentResponseHandler.onCancel|onCancel(kotlin.String;kotlin.String){}[0]
+    final suspend fun onError(kotlin/String, kotlin/String, kotlin/String?, dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type = ...) // dev.lokksmith.client.request.flow/AuthFlowUserAgentResponseHandler.onError|onError(kotlin.String;kotlin.String;kotlin.String?;dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error.Type){}[0]
+    final suspend fun onResponse(kotlin/String, kotlin/String) // dev.lokksmith.client.request.flow/AuthFlowUserAgentResponseHandler.onResponse|onResponse(kotlin.String;kotlin.String){}[0]
+}
+
+final class dev.lokksmith.client.request.token/TokenRequest { // dev.lokksmith.client.request.token/TokenRequest|null[0]
+    constructor <init>(dev.lokksmith.client/Client, io.ktor.client/HttpClient) // dev.lokksmith.client.request.token/TokenRequest.<init>|<init>(dev.lokksmith.client.Client;io.ktor.client.HttpClient){}[0]
+
+    final suspend fun invoke(kotlin/Function1<io.ktor.http/ParametersBuilder, kotlin/Unit>): dev.lokksmith.client.request.token/TokenResponse // dev.lokksmith.client.request.token/TokenRequest.invoke|invoke(kotlin.Function1<io.ktor.http.ParametersBuilder,kotlin.Unit>){}[0]
+}
+
+final class dev.lokksmith.client.request.token/TokenResponse { // dev.lokksmith.client.request.token/TokenResponse|null[0]
+    constructor <init>(kotlin/String? = ..., kotlin/String, kotlin/String, kotlin/Long? = ..., kotlin/String? = ..., kotlin/Long? = ..., kotlin/String? = ...) // dev.lokksmith.client.request.token/TokenResponse.<init>|<init>(kotlin.String?;kotlin.String;kotlin.String;kotlin.Long?;kotlin.String?;kotlin.Long?;kotlin.String?){}[0]
+
+    final val accessToken // dev.lokksmith.client.request.token/TokenResponse.accessToken|{}accessToken[0]
+        final fun <get-accessToken>(): kotlin/String // dev.lokksmith.client.request.token/TokenResponse.accessToken.<get-accessToken>|<get-accessToken>(){}[0]
+    final val expiresIn // dev.lokksmith.client.request.token/TokenResponse.expiresIn|{}expiresIn[0]
+        final fun <get-expiresIn>(): kotlin/Long? // dev.lokksmith.client.request.token/TokenResponse.expiresIn.<get-expiresIn>|<get-expiresIn>(){}[0]
+    final val idToken // dev.lokksmith.client.request.token/TokenResponse.idToken|{}idToken[0]
+        final fun <get-idToken>(): kotlin/String? // dev.lokksmith.client.request.token/TokenResponse.idToken.<get-idToken>|<get-idToken>(){}[0]
+    final val refreshExpiresIn // dev.lokksmith.client.request.token/TokenResponse.refreshExpiresIn|{}refreshExpiresIn[0]
+        final fun <get-refreshExpiresIn>(): kotlin/Long? // dev.lokksmith.client.request.token/TokenResponse.refreshExpiresIn.<get-refreshExpiresIn>|<get-refreshExpiresIn>(){}[0]
+    final val refreshToken // dev.lokksmith.client.request.token/TokenResponse.refreshToken|{}refreshToken[0]
+        final fun <get-refreshToken>(): kotlin/String? // dev.lokksmith.client.request.token/TokenResponse.refreshToken.<get-refreshToken>|<get-refreshToken>(){}[0]
+    final val scope // dev.lokksmith.client.request.token/TokenResponse.scope|{}scope[0]
+        final fun <get-scope>(): kotlin/String? // dev.lokksmith.client.request.token/TokenResponse.scope.<get-scope>|<get-scope>(){}[0]
+    final val tokenType // dev.lokksmith.client.request.token/TokenResponse.tokenType|{}tokenType[0]
+        final fun <get-tokenType>(): kotlin/String // dev.lokksmith.client.request.token/TokenResponse.tokenType.<get-tokenType>|<get-tokenType>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.token/TokenResponse.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.token/TokenResponse.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.lokksmith.client.request.token/TokenResponse.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.request.token/TokenResponse> { // dev.lokksmith.client.request.token/TokenResponse.$serializer|null[0]
+        final val descriptor // dev.lokksmith.client.request.token/TokenResponse.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.request.token/TokenResponse.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.request.token/TokenResponse.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.request.token/TokenResponse // dev.lokksmith.client.request.token/TokenResponse.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.request.token/TokenResponse) // dev.lokksmith.client.request.token/TokenResponse.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.request.token.TokenResponse){}[0]
+    }
+
+    final object Companion { // dev.lokksmith.client.request.token/TokenResponse.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.request.token/TokenResponse> // dev.lokksmith.client.request.token/TokenResponse.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class dev.lokksmith.client.request.token/TokenTemporalValidationException : dev.lokksmith.client.request.token/TokenValidationException // dev.lokksmith.client.request.token/TokenTemporalValidationException|null[0]
+
+final class dev.lokksmith.client.request/OAuthResponseException : dev.lokksmith/LokksmithException { // dev.lokksmith.client.request/OAuthResponseException|null[0]
+    final val error // dev.lokksmith.client.request/OAuthResponseException.error|{}error[0]
+        final fun <get-error>(): dev.lokksmith.client.request/OAuthError // dev.lokksmith.client.request/OAuthResponseException.error.<get-error>|<get-error>(){}[0]
+    final val errorDescription // dev.lokksmith.client.request/OAuthResponseException.errorDescription|{}errorDescription[0]
+        final fun <get-errorDescription>(): kotlin/String? // dev.lokksmith.client.request/OAuthResponseException.errorDescription.<get-errorDescription>|<get-errorDescription>(){}[0]
+    final val errorUri // dev.lokksmith.client.request/OAuthResponseException.errorUri|{}errorUri[0]
+        final fun <get-errorUri>(): kotlin/String? // dev.lokksmith.client.request/OAuthResponseException.errorUri.<get-errorUri>|<get-errorUri>(){}[0]
+    final val statusCode // dev.lokksmith.client.request/OAuthResponseException.statusCode|{}statusCode[0]
+        final fun <get-statusCode>(): kotlin/Int? // dev.lokksmith.client.request/OAuthResponseException.statusCode.<get-statusCode>|<get-statusCode>(){}[0]
+
+    final fun toString(): kotlin/String // dev.lokksmith.client.request/OAuthResponseException.toString|toString(){}[0]
+}
+
+final class dev.lokksmith.client.request/RequestException : dev.lokksmith/LokksmithException { // dev.lokksmith.client.request/RequestException|null[0]
+    final val reason // dev.lokksmith.client.request/RequestException.reason|{}reason[0]
+        final fun <get-reason>(): dev.lokksmith.client.request/RequestException.Reason? // dev.lokksmith.client.request/RequestException.reason.<get-reason>|<get-reason>(){}[0]
+
+    final enum class Reason : kotlin/Enum<dev.lokksmith.client.request/RequestException.Reason> { // dev.lokksmith.client.request/RequestException.Reason|null[0]
+        enum entry HttpError // dev.lokksmith.client.request/RequestException.Reason.HttpError|null[0]
+        enum entry UrlParsing // dev.lokksmith.client.request/RequestException.Reason.UrlParsing|null[0]
+
+        final val entries // dev.lokksmith.client.request/RequestException.Reason.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request/RequestException.Reason> // dev.lokksmith.client.request/RequestException.Reason.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): dev.lokksmith.client.request/RequestException.Reason // dev.lokksmith.client.request/RequestException.Reason.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<dev.lokksmith.client.request/RequestException.Reason> // dev.lokksmith.client.request/RequestException.Reason.values|values#static(){}[0]
+    }
+}
+
+final class dev.lokksmith.client.snapshot/Snapshot { // dev.lokksmith.client.snapshot/Snapshot|null[0]
+    constructor <init>(kotlin/Int = ..., dev.lokksmith.client/Key, dev.lokksmith.client/Id, dev.lokksmith.client/Client.Metadata, dev.lokksmith.client/Client.Tokens? = ..., kotlin/String? = ..., dev.lokksmith.client.snapshot/Snapshot.FlowResult? = ..., dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState? = ..., kotlin/Boolean = ...) // dev.lokksmith.client.snapshot/Snapshot.<init>|<init>(kotlin.Int;dev.lokksmith.client.Key;dev.lokksmith.client.Id;dev.lokksmith.client.Client.Metadata;dev.lokksmith.client.Client.Tokens?;kotlin.String?;dev.lokksmith.client.snapshot.Snapshot.FlowResult?;dev.lokksmith.client.snapshot.Snapshot.EphemeralFlowState?;kotlin.Boolean){}[0]
+
+    final val ephemeralFlowState // dev.lokksmith.client.snapshot/Snapshot.ephemeralFlowState|{}ephemeralFlowState[0]
+        final fun <get-ephemeralFlowState>(): dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState? // dev.lokksmith.client.snapshot/Snapshot.ephemeralFlowState.<get-ephemeralFlowState>|<get-ephemeralFlowState>(){}[0]
+    final val flowResult // dev.lokksmith.client.snapshot/Snapshot.flowResult|{}flowResult[0]
+        final fun <get-flowResult>(): dev.lokksmith.client.snapshot/Snapshot.FlowResult? // dev.lokksmith.client.snapshot/Snapshot.flowResult.<get-flowResult>|<get-flowResult>(){}[0]
+    final val id // dev.lokksmith.client.snapshot/Snapshot.id|{}id[0]
+        final fun <get-id>(): dev.lokksmith.client/Id // dev.lokksmith.client.snapshot/Snapshot.id.<get-id>|<get-id>(){}[0]
+    final val key // dev.lokksmith.client.snapshot/Snapshot.key|{}key[0]
+        final fun <get-key>(): dev.lokksmith.client/Key // dev.lokksmith.client.snapshot/Snapshot.key.<get-key>|<get-key>(){}[0]
+    final val metadata // dev.lokksmith.client.snapshot/Snapshot.metadata|{}metadata[0]
+        final fun <get-metadata>(): dev.lokksmith.client/Client.Metadata // dev.lokksmith.client.snapshot/Snapshot.metadata.<get-metadata>|<get-metadata>(){}[0]
+    final val migrated // dev.lokksmith.client.snapshot/Snapshot.migrated|{}migrated[0]
+        final fun <get-migrated>(): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.migrated.<get-migrated>|<get-migrated>(){}[0]
+    final val nonce // dev.lokksmith.client.snapshot/Snapshot.nonce|{}nonce[0]
+        final fun <get-nonce>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.nonce.<get-nonce>|<get-nonce>(){}[0]
+    final val schemaVersion // dev.lokksmith.client.snapshot/Snapshot.schemaVersion|{}schemaVersion[0]
+        final fun <get-schemaVersion>(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.schemaVersion.<get-schemaVersion>|<get-schemaVersion>(){}[0]
+    final val tokens // dev.lokksmith.client.snapshot/Snapshot.tokens|{}tokens[0]
+        final fun <get-tokens>(): dev.lokksmith.client/Client.Tokens? // dev.lokksmith.client.snapshot/Snapshot.tokens.<get-tokens>|<get-tokens>(){}[0]
+
+    final fun component1(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.component1|component1(){}[0]
+    final fun component2(): dev.lokksmith.client/Key // dev.lokksmith.client.snapshot/Snapshot.component2|component2(){}[0]
+    final fun component3(): dev.lokksmith.client/Id // dev.lokksmith.client.snapshot/Snapshot.component3|component3(){}[0]
+    final fun component4(): dev.lokksmith.client/Client.Metadata // dev.lokksmith.client.snapshot/Snapshot.component4|component4(){}[0]
+    final fun component5(): dev.lokksmith.client/Client.Tokens? // dev.lokksmith.client.snapshot/Snapshot.component5|component5(){}[0]
+    final fun component6(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.component6|component6(){}[0]
+    final fun component7(): dev.lokksmith.client.snapshot/Snapshot.FlowResult? // dev.lokksmith.client.snapshot/Snapshot.component7|component7(){}[0]
+    final fun component8(): dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState? // dev.lokksmith.client.snapshot/Snapshot.component8|component8(){}[0]
+    final fun component9(): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.component9|component9(){}[0]
+    final fun copy(kotlin/Int = ..., dev.lokksmith.client/Key = ..., dev.lokksmith.client/Id = ..., dev.lokksmith.client/Client.Metadata = ..., dev.lokksmith.client/Client.Tokens? = ..., kotlin/String? = ..., dev.lokksmith.client.snapshot/Snapshot.FlowResult? = ..., dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState? = ..., kotlin/Boolean = ...): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client.snapshot/Snapshot.copy|copy(kotlin.Int;dev.lokksmith.client.Key;dev.lokksmith.client.Id;dev.lokksmith.client.Client.Metadata;dev.lokksmith.client.Client.Tokens?;kotlin.String?;dev.lokksmith.client.snapshot.Snapshot.FlowResult?;dev.lokksmith.client.snapshot.Snapshot.EphemeralFlowState?;kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.toString|toString(){}[0]
+
+    sealed interface EphemeralFlowState { // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState|null[0]
+        abstract val responseUri // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState.responseUri|{}responseUri[0]
+            abstract fun <get-responseUri>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState.responseUri.<get-responseUri>|<get-responseUri>(){}[0]
+        abstract val state // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState.state|{}state[0]
+            abstract fun <get-state>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState.state.<get-state>|<get-state>(){}[0]
+
+        final object Companion : kotlinx.serialization.internal/SerializerFactory { // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState> // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState.Companion.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        }
+    }
+
+    sealed interface FlowResult { // dev.lokksmith.client.snapshot/Snapshot.FlowResult|null[0]
+        final class Cancelled : dev.lokksmith.client.snapshot/Snapshot.FlowResult { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled|null[0]
+            constructor <init>(kotlin/String) // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.<init>|<init>(kotlin.String){}[0]
+
+            final val state // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.state|{}state[0]
+                final fun <get-state>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.state.<get-state>|<get-state>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled> { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled) // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.snapshot.Snapshot.FlowResult.Cancelled){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Cancelled.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final class Error : dev.lokksmith.client.snapshot/Snapshot.FlowResult { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error|null[0]
+            constructor <init>(kotlin/String, dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type, kotlin/String?, kotlin/String? = ...) // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.<init>|<init>(kotlin.String;dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error.Type;kotlin.String?;kotlin.String?){}[0]
+
+            final val code // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.code|{}code[0]
+                final fun <get-code>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.code.<get-code>|<get-code>(){}[0]
+            final val message // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.message|{}message[0]
+                final fun <get-message>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.message.<get-message>|<get-message>(){}[0]
+            final val state // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.state|{}state[0]
+                final fun <get-state>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.state.<get-state>|<get-state>(){}[0]
+            final val type // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.type|{}type[0]
+                final fun <get-type>(): dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.type.<get-type>|<get-type>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.toString|toString(){}[0]
+
+            final enum class Type : kotlin/Enum<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type> { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type|null[0]
+                enum entry Generic // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.Generic|null[0]
+                enum entry OAuth // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.OAuth|null[0]
+                enum entry TemporalValidation // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.TemporalValidation|null[0]
+                enum entry Validation // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.Validation|null[0]
+
+                final val entries // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.entries|#static{}entries[0]
+                    final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.entries.<get-entries>|<get-entries>#static(){}[0]
+
+                final fun valueOf(kotlin/String): dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.valueOf|valueOf#static(kotlin.String){}[0]
+                final fun values(): kotlin/Array<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Type.values|values#static(){}[0]
+            }
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error> { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error) // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.snapshot.Snapshot.FlowResult.Error){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Companion|null[0]
+                final val $childSerializers // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Companion.$childSerializers|{}$childSerializers[0]
+
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Error.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final class Success : dev.lokksmith.client.snapshot/Snapshot.FlowResult { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success|null[0]
+            constructor <init>(kotlin/String) // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.<init>|<init>(kotlin.String){}[0]
+
+            final val state // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.state|{}state[0]
+                final fun <get-state>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.state.<get-state>|<get-state>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success> { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success) // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.snapshot.Snapshot.FlowResult.Success){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Success.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final object Companion : kotlinx.serialization.internal/SerializerFactory { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Companion.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        }
+
+        final object Consumed : dev.lokksmith.client.snapshot/Snapshot.FlowResult, kotlinx.serialization.internal/SerializerFactory { // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Consumed|null[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Consumed.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Consumed.hashCode|hashCode(){}[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.FlowResult.Consumed> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Consumed.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Consumed.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.FlowResult.Consumed.toString|toString(){}[0]
+        }
+    }
+
+    final class EphemeralAuthorizationCodeFlowState : dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState { // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState|null[0]
+        constructor <init>(kotlin/String, kotlin/String?, kotlin/String, kotlin/String?) // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?){}[0]
+
+        final val codeVerifier // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.codeVerifier|{}codeVerifier[0]
+            final fun <get-codeVerifier>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.codeVerifier.<get-codeVerifier>|<get-codeVerifier>(){}[0]
+        final val redirectUri // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.redirectUri|{}redirectUri[0]
+            final fun <get-redirectUri>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.redirectUri.<get-redirectUri>|<get-redirectUri>(){}[0]
+        final val responseUri // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.responseUri|{}responseUri[0]
+            final fun <get-responseUri>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.responseUri.<get-responseUri>|<get-responseUri>(){}[0]
+        final val state // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.state|{}state[0]
+            final fun <get-state>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.state.<get-state>|<get-state>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component1|component1(){}[0]
+        final fun component2(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component2|component2(){}[0]
+        final fun component3(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component3|component3(){}[0]
+        final fun component4(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component4|component4(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String? = ...): dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.copy|copy(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState> { // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.$serializer|null[0]
+            final val descriptor // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState) // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.snapshot.Snapshot.EphemeralAuthorizationCodeFlowState){}[0]
+        }
+
+        final object Companion { // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState> // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final class EphemeralEndSessionFlowState : dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState { // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState|null[0]
+        constructor <init>(kotlin/String, kotlin/String?) // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.<init>|<init>(kotlin.String;kotlin.String?){}[0]
+
+        final val responseUri // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.responseUri|{}responseUri[0]
+            final fun <get-responseUri>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.responseUri.<get-responseUri>|<get-responseUri>(){}[0]
+        final val state // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.state|{}state[0]
+            final fun <get-state>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.state.<get-state>|<get-state>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.component1|component1(){}[0]
+        final fun component2(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.component2|component2(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String? = ...): dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.copy|copy(kotlin.String;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState> { // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.$serializer|null[0]
+            final val descriptor // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState) // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.snapshot.Snapshot.EphemeralEndSessionFlowState){}[0]
+        }
+
+        final object Companion { // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState> // dev.lokksmith.client.snapshot/Snapshot.EphemeralEndSessionFlowState.Companion.serializer|serializer(){}[0]
+        }
+    }
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.snapshot/Snapshot> { // dev.lokksmith.client.snapshot/Snapshot.$serializer|null[0]
+        final val descriptor // dev.lokksmith.client.snapshot/Snapshot.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.snapshot/Snapshot.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.snapshot/Snapshot.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client.snapshot/Snapshot.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.snapshot/Snapshot) // dev.lokksmith.client.snapshot/Snapshot.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.snapshot.Snapshot){}[0]
+    }
+
+    final object Companion { // dev.lokksmith.client.snapshot/Snapshot.Companion|null[0]
+        final val $childSerializers // dev.lokksmith.client.snapshot/Snapshot.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.snapshot/Snapshot> // dev.lokksmith.client.snapshot/Snapshot.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class dev.lokksmith.client.token/Claims { // dev.lokksmith.client.token/Claims|null[0]
+    constructor <init>(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.token/Claims.<init>|<init>(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+
+    final val address // dev.lokksmith.client.token/Claims.address|{}address[0]
+        final fun <get-address>(): dev.lokksmith.client.token/Claims.Address? // dev.lokksmith.client.token/Claims.address.<get-address>|<get-address>(){}[0]
+    final val birthdate // dev.lokksmith.client.token/Claims.birthdate|{}birthdate[0]
+        final fun <get-birthdate>(): kotlin/String? // dev.lokksmith.client.token/Claims.birthdate.<get-birthdate>|<get-birthdate>(){}[0]
+    final val email // dev.lokksmith.client.token/Claims.email|{}email[0]
+        final fun <get-email>(): kotlin/String? // dev.lokksmith.client.token/Claims.email.<get-email>|<get-email>(){}[0]
+    final val emailVerified // dev.lokksmith.client.token/Claims.emailVerified|{}emailVerified[0]
+        final fun <get-emailVerified>(): kotlin/Boolean? // dev.lokksmith.client.token/Claims.emailVerified.<get-emailVerified>|<get-emailVerified>(){}[0]
+    final val familyName // dev.lokksmith.client.token/Claims.familyName|{}familyName[0]
+        final fun <get-familyName>(): kotlin/String? // dev.lokksmith.client.token/Claims.familyName.<get-familyName>|<get-familyName>(){}[0]
+    final val gender // dev.lokksmith.client.token/Claims.gender|{}gender[0]
+        final fun <get-gender>(): kotlin/String? // dev.lokksmith.client.token/Claims.gender.<get-gender>|<get-gender>(){}[0]
+    final val givenName // dev.lokksmith.client.token/Claims.givenName|{}givenName[0]
+        final fun <get-givenName>(): kotlin/String? // dev.lokksmith.client.token/Claims.givenName.<get-givenName>|<get-givenName>(){}[0]
+    final val locale // dev.lokksmith.client.token/Claims.locale|{}locale[0]
+        final fun <get-locale>(): kotlin/String? // dev.lokksmith.client.token/Claims.locale.<get-locale>|<get-locale>(){}[0]
+    final val middleName // dev.lokksmith.client.token/Claims.middleName|{}middleName[0]
+        final fun <get-middleName>(): kotlin/String? // dev.lokksmith.client.token/Claims.middleName.<get-middleName>|<get-middleName>(){}[0]
+    final val name // dev.lokksmith.client.token/Claims.name|{}name[0]
+        final fun <get-name>(): kotlin/String? // dev.lokksmith.client.token/Claims.name.<get-name>|<get-name>(){}[0]
+    final val nickname // dev.lokksmith.client.token/Claims.nickname|{}nickname[0]
+        final fun <get-nickname>(): kotlin/String? // dev.lokksmith.client.token/Claims.nickname.<get-nickname>|<get-nickname>(){}[0]
+    final val phoneNumber // dev.lokksmith.client.token/Claims.phoneNumber|{}phoneNumber[0]
+        final fun <get-phoneNumber>(): kotlin/String? // dev.lokksmith.client.token/Claims.phoneNumber.<get-phoneNumber>|<get-phoneNumber>(){}[0]
+    final val phoneNumberVerified // dev.lokksmith.client.token/Claims.phoneNumberVerified|{}phoneNumberVerified[0]
+        final fun <get-phoneNumberVerified>(): kotlin/Boolean? // dev.lokksmith.client.token/Claims.phoneNumberVerified.<get-phoneNumberVerified>|<get-phoneNumberVerified>(){}[0]
+    final val picture // dev.lokksmith.client.token/Claims.picture|{}picture[0]
+        final fun <get-picture>(): kotlin/String? // dev.lokksmith.client.token/Claims.picture.<get-picture>|<get-picture>(){}[0]
+    final val preferredUsername // dev.lokksmith.client.token/Claims.preferredUsername|{}preferredUsername[0]
+        final fun <get-preferredUsername>(): kotlin/String? // dev.lokksmith.client.token/Claims.preferredUsername.<get-preferredUsername>|<get-preferredUsername>(){}[0]
+    final val profile // dev.lokksmith.client.token/Claims.profile|{}profile[0]
+        final fun <get-profile>(): kotlin/String? // dev.lokksmith.client.token/Claims.profile.<get-profile>|<get-profile>(){}[0]
+    final val updatedAt // dev.lokksmith.client.token/Claims.updatedAt|{}updatedAt[0]
+        final fun <get-updatedAt>(): kotlin/Long? // dev.lokksmith.client.token/Claims.updatedAt.<get-updatedAt>|<get-updatedAt>(){}[0]
+    final val website // dev.lokksmith.client.token/Claims.website|{}website[0]
+        final fun <get-website>(): kotlin/String? // dev.lokksmith.client.token/Claims.website.<get-website>|<get-website>(){}[0]
+    final val zoneInfo // dev.lokksmith.client.token/Claims.zoneInfo|{}zoneInfo[0]
+        final fun <get-zoneInfo>(): kotlin/String? // dev.lokksmith.client.token/Claims.zoneInfo.<get-zoneInfo>|<get-zoneInfo>(){}[0]
+
+    final class Address { // dev.lokksmith.client.token/Claims.Address|null[0]
+        constructor <init>(kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?, kotlin/String?) // dev.lokksmith.client.token/Claims.Address.<init>|<init>(kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+
+        final val country // dev.lokksmith.client.token/Claims.Address.country|{}country[0]
+            final fun <get-country>(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.country.<get-country>|<get-country>(){}[0]
+        final val formatted // dev.lokksmith.client.token/Claims.Address.formatted|{}formatted[0]
+            final fun <get-formatted>(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.formatted.<get-formatted>|<get-formatted>(){}[0]
+        final val locality // dev.lokksmith.client.token/Claims.Address.locality|{}locality[0]
+            final fun <get-locality>(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.locality.<get-locality>|<get-locality>(){}[0]
+        final val region // dev.lokksmith.client.token/Claims.Address.region|{}region[0]
+            final fun <get-region>(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.region.<get-region>|<get-region>(){}[0]
+        final val streetAddress // dev.lokksmith.client.token/Claims.Address.streetAddress|{}streetAddress[0]
+            final fun <get-streetAddress>(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.streetAddress.<get-streetAddress>|<get-streetAddress>(){}[0]
+
+        final fun component1(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.component1|component1(){}[0]
+        final fun component2(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.component2|component2(){}[0]
+        final fun component3(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.component3|component3(){}[0]
+        final fun component4(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.component4|component4(){}[0]
+        final fun component5(): kotlin/String? // dev.lokksmith.client.token/Claims.Address.component5|component5(){}[0]
+        final fun copy(kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...): dev.lokksmith.client.token/Claims.Address // dev.lokksmith.client.token/Claims.Address.copy|copy(kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.token/Claims.Address.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.token/Claims.Address.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.token/Claims.Address.toString|toString(){}[0]
+    }
+}
+
+final class dev.lokksmith.client.token/JwtToIdTokenMapper { // dev.lokksmith.client.token/JwtToIdTokenMapper|null[0]
+    constructor <init>() // dev.lokksmith.client.token/JwtToIdTokenMapper.<init>|<init>(){}[0]
+
+    final fun invoke(dev.lokksmith.client.jwt/Jwt, kotlin/String): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client.token/JwtToIdTokenMapper.invoke|invoke(dev.lokksmith.client.jwt.Jwt;kotlin.String){}[0]
+}
+
+final class dev.lokksmith.client.usecase/RefreshTokensOrResetUseCase { // dev.lokksmith.client.usecase/RefreshTokensOrResetUseCase|null[0]
+    constructor <init>(dev.lokksmith.client/Client, kotlin.collections/List<dev.lokksmith.client.request/OAuthError> = ...) // dev.lokksmith.client.usecase/RefreshTokensOrResetUseCase.<init>|<init>(dev.lokksmith.client.Client;kotlin.collections.List<dev.lokksmith.client.request.OAuthError>){}[0]
+
+    final suspend fun invoke(): kotlin/Boolean // dev.lokksmith.client.usecase/RefreshTokensOrResetUseCase.invoke|invoke(){}[0]
+}
+
+final class dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase { // dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase|null[0]
+    constructor <init>(dev.lokksmith.client/Client, kotlin.collections/List<dev.lokksmith.client.request/OAuthError> = ...) // dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase.<init>|<init>(dev.lokksmith.client.Client;kotlin.collections.List<dev.lokksmith.client.request.OAuthError>){}[0]
+
+    final suspend fun invoke(kotlin.coroutines/SuspendFunction2<dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase.RunWithTokensOrResetScope, dev.lokksmith.client/Client.Tokens, kotlin/Unit>): kotlin/Boolean // dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase.invoke|invoke(kotlin.coroutines.SuspendFunction2<dev.lokksmith.client.usecase.RunWithTokensOrResetUseCase.RunWithTokensOrResetScope,dev.lokksmith.client.Client.Tokens,kotlin.Unit>){}[0]
+
+    abstract interface RunWithTokensOrResetScope { // dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase.RunWithTokensOrResetScope|null[0]
+        abstract suspend fun resetTokens() // dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase.RunWithTokensOrResetScope.resetTokens|resetTokens(){}[0]
+    }
+}
+
+final class dev.lokksmith.client/Migration { // dev.lokksmith.client/Migration|null[0]
+    final fun isMigrated(dev.lokksmith.client/Client): kotlin/Boolean // dev.lokksmith.client/Migration.isMigrated|isMigrated(dev.lokksmith.client.Client){}[0]
+    final suspend fun setMigrated(dev.lokksmith.client/Client, kotlin/Boolean = ...) // dev.lokksmith.client/Migration.setMigrated|setMigrated(dev.lokksmith.client.Client;kotlin.Boolean){}[0]
+    final suspend fun setTokens(dev.lokksmith.client/Client, kotlin/String, kotlin/Long?, kotlin/String?, kotlin/Long?, kotlin/String, kotlin/Boolean = ...) // dev.lokksmith.client/Migration.setTokens|setTokens(dev.lokksmith.client.Client;kotlin.String;kotlin.Long?;kotlin.String?;kotlin.Long?;kotlin.String;kotlin.Boolean){}[0]
+}
+
+final class dev.lokksmith/ClientAlreadyExistsException : dev.lokksmith/LokksmithException { // dev.lokksmith/ClientAlreadyExistsException|null[0]
+    constructor <init>(kotlin/String) // dev.lokksmith/ClientAlreadyExistsException.<init>|<init>(kotlin.String){}[0]
+}
+
+final class dev.lokksmith/CreateContext // dev.lokksmith/CreateContext|null[0]
+
+final class dev.lokksmith/Lokksmith { // dev.lokksmith/Lokksmith|null[0]
+    final val container // dev.lokksmith/Lokksmith.container|{}container[0]
+        final fun <get-container>(): dev.lokksmith/Container // dev.lokksmith/Lokksmith.container.<get-container>|<get-container>(){}[0]
+
+    final fun dispose() // dev.lokksmith/Lokksmith.dispose|dispose(){}[0]
+    final suspend fun create(kotlin/String, dev.lokksmith.client/Client.Options = ..., kotlin/Function1<dev.lokksmith/CreateContext, kotlin/Unit>): dev.lokksmith.client/Client // dev.lokksmith/Lokksmith.create|create(kotlin.String;dev.lokksmith.client.Client.Options;kotlin.Function1<dev.lokksmith.CreateContext,kotlin.Unit>){}[0]
+    final suspend fun delete(kotlin/String): kotlin/Boolean // dev.lokksmith/Lokksmith.delete|delete(kotlin.String){}[0]
+    final suspend fun exists(kotlin/String): kotlin/Boolean // dev.lokksmith/Lokksmith.exists|exists(kotlin.String){}[0]
+    final suspend fun get(kotlin/String, dev.lokksmith.client/Client.Options = ...): dev.lokksmith.client/Client? // dev.lokksmith/Lokksmith.get|get(kotlin.String;dev.lokksmith.client.Client.Options){}[0]
+    final suspend fun getOrCreate(kotlin/String, dev.lokksmith.client/Client.Options = ..., kotlin/Function1<dev.lokksmith/CreateContext, kotlin/Unit>): dev.lokksmith.client/Client // dev.lokksmith/Lokksmith.getOrCreate|getOrCreate(kotlin.String;dev.lokksmith.client.Client.Options;kotlin.Function1<dev.lokksmith.CreateContext,kotlin.Unit>){}[0]
+
+    final class Options { // dev.lokksmith/Lokksmith.Options|null[0]
+        constructor <init>(kotlin/String = ..., kotlinx.coroutines/CoroutineScope = ..., kotlin/String? = ..., io.ktor.client.engine/HttpClientEngine = ...) // dev.lokksmith/Lokksmith.Options.<init>|<init>(kotlin.String;kotlinx.coroutines.CoroutineScope;kotlin.String?;io.ktor.client.engine.HttpClientEngine){}[0]
+
+        final val coroutineScope // dev.lokksmith/Lokksmith.Options.coroutineScope|{}coroutineScope[0]
+            final fun <get-coroutineScope>(): kotlinx.coroutines/CoroutineScope // dev.lokksmith/Lokksmith.Options.coroutineScope.<get-coroutineScope>|<get-coroutineScope>(){}[0]
+        final val httpClientEngine // dev.lokksmith/Lokksmith.Options.httpClientEngine|{}httpClientEngine[0]
+            final fun <get-httpClientEngine>(): io.ktor.client.engine/HttpClientEngine // dev.lokksmith/Lokksmith.Options.httpClientEngine.<get-httpClientEngine>|<get-httpClientEngine>(){}[0]
+        final val persistenceFileBaseName // dev.lokksmith/Lokksmith.Options.persistenceFileBaseName|{}persistenceFileBaseName[0]
+            final fun <get-persistenceFileBaseName>(): kotlin/String // dev.lokksmith/Lokksmith.Options.persistenceFileBaseName.<get-persistenceFileBaseName>|<get-persistenceFileBaseName>(){}[0]
+        final val userAgent // dev.lokksmith/Lokksmith.Options.userAgent|{}userAgent[0]
+            final fun <get-userAgent>(): kotlin/String? // dev.lokksmith/Lokksmith.Options.userAgent.<get-userAgent>|<get-userAgent>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith/Lokksmith.Options.component1|component1(){}[0]
+        final fun component2(): kotlinx.coroutines/CoroutineScope // dev.lokksmith/Lokksmith.Options.component2|component2(){}[0]
+        final fun component3(): kotlin/String? // dev.lokksmith/Lokksmith.Options.component3|component3(){}[0]
+        final fun component4(): io.ktor.client.engine/HttpClientEngine // dev.lokksmith/Lokksmith.Options.component4|component4(){}[0]
+        final fun copy(kotlin/String = ..., kotlinx.coroutines/CoroutineScope = ..., kotlin/String? = ..., io.ktor.client.engine/HttpClientEngine = ...): dev.lokksmith/Lokksmith.Options // dev.lokksmith/Lokksmith.Options.copy|copy(kotlin.String;kotlinx.coroutines.CoroutineScope;kotlin.String?;io.ktor.client.engine.HttpClientEngine){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith/Lokksmith.Options.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith/Lokksmith.Options.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith/Lokksmith.Options.toString|toString(){}[0]
+    }
+}
+
+final value class dev.lokksmith.client/Id { // dev.lokksmith.client/Id|null[0]
+    constructor <init>(kotlin/String) // dev.lokksmith.client/Id.<init>|<init>(kotlin.String){}[0]
+
+    final val value // dev.lokksmith.client/Id.value|{}value[0]
+        final fun <get-value>(): kotlin/String // dev.lokksmith.client/Id.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Id.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.lokksmith.client/Id.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.lokksmith.client/Id.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Id> { // dev.lokksmith.client/Id.$serializer|null[0]
+        final val descriptor // dev.lokksmith.client/Id.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Id.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Id.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Id // dev.lokksmith.client/Id.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Id) // dev.lokksmith.client/Id.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Id){}[0]
+    }
+
+    final object Companion { // dev.lokksmith.client/Id.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Id> // dev.lokksmith.client/Id.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final value class dev.lokksmith.client/Key { // dev.lokksmith.client/Key|null[0]
+    constructor <init>(kotlin/String) // dev.lokksmith.client/Key.<init>|<init>(kotlin.String){}[0]
+
+    final val value // dev.lokksmith.client/Key.value|{}value[0]
+        final fun <get-value>(): kotlin/String // dev.lokksmith.client/Key.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Key.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // dev.lokksmith.client/Key.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // dev.lokksmith.client/Key.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Key> { // dev.lokksmith.client/Key.$serializer|null[0]
+        final val descriptor // dev.lokksmith.client/Key.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Key.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Key.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Key // dev.lokksmith.client/Key.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Key) // dev.lokksmith.client/Key.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Key){}[0]
+    }
+
+    final object Companion { // dev.lokksmith.client/Key.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Key> // dev.lokksmith.client/Key.Companion.serializer|serializer(){}[0]
+    }
+}
+
+open class dev.lokksmith.client.request.token/TokenValidationException : dev.lokksmith/LokksmithException // dev.lokksmith.client.request.token/TokenValidationException|null[0]
+
+open class dev.lokksmith.client.request/ResponseException : dev.lokksmith/LokksmithException { // dev.lokksmith.client.request/ResponseException|null[0]
+    final val reason // dev.lokksmith.client.request/ResponseException.reason|{}reason[0]
+        final fun <get-reason>(): dev.lokksmith.client.request/ResponseException.Reason? // dev.lokksmith.client.request/ResponseException.reason.<get-reason>|<get-reason>(){}[0]
+
+    final enum class Reason : kotlin/Enum<dev.lokksmith.client.request/ResponseException.Reason> { // dev.lokksmith.client.request/ResponseException.Reason|null[0]
+        enum entry HttpError // dev.lokksmith.client.request/ResponseException.Reason.HttpError|null[0]
+        enum entry InvalidResponse // dev.lokksmith.client.request/ResponseException.Reason.InvalidResponse|null[0]
+        enum entry StateMismatch // dev.lokksmith.client.request/ResponseException.Reason.StateMismatch|null[0]
+        enum entry UrlParsing // dev.lokksmith.client.request/ResponseException.Reason.UrlParsing|null[0]
+
+        final val entries // dev.lokksmith.client.request/ResponseException.Reason.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request/ResponseException.Reason> // dev.lokksmith.client.request/ResponseException.Reason.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): dev.lokksmith.client.request/ResponseException.Reason // dev.lokksmith.client.request/ResponseException.Reason.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<dev.lokksmith.client.request/ResponseException.Reason> // dev.lokksmith.client.request/ResponseException.Reason.values|values#static(){}[0]
+    }
+}
+
+open class dev.lokksmith/LokksmithException : kotlin/Exception // dev.lokksmith/LokksmithException|null[0]
+
+sealed class dev.lokksmith.client.request.parameter/Scope { // dev.lokksmith.client.request.parameter/Scope|null[0]
+    final class Custom : dev.lokksmith.client.request.parameter/Scope { // dev.lokksmith.client.request.parameter/Scope.Custom|null[0]
+        constructor <init>(kotlin/String) // dev.lokksmith.client.request.parameter/Scope.Custom.<init>|<init>(kotlin.String){}[0]
+
+        final val scope // dev.lokksmith.client.request.parameter/Scope.Custom.scope|{}scope[0]
+            final fun <get-scope>(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.Custom.scope.<get-scope>|<get-scope>(){}[0]
+
+        final fun component1(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.Custom.component1|component1(){}[0]
+        final fun copy(kotlin/String = ...): dev.lokksmith.client.request.parameter/Scope.Custom // dev.lokksmith.client.request.parameter/Scope.Custom.copy|copy(kotlin.String){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.parameter/Scope.Custom.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.parameter/Scope.Custom.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.Custom.toString|toString(){}[0]
+    }
+
+    final object Address : dev.lokksmith.client.request.parameter/Scope { // dev.lokksmith.client.request.parameter/Scope.Address|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.parameter/Scope.Address.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.parameter/Scope.Address.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.Address.toString|toString(){}[0]
+    }
+
+    final object Email : dev.lokksmith.client.request.parameter/Scope { // dev.lokksmith.client.request.parameter/Scope.Email|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.parameter/Scope.Email.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.parameter/Scope.Email.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.Email.toString|toString(){}[0]
+    }
+
+    final object OpenId : dev.lokksmith.client.request.parameter/Scope { // dev.lokksmith.client.request.parameter/Scope.OpenId|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.parameter/Scope.OpenId.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.parameter/Scope.OpenId.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.OpenId.toString|toString(){}[0]
+    }
+
+    final object Phone : dev.lokksmith.client.request.parameter/Scope { // dev.lokksmith.client.request.parameter/Scope.Phone|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.parameter/Scope.Phone.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.parameter/Scope.Phone.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.Phone.toString|toString(){}[0]
+    }
+
+    final object Profile : dev.lokksmith.client.request.parameter/Scope { // dev.lokksmith.client.request.parameter/Scope.Profile|null[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.parameter/Scope.Profile.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.parameter/Scope.Profile.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.client.request.parameter/Scope.Profile.toString|toString(){}[0]
+    }
+}
+
+final object dev.lokksmith.client.request.flow/AuthFlowResultProvider { // dev.lokksmith.client.request.flow/AuthFlowResultProvider|null[0]
+    final fun forClient(dev.lokksmith.client/Client): kotlinx.coroutines.flow/Flow<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.forClient|forClient(dev.lokksmith.client.Client){}[0]
+    final suspend fun confirmConsumed(dev.lokksmith.client/Client) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.confirmConsumed|confirmConsumed(dev.lokksmith.client.Client){}[0]
+
+    sealed interface Result { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result|null[0]
+        final class Cancelled : dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled|null[0]
+            constructor <init>(kotlin/String) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.<init>|<init>(kotlin.String){}[0]
+
+            final val state // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.state|{}state[0]
+                final fun <get-state>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.state.<get-state>|<get-state>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled> { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Cancelled){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Cancelled.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final class Error : dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error|null[0]
+            constructor <init>(kotlin/String, dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type, kotlin/String?, kotlin/String? = ...) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.<init>|<init>(kotlin.String;dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Error.Type;kotlin.String?;kotlin.String?){}[0]
+
+            final val code // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.code|{}code[0]
+                final fun <get-code>(): kotlin/String? // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.code.<get-code>|<get-code>(){}[0]
+            final val message // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.message|{}message[0]
+                final fun <get-message>(): kotlin/String? // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.message.<get-message>|<get-message>(){}[0]
+            final val state // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.state|{}state[0]
+                final fun <get-state>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.state.<get-state>|<get-state>(){}[0]
+            final val type // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.type|{}type[0]
+                final fun <get-type>(): dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.type.<get-type>|<get-type>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.toString|toString(){}[0]
+
+            final enum class Type : kotlin/Enum<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type> { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type|null[0]
+                enum entry Generic // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.Generic|null[0]
+                enum entry OAuth // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.OAuth|null[0]
+                enum entry TemporalValidation // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.TemporalValidation|null[0]
+                enum entry Validation // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.Validation|null[0]
+
+                final val entries // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.entries|#static{}entries[0]
+                    final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.entries.<get-entries>|<get-entries>#static(){}[0]
+
+                final fun valueOf(kotlin/String): dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.valueOf|valueOf#static(kotlin.String){}[0]
+                final fun values(): kotlin/Array<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Type.values|values#static(){}[0]
+            }
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error> { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Error){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Companion|null[0]
+                final val $childSerializers // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Companion.$childSerializers|{}$childSerializers[0]
+
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Error.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final class Processing : dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing|null[0]
+            constructor <init>(kotlin/String) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.<init>|<init>(kotlin.String){}[0]
+
+            final val state // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.state|{}state[0]
+                final fun <get-state>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.state.<get-state>|<get-state>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing> { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Processing){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Processing.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final class Success : dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success|null[0]
+            constructor <init>(kotlin/String) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.<init>|<init>(kotlin.String){}[0]
+
+            final val state // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.state|{}state[0]
+                final fun <get-state>(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.state.<get-state>|<get-state>(){}[0]
+
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.toString|toString(){}[0]
+
+            final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success> { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.$serializer|null[0]
+                final val descriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.$serializer.descriptor|{}descriptor[0]
+                    final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+                final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.$serializer.childSerializers|childSerializers(){}[0]
+                final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+                final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success) // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result.Success){}[0]
+            }
+
+            final object Companion { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.Companion|null[0]
+                final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Success.Companion.serializer|serializer(){}[0]
+            }
+        }
+
+        final object Companion : kotlinx.serialization.internal/SerializerFactory { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Companion|null[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Companion.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+        }
+
+        final object Undefined : dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result, kotlinx.serialization.internal/SerializerFactory { // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined|null[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined.hashCode|hashCode(){}[0]
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined.serializer|serializer(){}[0]
+            final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined.toString|toString(){}[0]
+        }
+    }
+}
+
+final object dev.lokksmith.client.request.parameter/Parameter { // dev.lokksmith.client.request.parameter/Parameter|null[0]
+    final const val CLIENT_ID // dev.lokksmith.client.request.parameter/Parameter.CLIENT_ID|{}CLIENT_ID[0]
+        final fun <get-CLIENT_ID>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.CLIENT_ID.<get-CLIENT_ID>|<get-CLIENT_ID>(){}[0]
+    final const val CODE // dev.lokksmith.client.request.parameter/Parameter.CODE|{}CODE[0]
+        final fun <get-CODE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.CODE.<get-CODE>|<get-CODE>(){}[0]
+    final const val CODE_CHALLENGE // dev.lokksmith.client.request.parameter/Parameter.CODE_CHALLENGE|{}CODE_CHALLENGE[0]
+        final fun <get-CODE_CHALLENGE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.CODE_CHALLENGE.<get-CODE_CHALLENGE>|<get-CODE_CHALLENGE>(){}[0]
+    final const val CODE_CHALLENGE_METHOD // dev.lokksmith.client.request.parameter/Parameter.CODE_CHALLENGE_METHOD|{}CODE_CHALLENGE_METHOD[0]
+        final fun <get-CODE_CHALLENGE_METHOD>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.CODE_CHALLENGE_METHOD.<get-CODE_CHALLENGE_METHOD>|<get-CODE_CHALLENGE_METHOD>(){}[0]
+    final const val CODE_VERIFIER // dev.lokksmith.client.request.parameter/Parameter.CODE_VERIFIER|{}CODE_VERIFIER[0]
+        final fun <get-CODE_VERIFIER>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.CODE_VERIFIER.<get-CODE_VERIFIER>|<get-CODE_VERIFIER>(){}[0]
+    final const val DISPLAY // dev.lokksmith.client.request.parameter/Parameter.DISPLAY|{}DISPLAY[0]
+        final fun <get-DISPLAY>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.DISPLAY.<get-DISPLAY>|<get-DISPLAY>(){}[0]
+    final const val ERROR // dev.lokksmith.client.request.parameter/Parameter.ERROR|{}ERROR[0]
+        final fun <get-ERROR>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.ERROR.<get-ERROR>|<get-ERROR>(){}[0]
+    final const val ERROR_DESCRIPTION // dev.lokksmith.client.request.parameter/Parameter.ERROR_DESCRIPTION|{}ERROR_DESCRIPTION[0]
+        final fun <get-ERROR_DESCRIPTION>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.ERROR_DESCRIPTION.<get-ERROR_DESCRIPTION>|<get-ERROR_DESCRIPTION>(){}[0]
+    final const val ERROR_URI // dev.lokksmith.client.request.parameter/Parameter.ERROR_URI|{}ERROR_URI[0]
+        final fun <get-ERROR_URI>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.ERROR_URI.<get-ERROR_URI>|<get-ERROR_URI>(){}[0]
+    final const val GRANT_TYPE // dev.lokksmith.client.request.parameter/Parameter.GRANT_TYPE|{}GRANT_TYPE[0]
+        final fun <get-GRANT_TYPE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.GRANT_TYPE.<get-GRANT_TYPE>|<get-GRANT_TYPE>(){}[0]
+    final const val ID_TOKEN_HINT // dev.lokksmith.client.request.parameter/Parameter.ID_TOKEN_HINT|{}ID_TOKEN_HINT[0]
+        final fun <get-ID_TOKEN_HINT>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.ID_TOKEN_HINT.<get-ID_TOKEN_HINT>|<get-ID_TOKEN_HINT>(){}[0]
+    final const val LOGIN_HINT // dev.lokksmith.client.request.parameter/Parameter.LOGIN_HINT|{}LOGIN_HINT[0]
+        final fun <get-LOGIN_HINT>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.LOGIN_HINT.<get-LOGIN_HINT>|<get-LOGIN_HINT>(){}[0]
+    final const val LOGOUT_HINT // dev.lokksmith.client.request.parameter/Parameter.LOGOUT_HINT|{}LOGOUT_HINT[0]
+        final fun <get-LOGOUT_HINT>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.LOGOUT_HINT.<get-LOGOUT_HINT>|<get-LOGOUT_HINT>(){}[0]
+    final const val MAX_AGE // dev.lokksmith.client.request.parameter/Parameter.MAX_AGE|{}MAX_AGE[0]
+        final fun <get-MAX_AGE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.MAX_AGE.<get-MAX_AGE>|<get-MAX_AGE>(){}[0]
+    final const val NONCE // dev.lokksmith.client.request.parameter/Parameter.NONCE|{}NONCE[0]
+        final fun <get-NONCE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.NONCE.<get-NONCE>|<get-NONCE>(){}[0]
+    final const val POST_LOGOUT_REDIRECT_URI // dev.lokksmith.client.request.parameter/Parameter.POST_LOGOUT_REDIRECT_URI|{}POST_LOGOUT_REDIRECT_URI[0]
+        final fun <get-POST_LOGOUT_REDIRECT_URI>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.POST_LOGOUT_REDIRECT_URI.<get-POST_LOGOUT_REDIRECT_URI>|<get-POST_LOGOUT_REDIRECT_URI>(){}[0]
+    final const val PROMPT // dev.lokksmith.client.request.parameter/Parameter.PROMPT|{}PROMPT[0]
+        final fun <get-PROMPT>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.PROMPT.<get-PROMPT>|<get-PROMPT>(){}[0]
+    final const val REDIRECT_URI // dev.lokksmith.client.request.parameter/Parameter.REDIRECT_URI|{}REDIRECT_URI[0]
+        final fun <get-REDIRECT_URI>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.REDIRECT_URI.<get-REDIRECT_URI>|<get-REDIRECT_URI>(){}[0]
+    final const val REFRESH_TOKEN // dev.lokksmith.client.request.parameter/Parameter.REFRESH_TOKEN|{}REFRESH_TOKEN[0]
+        final fun <get-REFRESH_TOKEN>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.REFRESH_TOKEN.<get-REFRESH_TOKEN>|<get-REFRESH_TOKEN>(){}[0]
+    final const val RESPONSE_TYPE // dev.lokksmith.client.request.parameter/Parameter.RESPONSE_TYPE|{}RESPONSE_TYPE[0]
+        final fun <get-RESPONSE_TYPE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.RESPONSE_TYPE.<get-RESPONSE_TYPE>|<get-RESPONSE_TYPE>(){}[0]
+    final const val SCOPE // dev.lokksmith.client.request.parameter/Parameter.SCOPE|{}SCOPE[0]
+        final fun <get-SCOPE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.SCOPE.<get-SCOPE>|<get-SCOPE>(){}[0]
+    final const val STATE // dev.lokksmith.client.request.parameter/Parameter.STATE|{}STATE[0]
+        final fun <get-STATE>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.STATE.<get-STATE>|<get-STATE>(){}[0]
+    final const val UI_LOCALES // dev.lokksmith.client.request.parameter/Parameter.UI_LOCALES|{}UI_LOCALES[0]
+        final fun <get-UI_LOCALES>(): kotlin/String // dev.lokksmith.client.request.parameter/Parameter.UI_LOCALES.<get-UI_LOCALES>|<get-UI_LOCALES>(){}[0]
+}
+
+final object dev.lokksmith.client.request/Defaults { // dev.lokksmith.client.request/Defaults|null[0]
+    final const val NONCE_MIN_LENGTH // dev.lokksmith.client.request/Defaults.NONCE_MIN_LENGTH|{}NONCE_MIN_LENGTH[0]
+        final fun <get-NONCE_MIN_LENGTH>(): kotlin/Int // dev.lokksmith.client.request/Defaults.NONCE_MIN_LENGTH.<get-NONCE_MIN_LENGTH>|<get-NONCE_MIN_LENGTH>(){}[0]
+    final const val STATE_MIN_LENGTH // dev.lokksmith.client.request/Defaults.STATE_MIN_LENGTH|{}STATE_MIN_LENGTH[0]
+        final fun <get-STATE_MIN_LENGTH>(): kotlin/Int // dev.lokksmith.client.request/Defaults.STATE_MIN_LENGTH.<get-STATE_MIN_LENGTH>|<get-STATE_MIN_LENGTH>(){}[0]
+}
+
+final object dev.lokksmith/BuildConfig { // dev.lokksmith/BuildConfig|null[0]
+    final const val VERSION // dev.lokksmith/BuildConfig.VERSION|{}VERSION[0]
+        final fun <get-VERSION>(): kotlin/String // dev.lokksmith/BuildConfig.VERSION.<get-VERSION>|<get-VERSION>(){}[0]
+}
+
+final object dev.lokksmith/SingletonLokksmithProvider { // dev.lokksmith/SingletonLokksmithProvider|null[0]
+    final val coroutineScope // dev.lokksmith/SingletonLokksmithProvider.coroutineScope|{}coroutineScope[0]
+        final fun <get-coroutineScope>(): kotlinx.coroutines/CoroutineScope // dev.lokksmith/SingletonLokksmithProvider.coroutineScope.<get-coroutineScope>|<get-coroutineScope>(){}[0]
+    final val lokksmith // dev.lokksmith/SingletonLokksmithProvider.lokksmith|{}lokksmith[0]
+        final fun <get-lokksmith>(): dev.lokksmith/Lokksmith // dev.lokksmith/SingletonLokksmithProvider.lokksmith.<get-lokksmith>|<get-lokksmith>(){}[0]
+
+    final fun set(dev.lokksmith/Lokksmith, kotlinx.coroutines/CoroutineScope? = ...) // dev.lokksmith/SingletonLokksmithProvider.set|set(dev.lokksmith.Lokksmith;kotlinx.coroutines.CoroutineScope?){}[0]
+}
+
+final val dev.lokksmith.client.request.flow/authFlowResult // dev.lokksmith.client.request.flow/authFlowResult|@dev.lokksmith.client.Client{}authFlowResult[0]
+    final fun (dev.lokksmith.client/Client).<get-authFlowResult>(): kotlinx.coroutines.flow/Flow<dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result> // dev.lokksmith.client.request.flow/authFlowResult.<get-authFlowResult>|<get-authFlowResult>@dev.lokksmith.client.Client(){}[0]
+final val dev.lokksmith.client.token/claims // dev.lokksmith.client.token/claims|@dev.lokksmith.client.Client.Tokens.IdToken{}claims[0]
+    final fun (dev.lokksmith.client/Client.Tokens.IdToken).<get-claims>(): dev.lokksmith.client.token/Claims // dev.lokksmith.client.token/claims.<get-claims>|<get-claims>@dev.lokksmith.client.Client.Tokens.IdToken(){}[0]
+final val dev.lokksmith.client/migration // dev.lokksmith.client/migration|@dev.lokksmith.Lokksmith{}migration[0]
+    final fun (dev.lokksmith/Lokksmith).<get-migration>(): dev.lokksmith.client/Migration // dev.lokksmith.client/migration.<get-migration>|<get-migration>@dev.lokksmith.Lokksmith(){}[0]
+
+final var dev.lokksmith/discoveryUrl // dev.lokksmith/discoveryUrl|@dev.lokksmith.CreateContext{}discoveryUrl[0]
+    final fun (dev.lokksmith/CreateContext).<get-discoveryUrl>(): kotlin/String // dev.lokksmith/discoveryUrl.<get-discoveryUrl>|<get-discoveryUrl>@dev.lokksmith.CreateContext(){}[0]
+    final fun (dev.lokksmith/CreateContext).<set-discoveryUrl>(kotlin/String) // dev.lokksmith/discoveryUrl.<set-discoveryUrl>|<set-discoveryUrl>@dev.lokksmith.CreateContext(kotlin.String){}[0]
+final var dev.lokksmith/id // dev.lokksmith/id|@dev.lokksmith.CreateContext{}id[0]
+    final fun (dev.lokksmith/CreateContext).<get-id>(): kotlin/String // dev.lokksmith/id.<get-id>|<get-id>@dev.lokksmith.CreateContext(){}[0]
+    final fun (dev.lokksmith/CreateContext).<set-id>(kotlin/String) // dev.lokksmith/id.<set-id>|<set-id>@dev.lokksmith.CreateContext(kotlin.String){}[0]
+final var dev.lokksmith/metadata // dev.lokksmith/metadata|@dev.lokksmith.CreateContext{}metadata[0]
+    final fun (dev.lokksmith/CreateContext).<get-metadata>(): dev.lokksmith.client/Client.Metadata // dev.lokksmith/metadata.<get-metadata>|<get-metadata>@dev.lokksmith.CreateContext(){}[0]
+    final fun (dev.lokksmith/CreateContext).<set-metadata>(dev.lokksmith.client/Client.Metadata) // dev.lokksmith/metadata.<set-metadata>|<set-metadata>@dev.lokksmith.CreateContext(dev.lokksmith.client.Client.Metadata){}[0]
+
+final fun (kotlin/String).dev.lokksmith.client/asId(): dev.lokksmith.client/Id // dev.lokksmith.client/asId|asId@kotlin.String(){}[0]
+final fun (kotlin/String).dev.lokksmith.client/asKey(): dev.lokksmith.client/Key // dev.lokksmith.client/asKey|asKey@kotlin.String(){}[0]
+final fun dev.lokksmith.internal/getRedirectScheme(kotlin/String): kotlin/String // dev.lokksmith.internal/getRedirectScheme|getRedirectScheme(kotlin.String){}[0]
+final fun dev.lokksmith.internal/getRedirectUri(kotlin/String): io.ktor.http/Url // dev.lokksmith.internal/getRedirectUri|getRedirectUri(kotlin.String){}[0]
+final fun dev.lokksmith/createLokksmith(dev.lokksmith/Lokksmith.Options = ...): dev.lokksmith/Lokksmith // dev.lokksmith/createLokksmith|createLokksmith(dev.lokksmith.Lokksmith.Options){}[0]
+final suspend fun (dev.lokksmith.client/Client).dev.lokksmith.client.request.flow/confirmAuthFlowResultConsumed() // dev.lokksmith.client.request.flow/confirmAuthFlowResultConsumed|confirmAuthFlowResultConsumed@dev.lokksmith.client.Client(){}[0]
+final suspend fun (dev.lokksmith.client/Client).dev.lokksmith.client.usecase/refreshOrReset(kotlin.collections/List<dev.lokksmith.client.request/OAuthError> = ...): kotlin/Boolean // dev.lokksmith.client.usecase/refreshOrReset|refreshOrReset@dev.lokksmith.client.Client(kotlin.collections.List<dev.lokksmith.client.request.OAuthError>){}[0]
+final suspend fun (dev.lokksmith.client/Client).dev.lokksmith.client.usecase/runWithTokensOrReset(kotlin.collections/List<dev.lokksmith.client.request/OAuthError> = ..., kotlin.coroutines/SuspendFunction2<dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase.RunWithTokensOrResetScope, dev.lokksmith.client/Client.Tokens, kotlin/Unit>): kotlin/Boolean // dev.lokksmith.client.usecase/runWithTokensOrReset|runWithTokensOrReset@dev.lokksmith.client.Client(kotlin.collections.List<dev.lokksmith.client.request.OAuthError>;kotlin.coroutines.SuspendFunction2<dev.lokksmith.client.usecase.RunWithTokensOrResetUseCase.RunWithTokensOrResetScope,dev.lokksmith.client.Client.Tokens,kotlin.Unit>){}[0]
+final suspend fun (dev.lokksmith/Lokksmith).dev.lokksmith.ios/launchAuthFlow(dev.lokksmith.client.request.flow/AuthFlow.Initiation, kotlin/Boolean = ..., kotlin.collections/Map<kotlin/Any?, *>? = ...) // dev.lokksmith.ios/launchAuthFlow|launchAuthFlow@dev.lokksmith.Lokksmith(dev.lokksmith.client.request.flow.AuthFlow.Initiation;kotlin.Boolean;kotlin.collections.Map<kotlin.Any?,*>?){}[0]
