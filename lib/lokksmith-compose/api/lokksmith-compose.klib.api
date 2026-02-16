@@ -1,0 +1,109 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, iosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <lokksmith:lokksmith-compose>
+final class dev.lokksmith.compose/AuthFlowLauncher { // dev.lokksmith.compose/AuthFlowLauncher|null[0]
+    final val result // dev.lokksmith.compose/AuthFlowLauncher.result|{}result[0]
+        final fun <get-result>(): dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result // dev.lokksmith.compose/AuthFlowLauncher.result.<get-result>|<get-result>(){}[0]
+
+    final suspend fun launch(dev.lokksmith.client.request.flow/AuthFlow.Initiation, kotlin.collections/Map<kotlin/String, kotlin/String> = ..., dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions = ...) // dev.lokksmith.compose/AuthFlowLauncher.launch|launch(dev.lokksmith.client.request.flow.AuthFlow.Initiation;kotlin.collections.Map<kotlin.String,kotlin.String>;dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions){}[0]
+
+    final class PlatformOptions { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions|null[0]
+        constructor <init>(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android = ..., dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios = ...) // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.<init>|<init>(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android;dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Ios){}[0]
+
+        final val android // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.android|{}android[0]
+            final fun <get-android>(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.android.<get-android>|<get-android>(){}[0]
+        final val iOS // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.iOS|{}iOS[0]
+            final fun <get-iOS>(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.iOS.<get-iOS>|<get-iOS>(){}[0]
+
+        final fun component1(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.component1|component1(){}[0]
+        final fun component2(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.component2|component2(){}[0]
+        final fun copy(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android = ..., dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios = ...): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.copy|copy(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android;dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Ios){}[0]
+        final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.equals|equals(kotlin.Any?){}[0]
+        final fun hashCode(): kotlin/Int // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.hashCode|hashCode(){}[0]
+        final fun toString(): kotlin/String // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.toString|toString(){}[0]
+
+        final class Android { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android|null[0]
+            constructor <init>(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method = ..., kotlin/Boolean = ..., kotlin/Function1<kotlin/Any, kotlin/Unit> = ...) // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.<init>|<init>(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method;kotlin.Boolean;kotlin.Function1<kotlin.Any,kotlin.Unit>){}[0]
+
+            final val ephemeralBrowsing // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.ephemeralBrowsing|{}ephemeralBrowsing[0]
+                final fun <get-ephemeralBrowsing>(): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.ephemeralBrowsing.<get-ephemeralBrowsing>|<get-ephemeralBrowsing>(){}[0]
+            final val method // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.method|{}method[0]
+                final fun <get-method>(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.method.<get-method>|<get-method>(){}[0]
+            final val onIntentCreated // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.onIntentCreated|{}onIntentCreated[0]
+                final fun <get-onIntentCreated>(): kotlin/Function1<kotlin/Any, kotlin/Unit> // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.onIntentCreated.<get-onIntentCreated>|<get-onIntentCreated>(){}[0]
+
+            final fun component1(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component1|component1(){}[0]
+            final fun component2(): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component2|component2(){}[0]
+            final fun component3(): kotlin/Function1<kotlin/Any, kotlin/Unit> // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component3|component3(){}[0]
+            final fun copy(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method = ..., kotlin/Boolean = ..., kotlin/Function1<kotlin/Any, kotlin/Unit> = ...): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.copy|copy(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method;kotlin.Boolean;kotlin.Function1<kotlin.Any,kotlin.Unit>){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.toString|toString(){}[0]
+
+            sealed interface Method { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method|null[0]
+                final class AuthTab : dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab|null[0]
+                    constructor <init>(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect = ...) // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.<init>|<init>(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect){}[0]
+
+                    final val redirect // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.redirect|{}redirect[0]
+                        final fun <get-redirect>(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.redirect.<get-redirect>|<get-redirect>(){}[0]
+
+                    final fun component1(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.component1|component1(){}[0]
+                    final fun copy(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect = ...): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.copy|copy(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect){}[0]
+                    final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.equals|equals(kotlin.Any?){}[0]
+                    final fun hashCode(): kotlin/Int // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.hashCode|hashCode(){}[0]
+                    final fun toString(): kotlin/String // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.toString|toString(){}[0]
+
+                    final enum class Redirect : kotlin/Enum<dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect> { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect|null[0]
+                        enum entry CustomScheme // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect.CustomScheme|null[0]
+                        enum entry Https // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect.Https|null[0]
+
+                        final val entries // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect.entries|#static{}entries[0]
+                            final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect> // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect.entries.<get-entries>|<get-entries>#static(){}[0]
+
+                        final fun valueOf(kotlin/String): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect.valueOf|valueOf#static(kotlin.String){}[0]
+                        final fun values(): kotlin/Array<dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect> // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.AuthTab.Redirect.values|values#static(){}[0]
+                    }
+                }
+
+                final object CustomTab : dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.CustomTab|null[0]
+                    final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.CustomTab.equals|equals(kotlin.Any?){}[0]
+                    final fun hashCode(): kotlin/Int // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.CustomTab.hashCode|hashCode(){}[0]
+                    final fun toString(): kotlin/String // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method.CustomTab.toString|toString(){}[0]
+                }
+            }
+        }
+
+        final class Ios { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios|null[0]
+            constructor <init>(kotlin/Boolean = ...) // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.<init>|<init>(kotlin.Boolean){}[0]
+
+            final val prefersEphemeralWebBrowserSession // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.prefersEphemeralWebBrowserSession|{}prefersEphemeralWebBrowserSession[0]
+                final fun <get-prefersEphemeralWebBrowserSession>(): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.prefersEphemeralWebBrowserSession.<get-prefersEphemeralWebBrowserSession>|<get-prefersEphemeralWebBrowserSession>(){}[0]
+
+            final fun component1(): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.component1|component1(){}[0]
+            final fun copy(kotlin/Boolean = ...): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.copy|copy(kotlin.Boolean){}[0]
+            final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.equals|equals(kotlin.Any?){}[0]
+            final fun hashCode(): kotlin/Int // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.hashCode|hashCode(){}[0]
+            final fun toString(): kotlin/String // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Ios.toString|toString(){}[0]
+        }
+    }
+}
+
+final val dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher$stableprop // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher$stableprop|#static{}dev_lokksmith_compose_AuthFlowLauncher$stableprop[0]
+final val dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions$stableprop // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions$stableprop|#static{}dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions$stableprop[0]
+final val dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android$stableprop // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android$stableprop|#static{}dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android$stableprop[0]
+final val dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_AuthTab$stableprop // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_AuthTab$stableprop|#static{}dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_AuthTab$stableprop[0]
+final val dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_CustomTab$stableprop // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_CustomTab$stableprop|#static{}dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_CustomTab$stableprop[0]
+final val dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Ios$stableprop // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Ios$stableprop|#static{}dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Ios$stableprop[0]
+
+final fun dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher$stableprop_getter(): kotlin/Int // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher$stableprop_getter|dev_lokksmith_compose_AuthFlowLauncher$stableprop_getter(){}[0]
+final fun dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions$stableprop_getter(): kotlin/Int // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions$stableprop_getter|dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions$stableprop_getter(){}[0]
+final fun dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android$stableprop_getter(): kotlin/Int // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android$stableprop_getter|dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android$stableprop_getter(){}[0]
+final fun dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_AuthTab$stableprop_getter(): kotlin/Int // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_AuthTab$stableprop_getter|dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_AuthTab$stableprop_getter(){}[0]
+final fun dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_CustomTab$stableprop_getter(): kotlin/Int // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_CustomTab$stableprop_getter|dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Android_Method_CustomTab$stableprop_getter(){}[0]
+final fun dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Ios$stableprop_getter(): kotlin/Int // dev.lokksmith.compose/dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Ios$stableprop_getter|dev_lokksmith_compose_AuthFlowLauncher_PlatformOptions_Ios$stableprop_getter(){}[0]
+final fun dev.lokksmith.compose/rememberAuthFlowLauncher(androidx.compose.runtime/Composer?, kotlin/Int): dev.lokksmith.compose/AuthFlowLauncher // dev.lokksmith.compose/rememberAuthFlowLauncher|rememberAuthFlowLauncher(androidx.compose.runtime.Composer?;kotlin.Int){}[0]

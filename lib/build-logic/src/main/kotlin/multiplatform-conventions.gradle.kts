@@ -8,6 +8,11 @@ plugins {
 kotlin {
     explicitApi()
 
+    @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
+    abiValidation {
+        enabled = true
+    }
+
     // targets
     androidLibrary {
         minSdk { version = release(Android.MIN_SDK) }
