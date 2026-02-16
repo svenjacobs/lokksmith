@@ -10,8 +10,8 @@ kotlin {
 
     // targets
     androidLibrary {
-        minSdk = Android.MIN_SDK
-        compileSdk = Android.COMPILE_SDK
+        minSdk { version = release(Android.MIN_SDK) }
+        compileSdk { version = release(Android.COMPILE_SDK) }
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
