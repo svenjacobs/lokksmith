@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "dev.lokksmith.demo"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk { version = release(libs.versions.android.compileSdk.get().toInt()) }
 
     defaultConfig {
         applicationId = "dev.lokksmith.demo"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk { version = release(libs.versions.android.minSdk.get().toInt()) }
+        targetSdk { version = release(libs.versions.android.targetSdk.get().toInt()) }
         versionCode = 1
         versionName = "1.0"
 
