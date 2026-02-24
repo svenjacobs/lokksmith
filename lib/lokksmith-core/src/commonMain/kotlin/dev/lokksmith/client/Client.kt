@@ -16,7 +16,6 @@
 package dev.lokksmith.client
 
 import dev.lokksmith.DateProvider
-import dev.lokksmith.DateProviders
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.Client.Tokens
 import dev.lokksmith.client.ClientImpl.Companion.create
@@ -386,7 +385,7 @@ private constructor(
     internal class DefaultProvider(
         private val httpClient: HttpClient,
         private val serializer: Json,
-        override val dateProvider: DateProvider = DateProviders.Default,
+        override val dateProvider: DateProvider,
         override val refreshTokenRequest: (InternalClient) -> RefreshTokenRequest = { client ->
             RefreshTokenRequestImpl(
                 client = client,
