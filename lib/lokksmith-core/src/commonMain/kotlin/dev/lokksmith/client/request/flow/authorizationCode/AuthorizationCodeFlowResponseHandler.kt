@@ -25,6 +25,7 @@ import dev.lokksmith.client.request.token.TokenRequest
 import dev.lokksmith.client.request.token.TokenValidationException
 import io.ktor.client.HttpClient
 import io.ktor.http.Url
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.Json
 
 public class AuthorizationCodeFlowResponseHandler(
@@ -58,6 +59,8 @@ public class AuthorizationCodeFlowResponseHandler(
         val result =
             try {
                 tokenResponseValidator.validate(response)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: TokenValidationException) {
                 throw e
             } catch (e: Exception) {
