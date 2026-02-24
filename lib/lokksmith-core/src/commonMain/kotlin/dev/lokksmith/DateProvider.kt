@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Sven Jacobs
+ * Copyright 2026 Sven Jacobs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:OptIn(ExperimentalTime::class)
-
-package dev.lokksmith.client
+package dev.lokksmith
 
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
-internal typealias InstantProvider = () -> Long
+public typealias DateProvider = suspend () -> Instant
 
-internal val DefaultInstantProvider: InstantProvider = { Clock.System.now().epochSeconds }
+public object DateProviders {
+    public val Default: DateProvider = { Clock.System.now() }
+}

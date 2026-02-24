@@ -47,7 +47,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
         extra: Map<String, JsonElement> = mapOf("nonce" to JsonPrimitive("0D1ck61")),
     ) = Jwt.Payload(iss = iss, sub = sub, aud = aud, exp = exp, nbf = nbf, iat = iat, extra = extra)
 
-    private fun `test validate`(
+    private suspend fun `test validate`(
         client: InternalClient,
         idTokenPayload: Jwt.Payload = idTokenPayload(),
         accessToken: String = "YwV7xECTE0",

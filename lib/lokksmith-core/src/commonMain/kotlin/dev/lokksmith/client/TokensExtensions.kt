@@ -17,21 +17,14 @@ package dev.lokksmith.client
 
 import dev.lokksmith.client.Client.Tokens
 
-internal fun Tokens.areExpired(
-    preemptiveRefreshSeconds: Int,
-    instantProvider: InstantProvider,
-): Boolean =
-    accessToken.isExpired(preemptiveRefreshSeconds, instantProvider) ||
-        idToken.isExpired(preemptiveRefreshSeconds, instantProvider)
+internal fun Tokens.areExpired(preemptiveRefreshSeconds: Int, currentSeconds: Long): Boolean =
+    accessToken.isExpired(preemptiveRefreshSeconds, currentSeconds) ||
+        idToken.isExpired(preemptiveRefreshSeconds, currentSeconds)
 
-internal fun Tokens.Token.isExpired(
-    preemptiveRefreshSeconds: Int,
-    instantProvider: InstantProvider,
-): Boolean =
-    expiresAt?.let { expiresAt -> instantProvider() >= expiresAt - preemptiveRefreshSeconds } ==
-        true
+internal fun Tokens.Token.isExpired(preemptiveRefreshSeconds: Int, currentSeconds: Long): Boolean =
+    expiresAt?.let { expiresAt -> currentSeconds >= expiresAt - preemptiveRefreshSeconds } == true
 
 internal fun Tokens.IdToken.isExpired(
     preemptiveRefreshSeconds: Int,
-    instantProvider: InstantProvider,
-): Boolean = instantProvider() >= expiration - preemptiveRefreshSeconds
+    currentSeconds: Long,
+): Boolean = currentSeconds >= expiration - preemptiveRefreshSeconds

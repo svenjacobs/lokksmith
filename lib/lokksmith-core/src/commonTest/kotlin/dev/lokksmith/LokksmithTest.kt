@@ -43,6 +43,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Instant
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
@@ -308,7 +309,7 @@ internal data class TestContainer(
         ClientImpl.DefaultProvider(
             httpClient = httpClient,
             serializer = Json,
-            instantProvider = { TEST_INSTANT },
+            dateProvider = { Instant.fromEpochSeconds(TEST_INSTANT, 0) },
         )
     },
 ) : Container {
