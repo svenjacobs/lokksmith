@@ -24,6 +24,7 @@ import dev.lokksmith.client.request.refresh.RefreshTokenRequest.Response
 import dev.lokksmith.client.request.token.TokenRequest
 import dev.lokksmith.client.request.token.TokenValidationException
 import io.ktor.client.HttpClient
+import kotlinx.coroutines.CancellationException
 import kotlinx.serialization.json.Json
 
 /**
@@ -66,6 +67,8 @@ internal class RefreshTokenRequestImpl(
                     response = response,
                     previousIdToken = client.snapshots.value.tokens?.idToken,
                 )
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: TokenValidationException) {
                 throw e
             } catch (e: Exception) {

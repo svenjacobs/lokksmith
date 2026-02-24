@@ -37,7 +37,10 @@ public abstract class TokenResponseValidator<T : IdToken?>(
         val idToken: T,
     )
 
-    public fun validate(response: TokenResponse, previousIdToken: IdToken? = null): Result<T> {
+    public suspend fun validate(
+        response: TokenResponse,
+        previousIdToken: IdToken? = null,
+    ): Result<T> {
         val idToken = getIdToken(response)
 
         // If a previous ID token exists it must be validated against the new token
@@ -55,11 +58,12 @@ public abstract class TokenResponseValidator<T : IdToken?>(
             validateIdToken(idToken)
         }
 
-        return Result<T>(
+        return Result(
             accessToken =
                 Tokens.AccessToken(
                     token = response.accessToken,
-                    expiresAt = response.expiresIn?.let { it + client.provider.instantProvider() },
+                    expiresAt =
+                        response.expiresIn?.let { it + client.provider.dateProvider().epochSeconds },
                 ),
             refreshToken =
                 response.refreshToken?.let {
@@ -67,7 +71,7 @@ public abstract class TokenResponseValidator<T : IdToken?>(
                         token = it,
                         expiresAt =
                             response.refreshExpiresIn?.let { refreshExpiresIn ->
-                                refreshExpiresIn + client.provider.instantProvider()
+                                refreshExpiresIn + client.provider.dateProvider().epochSeconds
                             },
                     )
                 },
@@ -88,8 +92,8 @@ public abstract class TokenResponseValidator<T : IdToken?>(
      * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID
      *   Token Validation</a>
      */
-    private fun validateIdToken(idToken: IdToken) {
-        val now = client.provider.instantProvider()
+    private suspend fun validateIdToken(idToken: IdToken) {
+        val now = client.provider.dateProvider().epochSeconds
 
         require(idToken.issuer == client.metadata.issuer) { "iss mismatch" }
         require(idToken.audiences.contains(client.id.value)) { "client_id missing in aud" }

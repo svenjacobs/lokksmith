@@ -82,7 +82,11 @@ internal class ContainerImpl(
     override val metadataDiscoveryRequest by lazy { MetadataDiscoveryRequestImpl(httpClient) }
 
     override val clientProviderFactory: () -> InternalClient.Provider = {
-        ClientImpl.DefaultProvider(httpClient = httpClient, serializer = serializer)
+        ClientImpl.DefaultProvider(
+            httpClient = httpClient,
+            serializer = serializer,
+            dateProvider = options.dateProvider,
+        )
     }
 }
 

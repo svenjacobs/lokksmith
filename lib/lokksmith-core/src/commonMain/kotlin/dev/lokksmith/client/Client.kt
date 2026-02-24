@@ -15,6 +15,7 @@
  */
 package dev.lokksmith.client
 
+import dev.lokksmith.DateProvider
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.Client.Tokens
 import dev.lokksmith.client.ClientImpl.Companion.create
@@ -305,7 +306,7 @@ public interface Client {
      * @see runWithTokens
      * @see refresh
      */
-    public fun isExpired(token: Tokens.Token): Boolean
+    public suspend fun isExpired(token: Tokens.Token): Boolean
 
     /**
      * Checks whether the provided token is expired, using the client's current expiration and
@@ -315,7 +316,7 @@ public interface Client {
      * @see runWithTokens
      * @see refresh
      */
-    public fun isExpired(token: Tokens.IdToken): Boolean
+    public suspend fun isExpired(token: Tokens.IdToken): Boolean
 
     /**
      * Releases all resources held by this client instance and performs necessary cleanup.
@@ -353,7 +354,7 @@ public interface InternalClient : Client {
      */
     public interface Provider {
 
-        public val instantProvider: InstantProvider
+        public val dateProvider: DateProvider
 
         public val refreshTokenRequest: (client: InternalClient) -> RefreshTokenRequest
 
@@ -384,7 +385,7 @@ private constructor(
     internal class DefaultProvider(
         private val httpClient: HttpClient,
         private val serializer: Json,
-        override val instantProvider: InstantProvider = DefaultInstantProvider,
+        override val dateProvider: DateProvider,
         override val refreshTokenRequest: (InternalClient) -> RefreshTokenRequest = { client ->
             RefreshTokenRequestImpl(
                 client = client,
@@ -449,7 +450,7 @@ private constructor(
             when {
                 currentTokens.areExpired(
                     preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-                    instantProvider = provider.instantProvider,
+                    currentSeconds = provider.dateProvider().epochSeconds,
                 ) -> refresh()
 
                 else -> currentTokens
@@ -472,16 +473,16 @@ private constructor(
     override fun endSessionFlow(request: EndSessionFlow.Request) =
         provider.endSessionFlow(this, request)
 
-    override fun isExpired(token: Tokens.Token) =
+    override suspend fun isExpired(token: Tokens.Token) =
         token.isExpired(
             preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-            instantProvider = provider.instantProvider,
+            currentSeconds = provider.dateProvider().epochSeconds,
         )
 
-    override fun isExpired(token: Tokens.IdToken) =
+    override suspend fun isExpired(token: Tokens.IdToken) =
         token.isExpired(
             preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-            instantProvider = provider.instantProvider,
+            currentSeconds = provider.dateProvider().epochSeconds,
         )
 
     override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) =
