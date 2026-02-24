@@ -66,8 +66,8 @@ extra:
       link: https://androiddev.social/@svenjacobs
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/svenjacobs81/
-  lokksmith_version: "0.10.0"
-  lokksmith_version_date: Feb 16, 2026
+  lokksmith_version: "0.11.0"
+  lokksmith_version_date: Feb 24, 2026
 markdown_extensions:
   - abbr
   - admonition
