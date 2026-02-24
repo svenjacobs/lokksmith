@@ -111,6 +111,8 @@ internal constructor(
          *
          * Override this property when your application has access to a more reliable or
          * network-synchronized time source that should take precedence over the device clock.
+         * Implementations should be fast/cached and ideally avoid performing network calls on every
+         * invocation.
          *
          * @see DateProvider
          * @see DateProviders
