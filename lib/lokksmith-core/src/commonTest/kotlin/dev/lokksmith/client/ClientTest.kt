@@ -15,7 +15,7 @@
  */
 package dev.lokksmith.client
 
-import dev.lokksmith.DateProvider
+import dev.lokksmith.TimeProvider
 import dev.lokksmith.client.Client.Tokens
 import dev.lokksmith.client.jwt.Jwt
 import dev.lokksmith.client.jwt.JwtEncoder
@@ -122,7 +122,7 @@ class ClientTest {
                 provider =
                     TestProvider(
                         httpClient = createHttpClient(engine),
-                        dateProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
                     ),
                 initialSnapshot = { copy(tokens = SAMPLE_TOKENS, nonce = "0D1ck61") },
             )
@@ -171,7 +171,7 @@ class ClientTest {
                 provider =
                     TestProvider(
                         httpClient = createHttpClient(engine),
-                        dateProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
                     ),
                 initialSnapshot = { copy(tokens = SAMPLE_TOKENS, nonce = "0D1ck61") },
             )
@@ -312,7 +312,7 @@ internal data class TestProvider(
     private val httpClient: HttpClient =
         createHttpClient(engine = MockEngine { respondBadRequest() }),
     private val serializer: Json = Json,
-    override val dateProvider: DateProvider = { Instant.fromEpochSeconds(TEST_INSTANT, 0) },
+    override val timeProvider: TimeProvider = { Instant.fromEpochSeconds(TEST_INSTANT, 0) },
     override val refreshTokenRequest: (InternalClient) -> RefreshTokenRequest = { client ->
         RefreshTokenRequestImpl(client = client, httpClient = httpClient, serializer = serializer)
     },

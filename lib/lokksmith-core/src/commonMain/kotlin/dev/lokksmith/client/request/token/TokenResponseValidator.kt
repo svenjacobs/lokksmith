@@ -63,7 +63,7 @@ public abstract class TokenResponseValidator<T : IdToken?>(
                 Tokens.AccessToken(
                     token = response.accessToken,
                     expiresAt =
-                        response.expiresIn?.let { it + client.provider.dateProvider().epochSeconds },
+                        response.expiresIn?.let { it + client.provider.timeProvider().epochSeconds },
                 ),
             refreshToken =
                 response.refreshToken?.let {
@@ -71,7 +71,7 @@ public abstract class TokenResponseValidator<T : IdToken?>(
                         token = it,
                         expiresAt =
                             response.refreshExpiresIn?.let { refreshExpiresIn ->
-                                refreshExpiresIn + client.provider.dateProvider().epochSeconds
+                                refreshExpiresIn + client.provider.timeProvider().epochSeconds
                             },
                     )
                 },
@@ -93,7 +93,7 @@ public abstract class TokenResponseValidator<T : IdToken?>(
      *   Token Validation</a>
      */
     private suspend fun validateIdToken(idToken: IdToken) {
-        val now = client.provider.dateProvider().epochSeconds
+        val now = client.provider.timeProvider().epochSeconds
 
         require(idToken.issuer == client.metadata.issuer) { "iss mismatch" }
         require(idToken.audiences.contains(client.id.value)) { "client_id missing in aud" }
