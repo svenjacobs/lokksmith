@@ -309,7 +309,7 @@ internal data class TestContainer(
         ClientImpl.DefaultProvider(
             httpClient = httpClient,
             serializer = Json,
-            dateProvider = { Instant.fromEpochSeconds(TEST_INSTANT, 0) },
+            timeProvider = { Instant.fromEpochSeconds(TEST_INSTANT, 0) },
         )
     },
 ) : Container {

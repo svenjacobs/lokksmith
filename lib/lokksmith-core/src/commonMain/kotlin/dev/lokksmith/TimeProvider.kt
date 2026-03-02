@@ -18,8 +18,8 @@ package dev.lokksmith
 import kotlin.time.Clock
 import kotlin.time.Instant
 
-public typealias DateProvider = suspend () -> Instant
+public typealias TimeProvider = suspend () -> Instant
 
-public object DateProviders {
-    public val Default: DateProvider = { Clock.System.now() }
+public object TimeProviders {
+    public val Default: TimeProvider = { Clock.System.now() }
 }

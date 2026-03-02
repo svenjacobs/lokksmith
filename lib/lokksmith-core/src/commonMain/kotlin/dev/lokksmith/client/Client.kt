@@ -15,8 +15,8 @@
  */
 package dev.lokksmith.client
 
-import dev.lokksmith.DateProvider
 import dev.lokksmith.Lokksmith
+import dev.lokksmith.TimeProvider
 import dev.lokksmith.client.Client.Tokens
 import dev.lokksmith.client.ClientImpl.Companion.create
 import dev.lokksmith.client.InternalClient.Provider
@@ -354,7 +354,7 @@ public interface InternalClient : Client {
      */
     public interface Provider {
 
-        public val dateProvider: DateProvider
+        public val timeProvider: TimeProvider
 
         public val refreshTokenRequest: (client: InternalClient) -> RefreshTokenRequest
 
@@ -385,7 +385,7 @@ private constructor(
     internal class DefaultProvider(
         private val httpClient: HttpClient,
         private val serializer: Json,
-        override val dateProvider: DateProvider,
+        override val timeProvider: TimeProvider,
         override val refreshTokenRequest: (InternalClient) -> RefreshTokenRequest = { client ->
             RefreshTokenRequestImpl(
                 client = client,
@@ -450,7 +450,7 @@ private constructor(
             when {
                 currentTokens.areExpired(
                     preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-                    currentSeconds = provider.dateProvider().epochSeconds,
+                    currentSeconds = provider.timeProvider().epochSeconds,
                 ) -> refresh()
 
                 else -> currentTokens
@@ -476,13 +476,13 @@ private constructor(
     override suspend fun isExpired(token: Tokens.Token) =
         token.isExpired(
             preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-            currentSeconds = provider.dateProvider().epochSeconds,
+            currentSeconds = provider.timeProvider().epochSeconds,
         )
 
     override suspend fun isExpired(token: Tokens.IdToken) =
         token.isExpired(
             preemptiveRefreshSeconds = options.preemptiveRefreshSeconds,
-            currentSeconds = provider.dateProvider().epochSeconds,
+            currentSeconds = provider.timeProvider().epochSeconds,
         )
 
     override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) =

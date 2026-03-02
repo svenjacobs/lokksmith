@@ -85,7 +85,7 @@ internal class ContainerImpl(
         ClientImpl.DefaultProvider(
             httpClient = httpClient,
             serializer = serializer,
-            dateProvider = options.dateProvider,
+            timeProvider = options.timeProvider,
         )
     }
 }

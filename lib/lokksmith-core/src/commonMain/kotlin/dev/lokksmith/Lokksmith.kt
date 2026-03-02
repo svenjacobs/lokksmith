@@ -107,17 +107,17 @@ internal constructor(
          *
          * The current time is consulted at several points during token lifecycle management, such
          * as checking whether an access token or ID token has expired. By default,
-         * [DateProviders.Default] is used, which delegates to [kotlin.time.Clock.System.now].
+         * [TimeProviders.Default] is used, which delegates to [kotlin.time.Clock.System.now].
          *
          * Override this property when your application has access to a more reliable or
          * network-synchronized time source that should take precedence over the device clock.
          * Implementations should be fast/cached and ideally avoid performing network calls on every
          * invocation.
          *
-         * @see DateProvider
-         * @see DateProviders
+         * @see TimeProvider
+         * @see TimeProviders
          */
-        val dateProvider: DateProvider = DateProviders.Default,
+        val timeProvider: TimeProvider = TimeProviders.Default,
     ) {
         init {
             require(persistenceFileBaseName.isNotBlank()) {

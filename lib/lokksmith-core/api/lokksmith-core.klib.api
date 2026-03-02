@@ -390,12 +390,12 @@ abstract interface dev.lokksmith.client/InternalClient : dev.lokksmith.client/Cl
     abstract interface Provider { // dev.lokksmith.client/InternalClient.Provider|null[0]
         abstract val authorizationCodeFlow // dev.lokksmith.client/InternalClient.Provider.authorizationCodeFlow|{}authorizationCodeFlow[0]
             abstract fun <get-authorizationCodeFlow>(): kotlin/Function2<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request, dev.lokksmith.client.request.flow/AuthFlow> // dev.lokksmith.client/InternalClient.Provider.authorizationCodeFlow.<get-authorizationCodeFlow>|<get-authorizationCodeFlow>(){}[0]
-        abstract val dateProvider // dev.lokksmith.client/InternalClient.Provider.dateProvider|{}dateProvider[0]
-            abstract fun <get-dateProvider>(): kotlin.coroutines/SuspendFunction0<kotlin.time/Instant> // dev.lokksmith.client/InternalClient.Provider.dateProvider.<get-dateProvider>|<get-dateProvider>(){}[0]
         abstract val endSessionFlow // dev.lokksmith.client/InternalClient.Provider.endSessionFlow|{}endSessionFlow[0]
             abstract fun <get-endSessionFlow>(): kotlin/Function2<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request, dev.lokksmith.client.request.flow/AuthFlow?> // dev.lokksmith.client/InternalClient.Provider.endSessionFlow.<get-endSessionFlow>|<get-endSessionFlow>(){}[0]
         abstract val refreshTokenRequest // dev.lokksmith.client/InternalClient.Provider.refreshTokenRequest|{}refreshTokenRequest[0]
             abstract fun <get-refreshTokenRequest>(): kotlin/Function1<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.refresh/RefreshTokenRequest> // dev.lokksmith.client/InternalClient.Provider.refreshTokenRequest.<get-refreshTokenRequest>|<get-refreshTokenRequest>(){}[0]
+        abstract val timeProvider // dev.lokksmith.client/InternalClient.Provider.timeProvider|{}timeProvider[0]
+            abstract fun <get-timeProvider>(): kotlin.coroutines/SuspendFunction0<kotlin.time/Instant> // dev.lokksmith.client/InternalClient.Provider.timeProvider.<get-timeProvider>|<get-timeProvider>(){}[0]
     }
 
     abstract interface SnapshotContract { // dev.lokksmith.client/InternalClient.SnapshotContract|null[0]
@@ -1277,12 +1277,12 @@ final class dev.lokksmith/Lokksmith { // dev.lokksmith/Lokksmith|null[0]
 
         final val coroutineScope // dev.lokksmith/Lokksmith.Options.coroutineScope|{}coroutineScope[0]
             final fun <get-coroutineScope>(): kotlinx.coroutines/CoroutineScope // dev.lokksmith/Lokksmith.Options.coroutineScope.<get-coroutineScope>|<get-coroutineScope>(){}[0]
-        final val dateProvider // dev.lokksmith/Lokksmith.Options.dateProvider|{}dateProvider[0]
-            final fun <get-dateProvider>(): kotlin.coroutines/SuspendFunction0<kotlin.time/Instant> // dev.lokksmith/Lokksmith.Options.dateProvider.<get-dateProvider>|<get-dateProvider>(){}[0]
         final val httpClientEngine // dev.lokksmith/Lokksmith.Options.httpClientEngine|{}httpClientEngine[0]
             final fun <get-httpClientEngine>(): io.ktor.client.engine/HttpClientEngine // dev.lokksmith/Lokksmith.Options.httpClientEngine.<get-httpClientEngine>|<get-httpClientEngine>(){}[0]
         final val persistenceFileBaseName // dev.lokksmith/Lokksmith.Options.persistenceFileBaseName|{}persistenceFileBaseName[0]
             final fun <get-persistenceFileBaseName>(): kotlin/String // dev.lokksmith/Lokksmith.Options.persistenceFileBaseName.<get-persistenceFileBaseName>|<get-persistenceFileBaseName>(){}[0]
+        final val timeProvider // dev.lokksmith/Lokksmith.Options.timeProvider|{}timeProvider[0]
+            final fun <get-timeProvider>(): kotlin.coroutines/SuspendFunction0<kotlin.time/Instant> // dev.lokksmith/Lokksmith.Options.timeProvider.<get-timeProvider>|<get-timeProvider>(){}[0]
         final val userAgent // dev.lokksmith/Lokksmith.Options.userAgent|{}userAgent[0]
             final fun <get-userAgent>(): kotlin/String? // dev.lokksmith/Lokksmith.Options.userAgent.<get-userAgent>|<get-userAgent>(){}[0]
 
@@ -1611,11 +1611,6 @@ final object dev.lokksmith/BuildConfig { // dev.lokksmith/BuildConfig|null[0]
         final fun <get-VERSION>(): kotlin/String // dev.lokksmith/BuildConfig.VERSION.<get-VERSION>|<get-VERSION>(){}[0]
 }
 
-final object dev.lokksmith/DateProviders { // dev.lokksmith/DateProviders|null[0]
-    final val Default // dev.lokksmith/DateProviders.Default|{}Default[0]
-        final fun <get-Default>(): kotlin.coroutines/SuspendFunction0<kotlin.time/Instant> // dev.lokksmith/DateProviders.Default.<get-Default>|<get-Default>(){}[0]
-}
-
 final object dev.lokksmith/SingletonLokksmithProvider { // dev.lokksmith/SingletonLokksmithProvider|null[0]
     final val coroutineScope // dev.lokksmith/SingletonLokksmithProvider.coroutineScope|{}coroutineScope[0]
         final fun <get-coroutineScope>(): kotlinx.coroutines/CoroutineScope // dev.lokksmith/SingletonLokksmithProvider.coroutineScope.<get-coroutineScope>|<get-coroutineScope>(){}[0]
@@ -1623,6 +1618,11 @@ final object dev.lokksmith/SingletonLokksmithProvider { // dev.lokksmith/Singlet
         final fun <get-lokksmith>(): dev.lokksmith/Lokksmith // dev.lokksmith/SingletonLokksmithProvider.lokksmith.<get-lokksmith>|<get-lokksmith>(){}[0]
 
     final fun set(dev.lokksmith/Lokksmith, kotlinx.coroutines/CoroutineScope? = ...) // dev.lokksmith/SingletonLokksmithProvider.set|set(dev.lokksmith.Lokksmith;kotlinx.coroutines.CoroutineScope?){}[0]
+}
+
+final object dev.lokksmith/TimeProviders { // dev.lokksmith/TimeProviders|null[0]
+    final val Default // dev.lokksmith/TimeProviders.Default|{}Default[0]
+        final fun <get-Default>(): kotlin.coroutines/SuspendFunction0<kotlin.time/Instant> // dev.lokksmith/TimeProviders.Default.<get-Default>|<get-Default>(){}[0]
 }
 
 final val dev.lokksmith.client.request.flow/authFlowResult // dev.lokksmith.client.request.flow/authFlowResult|@dev.lokksmith.client.Client{}authFlowResult[0]
