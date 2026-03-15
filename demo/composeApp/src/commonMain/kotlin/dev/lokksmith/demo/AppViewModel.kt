@@ -114,7 +114,7 @@ class AppViewModel : ViewModel() {
     }
 
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Logger.e(TAG, throwable) { "Lokksmith error" }
+        Logger.e(throwable, tag = TAG) { "Lokksmith error" }
 
         if (throwable is OAuthResponseException) {
             error.value = "Error: ${throwable.error}, ${throwable.errorDescription}"
