@@ -18,9 +18,6 @@ kotlin {
     android {
         namespace = "dev.lokksmith.compose.android"
         compileSdk { version = release(libs.versions.android.compileSdk.get().toInt()) }
-    }
-
-    androidLibrary {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
