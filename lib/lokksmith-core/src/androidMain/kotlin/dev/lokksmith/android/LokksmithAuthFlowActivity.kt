@@ -24,7 +24,6 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import dev.lokksmith.SingletonLokksmithProvider.coroutineScope
 import dev.lokksmith.SingletonLokksmithProvider.lokksmith
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
@@ -183,7 +182,12 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                 putExtra(EXTRA_LOKKSMITH_CLIENT_KEY, initiation.clientKey)
                 putExtra(EXTRA_LOKKSMITH_STATE, initiation.state)
                 putExtra(EXTRA_LOKKSMITH_URL, initiation.requestUrl)
-                putExtra(EXTRA_LOKKSMITH_HEADERS, bundleOf(*headers.toList().toTypedArray()))
+                putExtra(
+                    EXTRA_LOKKSMITH_HEADERS,
+                    Bundle(headers.size).apply {
+                        headers.forEach { (key, value) -> putString(key, value) }
+                    },
+                )
                 putExtra(EXTRA_LOKKSMITH_EPHEMERAL_BROWSING, ephemeralBrowsing)
             }
 

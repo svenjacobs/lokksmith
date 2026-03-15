@@ -14,7 +14,7 @@ kotlin {
     }
 
     // targets
-    androidLibrary {
+    android {
         minSdk { version = release(Android.MIN_SDK) }
         compileSdk { version = release(Android.COMPILE_SDK) }
         compilerOptions {

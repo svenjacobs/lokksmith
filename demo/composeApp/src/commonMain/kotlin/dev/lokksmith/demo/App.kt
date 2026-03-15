@@ -86,7 +86,7 @@ fun App(
     val launcher = rememberAuthFlowLauncher()
 
     LaunchedEffect(launcher.result) {
-        Logger.d("App") { "Received auth flow result: ${launcher.result}" }
+        Logger.d(tag = "App") { "Received auth flow result: ${launcher.result}" }
     }
 
     LifecycleStartEffect(Unit) {
