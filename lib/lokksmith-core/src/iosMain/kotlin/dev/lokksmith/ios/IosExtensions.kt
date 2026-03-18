@@ -22,8 +22,9 @@ import dev.lokksmith.client.request.parameter.Parameter
 import io.ktor.http.Url
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.AuthenticationServices.ASPresentationAnchor
 import platform.AuthenticationServices.ASWebAuthenticationPresentationContextProvidingProtocol
 import platform.AuthenticationServices.ASWebAuthenticationSession
@@ -69,15 +70,22 @@ private suspend fun startAuthenticationSession(
     requestUrl: String,
     prefersEphemeralWebBrowserSession: Boolean,
     additionalHeaderFields: Map<Any?, *>?,
-): String? = suspendCoroutine { cont ->
+): String? = suspendCancellableCoroutine { cont ->
     val url = checkNotNull(NSURL.URLWithString(requestUrl)) { "Could not create NSURL" }
     val redirectScheme = getRedirectScheme(requestUrl)
+
+    // Guard to prevent the "Double Resume" crash
+    val isResumed = atomic(false)
 
     val session =
         ASWebAuthenticationSession(
             uRL = url,
             callbackURLScheme = redirectScheme,
             completionHandler = { responseUri, error ->
+                // Ensure the continuation is only resumed once
+                if (!isResumed.compareAndSet(expect = false, update = true))
+                    return@ASWebAuthenticationSession
+
                 if (responseUri != null) {
                     cont.resume(responseUri.toString())
                     return@ASWebAuthenticationSession
@@ -99,6 +107,9 @@ private suspend fun startAuthenticationSession(
     session.presentationContextProvider = PresentationContextProvider()
     session.prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession
     session.additionalHeaderFields = additionalHeaderFields
+
+    // Cleanly cancel the iOS session if the coroutine is cancelled
+    cont.invokeOnCancellation { session.cancel() }
 
     session.start()
 }
