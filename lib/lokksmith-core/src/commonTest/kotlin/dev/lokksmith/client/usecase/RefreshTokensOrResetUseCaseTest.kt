@@ -25,7 +25,6 @@ import dev.lokksmith.client.request.refresh.RefreshTokenRequest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -59,7 +58,7 @@ class RefreshTokensOrResetUseCaseTest {
                 },
             )
 
-        assertFalse { client.refreshOrReset() }
+        assertNull(client.refreshOrReset())
         runCurrent()
         assertNull(client.tokens.value)
     }
@@ -114,7 +113,7 @@ class RefreshTokensOrResetUseCaseTest {
                 initialSnapshot = { copy(tokens = SAMPLE_TOKENS) },
             )
 
-        assertTrue { client.refreshOrReset() }
+        assertEquals(SAMPLE_TOKENS, client.refreshOrReset())
         assertTrue(refreshCalled)
     }
 }
