@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("multiplatform-conventions")
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlinx.atomicfu)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.dokka)
     alias(libs.plugins.poko)
@@ -26,6 +27,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             //api(libs.kotlinx.collections.immutable)
+            api(libs.kotlinx.atomicfu)
             api(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.serialization.core)
             api(libs.kotlinx.serialization.json)
