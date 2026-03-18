@@ -49,18 +49,17 @@ public class RefreshTokensOrResetUseCase(
     /**
      * See [class documentation][RefreshTokensOrResetUseCase] for details.
      *
-     * @return `true` if refresh was executed successfully; `false` if the client was logged out
-     *   locally.
+     * @return Current [Tokens] if refresh was executed successfully; `null` if the client was
+     *   logged out locally.
      * @see RefreshTokensOrResetUseCase
      */
-    public suspend operator fun invoke(): Boolean {
+    public suspend operator fun invoke(): Tokens? {
         try {
-            client.refresh()
-            return true
+            return client.refresh()
         } catch (e: OAuthResponseException) {
             if (errors.contains(e.error)) {
                 client.resetTokens()
-                return false
+                return null
             }
             throw e
         }
@@ -70,9 +69,9 @@ public class RefreshTokensOrResetUseCase(
 /**
  * Convenience function for [RefreshTokensOrResetUseCase].
  *
- * @return `true` if refresh was executed successfully; `false` if the client was logged out
- *   locally.
+ * @return Current [Tokens] if refresh was executed successfully; `null` if the client was logged
+ *   out locally.
  * @see RefreshTokensOrResetUseCase.invoke
  */
-public suspend fun Client.refreshOrReset(errors: List<OAuthError> = DEFAULT_ERRORS): Boolean =
+public suspend fun Client.refreshOrReset(errors: List<OAuthError> = DEFAULT_ERRORS): Tokens? =
     RefreshTokensOrResetUseCase(this, errors)()
