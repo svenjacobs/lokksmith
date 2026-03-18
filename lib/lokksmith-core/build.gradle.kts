@@ -6,7 +6,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("multiplatform-conventions")
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlinx.atomicfu)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.dokka)
     alias(libs.plugins.poko)
