@@ -39,7 +39,7 @@ spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradl
 test-logger-gradle-plugin = "com.adarshr.test-logger:com.adarshr.test-logger.gradle.plugin:4.0.0"
 compose-multiplatform-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
 compose-multiplatform-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
-jetbrains-lifecycle-runtime-compose = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.9.6"
+jetbrains-lifecycle-runtime-compose = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose:2.10.0"
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
