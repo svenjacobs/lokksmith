@@ -27,6 +27,7 @@ kotlin {
         commonMain.dependencies {
             api(project(":lokksmith-core"))
             api(libs.compose.multiplatform.ui)
+            api(libs.jetbrains.lifecycle.runtime.compose)
             implementation(libs.compose.multiplatform.ui.tooling.preview)
         }
 
