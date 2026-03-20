@@ -10,3 +10,5 @@
 # Binary files should be left untouched
 *.jar           binary
 
+
+.github/workflows/*.lock.yml linguist-generated=true merge=ours
