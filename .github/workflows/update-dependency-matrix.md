@@ -59,8 +59,13 @@ used in that release.
      the new version.
    - When a column value is the same as the one directly above it in the
      table, use `"` (a double-quote character) to indicate "same as above",
-     following the existing table style. Bold (**value**) any version that
-     is different from the immediately preceding row for that column.
+     following the existing table style.
+   - **Bold convention**: For each column, only the single latest (most recently
+     introduced) version value in the entire column should be wrapped in `**…**`.
+     All older values must NOT be bold. When you append a new row and a column
+     value changes, remove the bold markers from that column's previously-bolded
+     value and bold the new value instead. Columns whose value did not change
+     keep their existing bold placement unchanged.
    - Keep the column widths consistent with the existing table formatting.
 
 6. Apply the same logic to the **lokksmith-compose** table using only the
@@ -69,7 +74,8 @@ used in that release.
 7. Write the updated content back to `site/docs/dependency-matrix.md` using
    the edit tool.
 
-8. Create a pull request with:
+8. Create a pull request following the
+   [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/):
    - commit message: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`
    - title: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`
    - body: `Update dependency matrix in \`site/docs/dependency-matrix.md\` for release ${{ github.event.release.tag_name }}.`
