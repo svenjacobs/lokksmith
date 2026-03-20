@@ -34,6 +34,19 @@ used in that release.
 - The authoritative source of dependency versions for each release is
   `lib/gradle/libs.versions.toml` in the repository.
 
+## Commit conventions
+
+Every commit created during this workflow — including the automatic initial
+"Initial plan" commit and the final PR commit — **must** follow the
+[Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+
+The format is: `<type>[optional scope]: <description>`
+
+- Use `chore(docs)` as the type+scope for all commits in this workflow.
+- Example: `chore(docs): update dependency matrix for v0.13.0`
+- The initial "Initial plan" commit message must also use this format,
+  e.g. `chore(docs): initial plan for updating dependency matrix`.
+
 ## Instructions
 
 1. Read `lib/gradle/libs.versions.toml` from the repository.
@@ -74,8 +87,7 @@ used in that release.
 7. Write the updated content back to `site/docs/dependency-matrix.md` using
    the edit tool.
 
-8. Create a pull request following the
-   [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/):
+8. Create a pull request (following the commit conventions defined above):
    - commit message: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`
    - title: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`
    - body: `Update dependency matrix in \`site/docs/dependency-matrix.md\` for release ${{ github.event.release.tag_name }}.`
