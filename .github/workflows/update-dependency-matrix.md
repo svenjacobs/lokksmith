@@ -87,7 +87,12 @@ The format is: `<type>[optional scope]: <description>`
 7. Write the updated content back to `site/docs/dependency-matrix.md` using
    the edit tool.
 
-8. Create a pull request (following the commit conventions defined above):
+8. Check whether `site/docs/dependency-matrix.md` was actually modified in
+   step 7. If the file content is identical to what was read in step 4
+   (i.e. no changes were needed), **do not create a pull request** and stop
+   here.
+
+9. Create a pull request (following the commit conventions defined above):
    - commit message: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`
    - title: `chore(docs): update dependency matrix for ${{ github.event.release.tag_name }}`
    - body: `Update dependency matrix in \`site/docs/dependency-matrix.md\` for release ${{ github.event.release.tag_name }}.`
