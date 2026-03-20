@@ -20,7 +20,7 @@ with other (minor) versions of transitive dependencies, use them with caution.
 | 0.9.0 - 0.9.1   |     "      |     "      |  **1.10.0**   |   3.4.0   |
 | 0.10.0          |   2.3.10   |     "      |       "       |     "     |
 | 0.11.0 - 0.11.1 |     "      |     "      |       "       |     "     |
-| 0.12.0          |     "      |     "      |       "       |   3.4.1   |
+| 0.12.0          |     "      |     "      |       "       | **3.4.1** |
 | 0.12.1 - 0.12.2 | **2.3.20** |     "      |       "       |     "     |
 
 ## lokksmith-compose
