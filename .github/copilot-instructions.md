@@ -22,10 +22,11 @@ The title of a pull request must follow the Conventional Commits format describe
 
 ## Code Style
 
-After generating or altering any code, run the following command to reformat it according to the project's code style guidelines:
+After generating or altering any code, run the following commands inside the `lib` folder to reformat it according to the project's code style guidelines and to update the ABI files:
 
 ```
 lib/gradlew spotlessApply
+lib/gradlew updateLegacyAbi
 ```
 
 ## Pull Request Labels
