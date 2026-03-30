@@ -101,6 +101,12 @@ public data class Snapshot(
         override val responseUri: String?,
         val redirectUri: String,
         val codeVerifier: String?,
+
+        /**
+         * The `max_age` value from the original authorization request. Used to validate
+         * `auth_time` in the ID Token per OIDC Core 1.0, Section 3.1.3.7, item 12.
+         */
+        val maxAge: Int? = null,
     ) : EphemeralFlowState
 
     @Serializable

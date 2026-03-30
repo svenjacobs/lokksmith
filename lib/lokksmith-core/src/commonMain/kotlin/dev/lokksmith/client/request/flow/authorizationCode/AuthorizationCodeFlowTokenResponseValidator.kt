@@ -19,6 +19,7 @@ import dev.lokksmith.client.Client.Tokens.IdToken
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.request.token.TokenResponse
 import dev.lokksmith.client.request.token.TokenResponseValidator
+import dev.lokksmith.client.request.token.TokenTemporalValidationException
 import kotlinx.serialization.json.Json
 
 /**
@@ -26,15 +27,41 @@ import kotlinx.serialization.json.Json
  *   href="https://openid.net/specs/openid-connect-core-1_0.html#TokenResponseValidation">Token
  *   Response Validation</a>
  */
-public class AuthorizationCodeFlowTokenResponseValidator(serializer: Json, client: InternalClient) :
-    TokenResponseValidator<IdToken>(serializer = serializer, client = client) {
+public class AuthorizationCodeFlowTokenResponseValidator(
+    serializer: Json,
+    client: InternalClient,
+
+    /**
+     * The `max_age` value from the original authorization request.
+     *
+     * Per OIDC Core 1.0, Section 3.1.3.7, item 12: "If a max_age request parameter was provided,
+     * the Client MUST check the auth_time Claim value and request re-authentication if it
+     * determines too much time has elapsed since the last End-User authentication."
+     */
+    private val maxAge: Int? = null,
+) : TokenResponseValidator<IdToken>(serializer = serializer, client = client) {
 
     override fun getIdToken(response: TokenResponse): IdToken {
         val rawIdToken = requireNotNull(response.idToken) { "ID Token is null" }
         return decodeIdToken(rawIdToken)
     }
 
-    override fun validateIdTokenNonce(idToken: IdToken) {
+    override suspend fun validateIdTokenNonce(idToken: IdToken) {
         require(idToken.nonce == client.snapshots.value.nonce) { "nonce mismatch" }
+
+        // Per OIDC Core 1.0, Section 3.1.3.7, item 12:
+        // If a max_age request parameter was provided, the Client MUST check the auth_time Claim
+        // value and request re-authentication if it determines too much time has elapsed since the
+        // last End-User authentication.
+        maxAge?.let { maxAgeSeconds ->
+            val authTime =
+                requireNotNull(idToken.authTime) {
+                    "auth_time missing but max_age was requested"
+                }
+            val now = client.provider.timeProvider().epochSeconds
+            if (now - authTime > maxAgeSeconds + client.options.leewaySeconds) {
+                throw TokenTemporalValidationException("auth_time exceeds max_age")
+            }
+        }
     }
 }

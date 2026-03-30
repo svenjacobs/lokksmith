@@ -160,6 +160,7 @@ private constructor(
                 redirectUri = request.redirectUri,
                 codeVerifier = codeVerifier,
                 responseUri = null,
+                maxAge = request.maxAge,
             )
 
     override fun onPrepareUpdateSnapshot(snapshot: Snapshot) = snapshot.copy(nonce = nonce)
@@ -248,6 +249,7 @@ private constructor(
                     httpClient = httpClient,
                     redirectUri = request.redirectUri,
                     codeVerifier = codeVerifier,
+                    maxAge = request.maxAge,
                 )
 
             return AuthorizationCodeFlow(

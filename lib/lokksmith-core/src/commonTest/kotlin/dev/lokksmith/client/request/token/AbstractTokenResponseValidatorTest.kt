@@ -240,4 +240,79 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
 
         assertEquals("aud mismatch with previous token", e.message)
     }
+
+    // azp (authorized party) validation tests
+    // Per OIDC Core 1.0, Section 3.1.3.7, items 4-5:
+    // "If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is
+    // present. If an authorized party is present, the Client SHOULD verify that its client_id is
+    // the Claim Value."
+
+    @Test
+    fun `validate should succeed when azp matches client ID`() = runTest {
+        `test validate`(
+            client = createTestClient { copy(nonce = "0D1ck61") },
+            idTokenPayload =
+                idTokenPayload(
+                    extra =
+                        mapOf(
+                            "nonce" to JsonPrimitive("0D1ck61"),
+                            "azp" to JsonPrimitive("clientId"),
+                        )
+                ),
+        )
+    }
+
+    @Test
+    fun `validate should succeed with multiple audiences when azp is present and matches`() =
+        runTest {
+            `test validate`(
+                client = createTestClient { copy(nonce = "0D1ck61") },
+                idTokenPayload =
+                    idTokenPayload(
+                        aud = listOf("clientId", "otherAudience"),
+                        extra =
+                            mapOf(
+                                "nonce" to JsonPrimitive("0D1ck61"),
+                                "azp" to JsonPrimitive("clientId"),
+                            ),
+                    ),
+            )
+        }
+
+    @Test
+    fun `validate should fail when azp does not match client ID`() = runTest {
+        val e =
+            assertFailsWith<IllegalArgumentException> {
+                `test validate`(
+                    client = createTestClient { copy(nonce = "0D1ck61") },
+                    idTokenPayload =
+                        idTokenPayload(
+                            extra =
+                                mapOf(
+                                    "nonce" to JsonPrimitive("0D1ck61"),
+                                    "azp" to JsonPrimitive("someOtherClientId"),
+                                )
+                        ),
+                )
+            }
+
+        assertEquals("azp does not match client_id", e.message)
+    }
+
+    @Test
+    fun `validate should fail with multiple audiences when azp is missing`() = runTest {
+        val e =
+            assertFailsWith<IllegalArgumentException> {
+                `test validate`(
+                    client = createTestClient { copy(nonce = "0D1ck61") },
+                    idTokenPayload =
+                        idTokenPayload(
+                            aud = listOf("clientId", "otherAudience"),
+                            extra = mapOf("nonce" to JsonPrimitive("0D1ck61")),
+                        ),
+                )
+            }
+
+        assertEquals("azp missing with multiple audiences", e.message)
+    }
 }
