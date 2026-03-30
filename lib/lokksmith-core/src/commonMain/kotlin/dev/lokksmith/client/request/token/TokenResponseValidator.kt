@@ -89,6 +89,12 @@ public abstract class TokenResponseValidator<T : IdToken?>(
     protected abstract fun validateIdTokenNonce(idToken: IdToken)
 
     /**
+     * This method is empty because the "auth_time" validation is only relevant for the
+     * authorization code flow and not for the refresh flow.
+     */
+    protected open suspend fun validateAuthTime(idToken: IdToken) {}
+
+    /**
      * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID
      *   Token Validation</a>
      */
@@ -97,6 +103,21 @@ public abstract class TokenResponseValidator<T : IdToken?>(
 
         require(idToken.issuer == client.metadata.issuer) { "iss mismatch" }
         require(idToken.audiences.contains(client.id.value)) { "client_id missing in aud" }
+
+        // Per OIDC Core 1.0, Section 3.1.3.7, item 4:
+        // If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim
+        // is present.
+        if (idToken.audiences.size > 1) {
+            require(idToken.authorizedParty != null) { "azp missing with multiple audiences" }
+        }
+
+        // Per OIDC Core 1.0, Section 3.1.3.7, item 5:
+        // If an azp (authorized party) Claim is present, the Client SHOULD verify that its
+        // client_id is the Claim Value.
+        idToken.authorizedParty?.let { azp ->
+            require(azp == client.id.value) { "azp does not match client_id" }
+        }
+
         requireTemporal(idToken.issuedAt <= now + client.options.leewaySeconds) {
             "iat is in the future"
         }
@@ -111,8 +132,7 @@ public abstract class TokenResponseValidator<T : IdToken?>(
         }
 
         validateIdTokenNonce(idToken)
-
-        // TODO check auth_time?
+        validateAuthTime(idToken)
     }
 
     @OptIn(ExperimentalContracts::class)

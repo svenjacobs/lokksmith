@@ -59,6 +59,7 @@ public class AuthFlowStateResponseHandler(private val lokksmith: Lokksmith) {
                         httpClient = lokksmith.container.httpClient,
                         redirectUri = ephemeralState.redirectUri,
                         codeVerifier = ephemeralState.codeVerifier,
+                        maxAge = ephemeralState.maxAge,
                     )
 
                 is Snapshot.EphemeralEndSessionFlowState ->

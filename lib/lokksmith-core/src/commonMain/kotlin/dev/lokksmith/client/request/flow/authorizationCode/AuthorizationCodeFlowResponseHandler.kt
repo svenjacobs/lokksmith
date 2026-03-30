@@ -35,9 +35,14 @@ public class AuthorizationCodeFlowResponseHandler(
     httpClient: HttpClient,
     private val redirectUri: String,
     private val codeVerifier: String?,
+    private val maxAge: Int? = null,
     private val tokenRequest: TokenRequest = TokenRequest(client, httpClient),
     private val tokenResponseValidator: AuthorizationCodeFlowTokenResponseValidator =
-        AuthorizationCodeFlowTokenResponseValidator(serializer = serializer, client = client),
+        AuthorizationCodeFlowTokenResponseValidator(
+            serializer = serializer,
+            client = client,
+            maxAge = maxAge,
+        ),
 ) : AbstractAuthFlowResponseHandler(state, client) {
 
     override suspend fun onResponse(url: Url) {
