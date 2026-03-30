@@ -49,8 +49,10 @@ public class AuthorizationCodeFlowTokenResponseValidator(
 
     override suspend fun validateIdTokenNonce(idToken: IdToken) {
         require(idToken.nonce == client.snapshots.value.nonce) { "nonce mismatch" }
+    }
 
-        // Per OIDC Core 1.0, Section 3.1.3.7, item 12:
+    override suspend fun validateAuthTime(idToken: IdToken) {
+        // Per OIDC Core 1.0, Section 3.1.3.7, item 13:
         // If a max_age request parameter was provided, the Client MUST check the auth_time Claim
         // value and request re-authentication if it determines too much time has elapsed since the
         // last End-User authentication.

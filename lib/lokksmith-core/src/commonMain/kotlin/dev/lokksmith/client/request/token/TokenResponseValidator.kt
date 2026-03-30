@@ -89,6 +89,12 @@ public abstract class TokenResponseValidator<T : IdToken?>(
     protected abstract suspend fun validateIdTokenNonce(idToken: IdToken)
 
     /**
+     * This method is empty because the "auth_time" validation is only relevant for the
+     * authorization code flow and not for the refresh flow.
+     */
+    protected open suspend fun validateAuthTime(idToken: IdToken) {}
+
+    /**
      * @see <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation">ID
      *   Token Validation</a>
      */
@@ -126,6 +132,7 @@ public abstract class TokenResponseValidator<T : IdToken?>(
         }
 
         validateIdTokenNonce(idToken)
+        validateAuthTime(idToken)
     }
 
     @OptIn(ExperimentalContracts::class)
