@@ -434,7 +434,7 @@ private constructor(
         val refreshedTokens =
             Tokens(
                 accessToken = response.accessToken,
-                refreshToken = response.refreshToken,
+                refreshToken = response.refreshToken ?: tokens.refreshToken,
                 idToken = response.idToken ?: tokens.idToken,
             )
 
