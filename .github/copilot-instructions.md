@@ -15,7 +15,7 @@ Examples:
 
 ## Pull Request Titles
 
-The title of a pull request must be identical to the commit message (following the Conventional Commits format above).
+The title of a pull request must follow the Conventional Commits format described above and should be written as the intended squash-merge commit message (when using squash-and-merge).
 
 ## Code Style
 
