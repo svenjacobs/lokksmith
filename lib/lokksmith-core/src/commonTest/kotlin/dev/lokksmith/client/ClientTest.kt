@@ -142,6 +142,72 @@ class ClientTest {
     }
 
     @Test
+    fun `refresh should preserve existing refresh token when server does not return new one`() =
+        runTest {
+            val jwtEncoder = JwtEncoder(Json)
+            val engine = MockEngine { request ->
+                when (request.url.toString()) {
+                    "https://example.com/tokenEndpoint" -> {
+                        val idToken =
+                            Jwt(
+                                header = Jwt.Header(alg = "none"),
+                                payload =
+                                    Jwt.Payload(
+                                        iss = "issuer",
+                                        sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                        aud = listOf("clientId"),
+                                        exp = 1748706999 + 600,
+                                        iat = 1748706999,
+                                        extra = mapOf("nonce" to JsonPrimitive("0D1ck61")),
+                                    ),
+                            )
+
+                        // Server response does not include a new refresh token
+                        val response =
+                            TokenResponse(
+                                tokenType = "Bearer",
+                                accessToken = "Lh0rP8vrtQH",
+                                expiresIn = 600,
+                                refreshToken = null,
+                                idToken = jwtEncoder.encode(idToken),
+                            )
+
+                        val json = httpJson.encodeToString(response)
+
+                        respond(
+                            content = json,
+                            status = HttpStatusCode.OK,
+                            headers = headersOf("Content-Type", "application/json"),
+                        )
+                    }
+
+                    else -> respondBadRequest()
+                }
+            }
+
+            val client =
+                createTestClient(
+                    provider =
+                        TestProvider(
+                            httpClient = createHttpClient(engine),
+                            timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                        ),
+                    initialSnapshot = { copy(tokens = SAMPLE_TOKENS, nonce = "0D1ck61") },
+                )
+
+            assertEquals(SAMPLE_TOKENS, client.tokens.value)
+            assertEquals("bMGysPYch", client.tokens.value?.refreshToken?.token)
+
+            client.refresh()
+            runCurrent()
+
+            val tokens = assertNotNull(client.tokens.value)
+            assertEquals("Lh0rP8vrtQH", tokens.accessToken.token)
+            // The original refresh token must be preserved when the server doesn't return a new one
+            assertEquals("bMGysPYch", tokens.refreshToken?.token)
+        }
+
+    @Test
     fun `refresh should throw exception on OAuth error`() = runTest {
         val engine = MockEngine { request ->
             when (request.url.toString()) {
