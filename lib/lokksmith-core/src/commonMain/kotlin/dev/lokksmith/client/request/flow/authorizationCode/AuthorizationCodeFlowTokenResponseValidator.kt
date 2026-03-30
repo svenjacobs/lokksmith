@@ -20,6 +20,7 @@ import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.request.token.TokenResponse
 import dev.lokksmith.client.request.token.TokenResponseValidator
 import dev.lokksmith.client.request.token.TokenTemporalValidationException
+import dev.lokksmith.client.request.token.TokenValidationException
 import kotlinx.serialization.json.Json
 
 /**
@@ -55,7 +56,8 @@ public class AuthorizationCodeFlowTokenResponseValidator(
         // last End-User authentication.
         maxAge?.let { maxAgeSeconds ->
             val authTime =
-                requireNotNull(idToken.authTime) { "auth_time missing but max_age was requested" }
+                idToken.authTime
+                    ?: throw TokenValidationException("auth_time missing but max_age was requested")
             val now = client.provider.timeProvider().epochSeconds
             if (now - authTime > maxAgeSeconds + client.options.leewaySeconds) {
                 throw TokenTemporalValidationException("auth_time exceeds max_age")

@@ -115,7 +115,7 @@ class AuthorizationCodeFlowTokenResponseValidatorTest :
             assertFailsWith<TokenValidationException> {
                 validator.validate(buildTokenResponse(authTime = null))
             }
-        assertEquals("auth_time missing but max_age was requested", e.cause?.message)
+        assertEquals("auth_time missing but max_age was requested", e.message)
     }
 
     @Test
