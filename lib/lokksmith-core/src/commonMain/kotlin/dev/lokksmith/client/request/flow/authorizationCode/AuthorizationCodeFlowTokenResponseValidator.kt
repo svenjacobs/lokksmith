@@ -55,9 +55,7 @@ public class AuthorizationCodeFlowTokenResponseValidator(
         // last End-User authentication.
         maxAge?.let { maxAgeSeconds ->
             val authTime =
-                requireNotNull(idToken.authTime) {
-                    "auth_time missing but max_age was requested"
-                }
+                requireNotNull(idToken.authTime) { "auth_time missing but max_age was requested" }
             val now = client.provider.timeProvider().epochSeconds
             if (now - authTime > maxAgeSeconds + client.options.leewaySeconds) {
                 throw TokenTemporalValidationException("auth_time exceeds max_age")

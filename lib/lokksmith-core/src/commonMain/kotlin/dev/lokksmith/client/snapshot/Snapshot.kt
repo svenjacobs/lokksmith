@@ -103,8 +103,8 @@ public data class Snapshot(
         val codeVerifier: String?,
 
         /**
-         * The `max_age` value from the original authorization request. Used to validate
-         * `auth_time` in the ID Token per OIDC Core 1.0, Section 3.1.3.7, item 12.
+         * The `max_age` value from the original authorization request. Used to validate `auth_time`
+         * in the ID Token per OIDC Core 1.0, Section 3.1.3.7, item 12.
          */
         val maxAge: Int? = null,
     ) : EphemeralFlowState

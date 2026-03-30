@@ -122,29 +122,36 @@ class SnapshotStoreTest {
     }
 
     @Test
-    fun `observe should deserialize EphemeralAuthorizationCodeFlowState without maxAge`() = runTest {
-        // Backward-compatibility test: snapshots saved by older versions of the library do not
-        // contain the `maxAge` field in EphemeralAuthorizationCodeFlowState because that property
-        // was added later. When loaded by the current version, maxAge should default to null.
-        val key = "key".asKey()
-        val snapshot = newSnapshot(key, state = "Ly5GJLkj")
+    fun `observe should deserialize EphemeralAuthorizationCodeFlowState without maxAge`() =
+        runTest {
+            // Backward-compatibility test: snapshots saved by older versions of the library do not
+            // contain the `maxAge` field in EphemeralAuthorizationCodeFlowState because that
+            // property
+            // was added later. When loaded by the current version, maxAge should default to null.
+            val key = "key".asKey()
+            val snapshot = newSnapshot(key, state = "Ly5GJLkj")
 
-        // Encode using the default Json instance (encodeDefaults = false), which means null/default
-        // values are omitted, so the resulting JSON will not contain a "maxAge" field — exactly as
-        // snapshots saved by older versions would look.
-        val json = Json.encodeToString(snapshot)
+            // Encode using the default Json instance (encodeDefaults = false), which means
+            // null/default
+            // values are omitted, so the resulting JSON will not contain a "maxAge" field — exactly
+            // as
+            // snapshots saved by older versions would look.
+            val json = Json.encodeToString(snapshot)
 
-        // Assert the JSON really has no "maxAge" key (confirming old-format equivalence).
-        assertFalse(json.contains("maxAge"), "Expected 'maxAge' to be absent from serialized JSON")
+            // Assert the JSON really has no "maxAge" key (confirming old-format equivalence).
+            assertFalse(
+                json.contains("maxAge"),
+                "Expected 'maxAge' to be absent from serialized JSON",
+            )
 
-        // Simulate loading that old snapshot from persistent storage.
-        persistence.memory.value = mutableMapOf(key.value to json)
+            // Simulate loading that old snapshot from persistent storage.
+            persistence.memory.value = mutableMapOf(key.value to json)
 
-        val restored = assertIs<Snapshot>(store.observe(key).firstOrNull())
-        val ephemeral =
-            assertIs<Snapshot.EphemeralAuthorizationCodeFlowState>(restored.ephemeralFlowState)
-        assertNull(ephemeral.maxAge)
-    }
+            val restored = assertIs<Snapshot>(store.observe(key).firstOrNull())
+            val ephemeral =
+                assertIs<Snapshot.EphemeralAuthorizationCodeFlowState>(restored.ephemeralFlowState)
+            assertNull(ephemeral.maxAge)
+        }
 }
 
 class PersistenceFake(initialData: Map<String, String> = emptyMap()) :
