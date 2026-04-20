@@ -10,6 +10,10 @@
     {
       "matchPackageNames": ["*"],
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchFileNames": [".github/workflows/update-dependency-matrix.lock.yml"],
+      "schedule": ["on the first day of the month"]
     }
   ]
 }
