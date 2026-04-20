@@ -13,7 +13,7 @@
     },
     {
       "matchFileNames": [".github/workflows/update-dependency-matrix.lock.yml"],
-      "schedule": ["on the first day of the month"]
+      "schedule": ["* 0-3 1 * *"]
     }
   ]
 }
