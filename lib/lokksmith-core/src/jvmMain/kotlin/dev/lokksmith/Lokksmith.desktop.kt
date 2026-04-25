@@ -37,7 +37,7 @@ public fun createLokksmith(dataDirectory: DataDirectory, options: Options = Opti
     )
 }
 
-private const val LOKKSMITH_DIR = ".lokksmith"
+private const val LOKKSMITH_DIR = "lokksmith"
 
 internal actual val platformHttpClientEngine: HttpClientEngine
     get() = OkHttp.create()
