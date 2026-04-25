@@ -25,7 +25,7 @@ public sealed interface DataDirectory {
      * - **macOS**: `~/Library/Application Support/<appName>`
      * - **Windows**: `%APPDATA%/<appName>`
      */
-    public data class Default(val value: String) : DataDirectory
+    public data class Default(val appName: String) : DataDirectory
 
     /** Uses a custom absolute path as the data directory. */
     public data class Custom(val path: File) : DataDirectory
