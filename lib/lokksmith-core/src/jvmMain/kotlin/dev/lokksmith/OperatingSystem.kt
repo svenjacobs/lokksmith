@@ -15,16 +15,9 @@
  */
 package dev.lokksmith
 
-import java.io.File
-
 private const val OS_NAME_PROPERTY = "os.name"
 private const val OS_NAME_MAC = "mac"
 private const val OS_NAME_WIN = "win"
-private const val USER_HOME_PROPERTY = "user.home"
-private const val WINDOWS_APPDATA_ENV = "APPDATA"
-private const val MACOS_APP_SUPPORT_PATH = "Library/Application Support"
-private const val LINUX_XDG_DATA_HOME_ENV = "XDG_DATA_HOME"
-private const val LINUX_LOCAL_SHARE_PATH = ".local/share"
 
 internal enum class OperatingSystem {
     Linux,
@@ -40,18 +33,5 @@ internal enum class OperatingSystem {
                 else -> Linux
             }
         }
-    }
-}
-
-internal fun appDataDir(appName: String): File {
-    val userHome = System.getProperty(USER_HOME_PROPERTY)
-    return when (OperatingSystem.current) {
-        OperatingSystem.Windows -> File(System.getenv(WINDOWS_APPDATA_ENV), appName)
-        OperatingSystem.MacOS -> File(userHome, "$MACOS_APP_SUPPORT_PATH/$appName")
-        OperatingSystem.Linux ->
-            File(
-                System.getenv(LINUX_XDG_DATA_HOME_ENV) ?: "$userHome/$LINUX_LOCAL_SHARE_PATH",
-                appName,
-            )
     }
 }
