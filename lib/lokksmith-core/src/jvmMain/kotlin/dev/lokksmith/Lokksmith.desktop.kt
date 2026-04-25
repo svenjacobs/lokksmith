@@ -28,7 +28,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 public fun createLokksmith(dataDirectory: DataDirectory, options: Options = Options()): Lokksmith {
     val dir =
         when (dataDirectory) {
-            is DataDirectory.Default -> appDataDir(dataDirectory.value)
+            is DataDirectory.Default -> appDataDir(dataDirectory.appName)
             is DataDirectory.Custom -> dataDirectory.path
         }
     return Lokksmith(
