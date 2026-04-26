@@ -25,11 +25,14 @@ internal enum class OperatingSystem {
     Windows;
 
     companion object {
-        val current: OperatingSystem by lazy {
-            val osName = System.getProperty(OS_NAME_PROPERTY).lowercase()
-            when {
-                OS_NAME_WIN in osName -> Windows
-                OS_NAME_MAC in osName -> MacOS
+        val current: OperatingSystem by lazy { fromOsName(System.getProperty(OS_NAME_PROPERTY)) }
+
+        internal fun fromOsName(osName: String?): OperatingSystem {
+            checkNotNull(osName) { "system property '$OS_NAME_PROPERTY' is not set" }
+            val name = osName.lowercase()
+            return when {
+                OS_NAME_WIN in name -> Windows
+                OS_NAME_MAC in name -> MacOS
                 else -> Linux
             }
         }
