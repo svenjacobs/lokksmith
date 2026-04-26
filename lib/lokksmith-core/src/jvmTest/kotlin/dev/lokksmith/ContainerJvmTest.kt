@@ -29,7 +29,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import org.junit.Assume.assumeTrue
 
-class ContainerDesktopTest {
+class ContainerJvmTest {
 
     @Test
     fun `ensureSecureDirectory creates missing directory with owner-only POSIX perms`() {
@@ -97,6 +97,11 @@ class ContainerDesktopTest {
         } finally {
             deleteRecursively(parent)
         }
+    }
+
+    @Test
+    fun `platformUserAgentSuffix is JVM`() {
+        assertEquals("JVM", platformUserAgentSuffix)
     }
 
     @Test

@@ -41,7 +41,7 @@ internal actual fun createDataStore(
     }
 }
 
-internal actual val platformUserAgentSuffix = "Desktop"
+internal actual val platformUserAgentSuffix = "JVM"
 
 /**
  * Creates [path] (and any missing parents) and ensures it is readable/writable only by the current
