@@ -30,8 +30,8 @@ public fun interface ResponseHtml {
 
     /**
      * Renders the post-authentication HTML. Suspending so implementations can do IO (read from
-     * resources, fetch templates, etc.). Called exactly once per server lifecycle, during
-     * [LoopbackRedirectServer.start], on the calling coroutine's context.
+     * resources, fetch templates, etc.). Called exactly once per server lifecycle on the calling
+     * coroutine's context.
      */
     public suspend fun render(): String
 
