@@ -15,6 +15,7 @@
  */
 package dev.lokksmith
 
+import dev.lokksmith.Lokksmith.Options
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
 
@@ -22,12 +23,14 @@ import io.ktor.client.engine.okhttp.OkHttp
  * Creates a new [Lokksmith] instance for JVM/Desktop.
  *
  * @param dataDirectory Specifies where Lokksmith stores its data.
- * @param options Configuration options for the [Lokksmith] instance, including cross-platform
- *   settings and desktop-specific configuration. See [JvmOptions].
+ * @param options Cross-platform configuration options for the [Lokksmith] instance.
+ * @param desktop JVM/Desktop-specific configuration controlling the loopback redirect server and
+ *   browser launching. See [DesktopOptions].
  */
 public fun createLokksmith(
     dataDirectory: DataDirectory,
-    options: JvmOptions = JvmOptions(),
+    options: Options = Options(),
+    desktop: DesktopOptions = DesktopOptions(),
 ): Lokksmith {
     val dir =
         when (dataDirectory) {
@@ -35,9 +38,9 @@ public fun createLokksmith(
             is DataDirectory.Custom -> dataDirectory.path
         }
     val platformContext = PlatformContext(dataDirectory = dir.resolve(LOKKSMITH_DIR))
-    val baseContainer = ContainerImpl(platformContext = platformContext, options = options.core)
+    val baseContainer = ContainerImpl(platformContext = platformContext, options = options)
     return Lokksmith(
-        container = JvmContainerImpl(delegate = baseContainer, desktopOptions = options.desktop)
+        container = JvmContainerImpl(delegate = baseContainer, desktopOptions = desktop)
     )
 }
 
