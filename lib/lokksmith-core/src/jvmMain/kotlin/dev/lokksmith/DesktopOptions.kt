@@ -22,21 +22,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
 /**
- * JVM/Desktop configuration for [createLokksmith].
- *
- * Bundles the cross-platform [Lokksmith.Options] together with desktop-specific configuration so
- * the JVM `createLokksmith` overload takes a single `options` parameter.
- *
- * @property core Cross-platform Lokksmith configuration (persistence, HTTP, time, etc.).
- * @property desktop Desktop-specific configuration controlling the loopback redirect server and
- *   browser launching. See [DesktopOptions].
- */
-public data class JvmOptions(
-    val core: Lokksmith.Options = Lokksmith.Options(),
-    val desktop: DesktopOptions = DesktopOptions(),
-)
-
-/**
  * JVM/Desktop-specific configuration applied when creating a [Lokksmith] instance.
  *
  * On desktop, the redirect URI is a loopback HTTP URL (RFC 8252 §7.3) bound to an ephemeral port by

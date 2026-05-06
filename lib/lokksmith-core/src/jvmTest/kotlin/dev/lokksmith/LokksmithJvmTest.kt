@@ -35,7 +35,7 @@ class LokksmithJvmTest {
     }
 
     @Test
-    fun `createLokksmith uses default JvmOptions when none supplied`() {
+    fun `createLokksmith uses default DesktopOptions when none supplied`() {
         val lokksmith = createLokksmith(dataDirectory = DataDirectory.Custom(tempDir))
         try {
             val container = assertIs<JvmContainer>(lokksmith.container)
@@ -49,20 +49,20 @@ class LokksmithJvmTest {
     fun `createLokksmith exposes supplied DesktopOptions on the container`() {
         val customResponseHtml = ResponseHtml { "<html></html>" }
         val customBrowser = BrowserLauncher { /* no-op */ }
-        val options =
-            JvmOptions(
-                core = Lokksmith.Options(userAgent = "Test/1.0"),
-                desktop =
-                    DesktopOptions(
-                        redirectPath = "/auth-callback",
-                        responseHtml = customResponseHtml,
-                        browserLauncher = customBrowser,
-                        redirectTimeout = 30.seconds,
-                    ),
+        val desktop =
+            DesktopOptions(
+                redirectPath = "/auth-callback",
+                responseHtml = customResponseHtml,
+                browserLauncher = customBrowser,
+                redirectTimeout = 30.seconds,
             )
 
         val lokksmith =
-            createLokksmith(dataDirectory = DataDirectory.Custom(tempDir), options = options)
+            createLokksmith(
+                dataDirectory = DataDirectory.Custom(tempDir),
+                options = Lokksmith.Options(userAgent = "Test/1.0"),
+                desktop = desktop,
+            )
         try {
             val container = assertIs<JvmContainer>(lokksmith.container)
             assertEquals("/auth-callback", container.desktopOptions.redirectPath)
