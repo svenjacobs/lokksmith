@@ -15,6 +15,11 @@
  */
 package dev.lokksmith
 
+import dev.lokksmith.client.InternalClient
+import dev.lokksmith.client.request.flow.RedirectUriHandler
+import dev.lokksmith.desktop.JvmRedirectUriHandler
+import kotlinx.coroutines.CoroutineScope
+
 /**
  * JVM/Desktop-specific [Container] that exposes [DesktopOptions] alongside the standard container
  * dependencies.
@@ -27,5 +32,26 @@ public interface JvmContainer : Container {
     public val desktopOptions: DesktopOptions
 }
 
-internal class JvmContainerImpl(delegate: Container, override val desktopOptions: DesktopOptions) :
-    JvmContainer, Container by delegate
+internal class JvmContainerImpl(
+    private val delegate: Container,
+    override val desktopOptions: DesktopOptions,
+) : JvmContainer, Container by delegate {
+
+    override val clientProviderFactory: () -> InternalClient.Provider = {
+        JvmProvider(
+            base = delegate.clientProviderFactory(),
+            scope = delegate.coroutineScope,
+            desktopOptions = desktopOptions,
+        )
+    }
+}
+
+private class JvmProvider(
+    base: InternalClient.Provider,
+    private val scope: CoroutineScope,
+    private val desktopOptions: DesktopOptions,
+) : InternalClient.Provider by base {
+    override val redirectUriHandler: (InternalClient) -> RedirectUriHandler = { client ->
+        JvmRedirectUriHandler(client = client, scope = scope, options = desktopOptions)
+    }
+}
