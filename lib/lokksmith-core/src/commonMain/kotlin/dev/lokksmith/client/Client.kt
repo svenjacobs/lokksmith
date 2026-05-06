@@ -22,6 +22,8 @@ import dev.lokksmith.client.ClientImpl.Companion.create
 import dev.lokksmith.client.InternalClient.Provider
 import dev.lokksmith.client.InternalClient.SnapshotContract
 import dev.lokksmith.client.request.flow.AuthFlow
+import dev.lokksmith.client.request.flow.IdentityRedirectUriHandler
+import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow
 import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
 import dev.lokksmith.client.request.refresh.RefreshTokenRequest
@@ -363,6 +365,14 @@ public interface InternalClient : Client {
 
         public val endSessionFlow:
             (client: InternalClient, request: EndSessionFlow.Request) -> AuthFlow?
+
+        /**
+         * Strategy for resolving the redirect URI used during an auth flow. The default identity
+         * implementation passes the URI from the request through unchanged. JVM/Desktop overrides
+         * this to bind a loopback HTTP server (RFC 8252 §7.3) and substitute its bound URL.
+         */
+        public val redirectUriHandler: (client: InternalClient) -> RedirectUriHandler
+            get() = { IdentityRedirectUriHandler }
     }
 
     public val provider: Provider

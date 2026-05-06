@@ -26,22 +26,28 @@ internal constructor(
     private val responseHandler: AuthFlowResponseHandler,
 ) : AuthFlow {
 
-    internal abstract val ephemeralFlowState: Snapshot.EphemeralFlowState
+    private val redirectUriHandler: RedirectUriHandler = client.provider.redirectUriHandler(client)
 
-    /** Returns the URL to initiate the flow. */
-    internal abstract suspend fun onPrepare(): String
+    /** The redirect URI as supplied by the consumer in the [AuthFlow.Request]. */
+    internal abstract val rawRedirectUri: String
+
+    /** Returns the URL to initiate the flow, using the resolved [redirectUri]. */
+    internal abstract suspend fun onPrepare(redirectUri: String): String
+
+    /**
+     * Builds the ephemeral flow state to persist for this flow, using the resolved [redirectUri].
+     */
+    internal abstract fun createEphemeralFlowState(redirectUri: String): Snapshot.EphemeralFlowState
 
     internal open fun onPrepareUpdateSnapshot(snapshot: Snapshot): Snapshot = snapshot
 
     override suspend fun prepare(): Initiation {
-        val requestUrl = onPrepare()
+        val redirectUri = redirectUriHandler.resolve(rawRedirectUri, state)
+        val requestUrl = onPrepare(redirectUri)
 
         client.updateSnapshot {
             onPrepareUpdateSnapshot(
-                copy(
-                    flowResult = null,
-                    ephemeralFlowState = this@AbstractAuthFlow.ephemeralFlowState,
-                )
+                copy(flowResult = null, ephemeralFlowState = createEphemeralFlowState(redirectUri))
             )
         }
 
@@ -53,6 +59,10 @@ internal constructor(
     }
 
     override suspend fun cancel() {
-        AuthFlowCancellation(client).cancel(state)
+        try {
+            AuthFlowCancellation(client).cancel(state)
+        } finally {
+            redirectUriHandler.release(state)
+        }
     }
 }
