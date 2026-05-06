@@ -15,7 +15,6 @@
  */
 package dev.lokksmith
 
-import dev.lokksmith.Lokksmith.Options
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
 
@@ -23,17 +22,22 @@ import io.ktor.client.engine.okhttp.OkHttp
  * Creates a new [Lokksmith] instance for JVM/Desktop.
  *
  * @param dataDirectory Specifies where Lokksmith stores its data.
- * @param options Configuration options for the [Lokksmith] instance.
+ * @param options Configuration options for the [Lokksmith] instance, including cross-platform
+ *   settings and desktop-specific configuration. See [JvmOptions].
  */
-public fun createLokksmith(dataDirectory: DataDirectory, options: Options = Options()): Lokksmith {
+public fun createLokksmith(
+    dataDirectory: DataDirectory,
+    options: JvmOptions = JvmOptions(),
+): Lokksmith {
     val dir =
         when (dataDirectory) {
             is DataDirectory.Default -> appDataDir(dataDirectory.appName)
             is DataDirectory.Custom -> dataDirectory.path
         }
+    val platformContext = PlatformContext(dataDirectory = dir.resolve(LOKKSMITH_DIR))
+    val baseContainer = ContainerImpl(platformContext = platformContext, options = options.core)
     return Lokksmith(
-        platformContext = PlatformContext(dataDirectory = dir.resolve(LOKKSMITH_DIR)),
-        options = options,
+        container = JvmContainerImpl(delegate = baseContainer, desktopOptions = options.desktop)
     )
 }
 
