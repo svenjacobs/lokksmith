@@ -1,3 +1,4 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -15,6 +16,12 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
         experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
+    }
+
+    jvm {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
 
     listOf(
@@ -45,6 +52,11 @@ kotlin {
             implementation(libs.kermit)
         }
 
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            implementation(libs.kotlinx.coroutines.swing)
+        }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
@@ -53,4 +65,16 @@ kotlin {
 
 compose.resources {
     packageOfResClass = "dev.lokksmith.demo.resources"
+}
+
+compose.desktop {
+    application {
+        mainClass = "dev.lokksmith.demo.DesktopMainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "lokksmith-demo"
+            packageVersion = "1.0.0"
+        }
+    }
 }
