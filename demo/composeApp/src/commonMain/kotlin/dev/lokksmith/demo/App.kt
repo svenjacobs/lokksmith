@@ -179,10 +179,19 @@ fun App(
                         .clickable(enabled = false) {},
                     contentAlignment = Alignment.Center,
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(64.dp),
-                        strokeWidth = 6.dp,
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(64.dp),
+                            strokeWidth = 6.dp,
+                        )
+
+                        Button(onClick = viewModel::onCancelLoadingClick) {
+                            Text("Cancel")
+                        }
+                    }
                 }
             }
         }
