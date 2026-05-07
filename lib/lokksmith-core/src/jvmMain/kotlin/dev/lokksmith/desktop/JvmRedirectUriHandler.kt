@@ -23,6 +23,7 @@ import dev.lokksmith.client.request.flow.recordResponseUri
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.TimeoutCancellationException
@@ -45,17 +46,23 @@ internal class JvmRedirectUriHandler(
     private val resources = ConcurrentHashMap<String, Resources>()
 
     override suspend fun resolve(requestRedirectUri: String, state: String): String {
+        println("[Lokksmith DIAG] resolve() entered, state=$state")
         val server =
             LoopbackRedirectServer.create(
                 expectedState = state,
                 path = options.redirectPath,
                 responseHtml = options.responseHtml,
             )
+        println("[Lokksmith DIAG] server bound, redirectUri=${server.redirectUri}")
 
         val watcher =
             scope.launch {
+                println(
+                    "[Lokksmith DIAG] watcher started, awaiting redirect on ${server.redirectUri}"
+                )
                 try {
                     val responseUri = server.awaitResponseUri(options.redirectTimeout)
+                    println("[Lokksmith DIAG] watcher received responseUri=$responseUri")
                     client.recordResponseUri(responseUri)
                 } catch (e: TimeoutCancellationException) {
                     // TimeoutCancellationException is a CancellationException — must precede the
@@ -78,7 +85,24 @@ internal class JvmRedirectUriHandler(
                 }
             }
 
-        watcher.invokeOnCompletion { server.runCatching { close() } }
+        // invokeOnCompletion fires even when the watcher is cancelled before it starts (e.g. when
+        // release() runs before the dispatcher gets to it), so it's the right hook for cleanup.
+        watcher.invokeOnCompletion { cause ->
+            println(
+                "[Lokksmith DIAG] watcher completed (cause=$cause), closing server ${server.redirectUri}"
+            )
+            if (cause is CancellationException) {
+                // Cancel path: there's no response we want to flush, so close immediately.
+                // close(0, 0) returns quickly, which is acceptable to run on whatever thread
+                // completes the watcher.
+                runCatching { server.close(gracePeriodMillis = 0L, timeoutMillis = 0L) }
+            } else {
+                // Normal completion: close gracefully so the success/error HTML flushes to the
+                // browser. stop() with a non-zero grace blocks, so dispatch onto IO to avoid
+                // pinning the thread that completed the job (often Main on a Compose UI scope).
+                scope.launch(NonCancellable + Dispatchers.IO) { runCatching { server.close() } }
+            }
+        }
 
         resources.put(state, Resources(server, watcher))?.watcher?.cancel()
 
