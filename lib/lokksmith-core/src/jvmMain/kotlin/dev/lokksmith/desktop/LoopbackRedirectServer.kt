@@ -30,6 +30,7 @@ import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
 import io.ktor.server.routing.host
 import io.ktor.server.routing.routing
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.time.Duration
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
@@ -59,26 +60,40 @@ internal class LoopbackRedirectServer
 private constructor(
     val redirectUri: String,
     private val responseUri: CompletableDeferred<String>,
-    private val onClose: () -> Unit,
+    private val onClose: (gracePeriodMillis: Long, timeoutMillis: Long) -> Unit,
 ) : AutoCloseable {
 
     /**
      * Suspends until a valid redirect arrives, the [timeout] elapses, or the calling coroutine is
-     * cancelled. On timeout or cancellation the underlying server is shut down. Use [close]
-     * (typically via Kotlin's `use { }`) to release the server in success cases too.
+     * canceled. On timeout or cancellation the underlying server is shut down with no grace period
+     * — there's no in-flight response we care about. Use [close] (typically via Kotlin's `use { }`)
+     * to release the server in success cases too.
      */
     suspend fun awaitResponseUri(timeout: Duration): String =
         try {
             withTimeout(timeout) { responseUri.await() }
         } catch (e: CancellationException) {
             // Catch only to release the bound port; rethrow preserves cancellation semantics.
-            close()
+            close(gracePeriodMillis = 0L, timeoutMillis = 0L)
             throw e
         }
 
-    /** Releases the bound port and shuts down the embedded server. Idempotent. */
+    /**
+     * Releases the bound port and shuts down the embedded server. Idempotent.
+     *
+     * Defaults to a small grace period so any in-flight success response (the HTML page sent to the
+     * user's browser after the OAuth provider redirects back) has time to flush before the engine
+     * is torn down — Ktor CIO writes asynchronously, so a 0/0 stop will drop them.
+     */
     override fun close() {
-        onClose()
+        onClose(STOP_GRACE_MILLIS, STOP_TIMEOUT_MILLIS)
+    }
+
+    /**
+     * Variant of [close] with explicit grace/timeout, for callers that don't need the flush window.
+     */
+    fun close(gracePeriodMillis: Long, timeoutMillis: Long) {
+        onClose(gracePeriodMillis, timeoutMillis)
     }
 
     companion object {
@@ -101,22 +116,25 @@ private constructor(
 
             val successHtml = responseHtml.render()
             val responseUri = CompletableDeferred<String>()
+            val responded = AtomicBoolean(false)
 
             val server =
                 embeddedServer(CIO, port = EPHEMERAL_PORT, host = LOOPBACK_HOST) {
                     routing {
                         host(LOOPBACK_HOST) {
-                            get(path) { handleCallback(expectedState, successHtml, responseUri) }
+                            get(path) {
+                                handleCallback(expectedState, successHtml, responseUri, responded)
+                            }
                         }
                     }
                 }
-            server.start(wait = false)
-            val stop = { server.stop(STOP_GRACE_MILLIS, STOP_TIMEOUT_MILLIS) }
+            server.startSuspend(wait = false)
+            val stop: (Long, Long) -> Unit = { grace, timeout -> server.stop(grace, timeout) }
             val port =
                 try {
                     server.engine.resolvedConnectors().first().port
                 } catch (t: Throwable) {
-                    stop()
+                    stop(0L, 0L)
                     throw t
                 }
             return LoopbackRedirectServer(
@@ -134,6 +152,7 @@ private suspend fun RoutingContext.handleCallback(
     expectedState: String,
     successHtml: String,
     responseUri: CompletableDeferred<String>,
+    responded: AtomicBoolean,
 ) {
     val state = call.request.queryParameters[STATE_PARAM]
     if (state != expectedState) {
@@ -141,13 +160,13 @@ private suspend fun RoutingContext.handleCallback(
         return
     }
 
-    val uri = createLoopbackUrl(call.request.local.localPort, call.request.uri)
-    if (!responseUri.complete(uri)) {
+    if (!responded.compareAndSet(false, true)) {
         call.respondHtmlResult(HttpStatusCode.NotFound, NOT_FOUND_HTML)
         return
     }
-
+    val uri = createLoopbackUrl(call.request.local.localPort, call.request.uri)
     call.respondHtmlResult(HttpStatusCode.OK, successHtml)
+    responseUri.complete(uri)
 }
 
 private fun createLoopbackUrl(port: Int, pathAndQuery: String): String =
@@ -163,8 +182,10 @@ private suspend fun ApplicationCall.respondHtmlResult(status: HttpStatusCode, ht
 private const val HTTP_SCHEME = "http"
 private const val LOOPBACK_HOST = "127.0.0.1"
 private const val EPHEMERAL_PORT = 0
-private const val STOP_GRACE_MILLIS = 0L
-private const val STOP_TIMEOUT_MILLIS = 0L
+// Allow in-flight responses (the success/error HTML the user sees) to flush before the
+// engine is torn down — Ktor CIO writes asynchronously, so a 0/0 stop drops them.
+private const val STOP_GRACE_MILLIS = 2_000L
+private const val STOP_TIMEOUT_MILLIS = 5_000L
 private const val STATE_PARAM = "state"
 private const val CACHE_CONTROL_NO_STORE = "no-store"
 private const val REFERRER_POLICY_HEADER = "Referrer-Policy"
