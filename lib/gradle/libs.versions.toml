@@ -1,15 +1,15 @@
 [versions]
-agp = "9.1.1"
+agp = "9.2.0"
 android-compileSdk = "36"
 androidx-activity = "1.13.0"
 androidx-datastore = "1.2.1"
 compose-multiplatform = "1.10.3"
 cryptography = "0.6.0"
-kotlin = "2.3.20"
+kotlin = "2.3.21"
 kotlinx-atomicfu = "0.32.1"
 kotlinx-coroutines = "1.10.2"
 kotlinx-serialization = "1.11.0"
-ktor = "3.4.2"
+ktor = "3.4.3"
 spotless = "8.4.0"
 
 [libraries]
@@ -52,6 +52,6 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 buildconfig = "com.github.gmazzo.buildconfig:6.0.9"
 dokka = "org.jetbrains.dokka:2.2.0"
-poko = "dev.drewhamilton.poko:0.22.0"
+poko = "dev.drewhamilton.poko:0.22.1"
 maven-publish = "com.vanniktech.maven.publish:0.36.0"
-ben-manes-versions = "com.github.ben-manes.versions:0.53.0"
+ben-manes-versions = "com.github.ben-manes.versions:0.54.0"
