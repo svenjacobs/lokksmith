@@ -21,11 +21,21 @@ package dev.lokksmith.client.request.flow
  */
 internal class RecordingRedirectUriHandler(private val resolved: String) : RedirectUriHandler {
 
-    val resolveCalls = mutableListOf<Pair<String, String>>()
+    data class ResolveCall(
+        val requestRedirectUri: String,
+        val state: String,
+        val purpose: RedirectUriHandler.Purpose,
+    )
+
+    val resolveCalls = mutableListOf<ResolveCall>()
     val releaseCalls = mutableListOf<String>()
 
-    override suspend fun resolve(requestRedirectUri: String, state: String): String {
-        resolveCalls += requestRedirectUri to state
+    override suspend fun resolve(
+        requestRedirectUri: String,
+        state: String,
+        purpose: RedirectUriHandler.Purpose,
+    ): String {
+        resolveCalls += ResolveCall(requestRedirectUri, state, purpose)
         return resolved
     }
 

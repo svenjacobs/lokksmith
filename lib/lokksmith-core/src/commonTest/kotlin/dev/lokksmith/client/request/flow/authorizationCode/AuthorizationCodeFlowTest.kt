@@ -502,8 +502,18 @@ class AuthorizationCodeFlowTest {
         runCurrent()
         val requestUrl = Url(initiation.requestUrl)
 
-        // resolve() was called with the consumer-supplied URI and the flow's state.
-        assertEquals(listOf("https://example.com/app/redirect" to flow.state), handler.resolveCalls)
+        // resolve() was called with the consumer-supplied URI, the flow's state, and the
+        // Authorization purpose.
+        assertEquals(
+            listOf(
+                RecordingRedirectUriHandler.ResolveCall(
+                    requestRedirectUri = "https://example.com/app/redirect",
+                    state = flow.state,
+                    purpose = RedirectUriHandler.Purpose.Authorization,
+                )
+            ),
+            handler.resolveCalls,
+        )
 
         // The resolved URI ends up in the auth request URL …
         assertEquals(resolved, requestUrl.parameters[Parameter.REDIRECT_URI])

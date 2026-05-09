@@ -45,24 +45,27 @@ internal class JvmRedirectUriHandler(
 
     private val resources = ConcurrentHashMap<String, Resources>()
 
-    override suspend fun resolve(requestRedirectUri: String, state: String): String {
-        println("[Lokksmith DIAG] resolve() entered, state=$state")
+    override suspend fun resolve(
+        requestRedirectUri: String,
+        state: String,
+        purpose: RedirectUriHandler.Purpose,
+    ): String {
+        val responseHtml =
+            when (purpose) {
+                RedirectUriHandler.Purpose.Authorization -> options.authorizationResponseHtml
+                RedirectUriHandler.Purpose.EndSession -> options.endSessionResponseHtml
+            }
         val server =
             LoopbackRedirectServer.create(
                 expectedState = state,
                 path = options.redirectPath,
-                responseHtml = options.responseHtml,
+                responseHtml = responseHtml,
             )
-        println("[Lokksmith DIAG] server bound, redirectUri=${server.redirectUri}")
 
         val watcher =
             scope.launch {
-                println(
-                    "[Lokksmith DIAG] watcher started, awaiting redirect on ${server.redirectUri}"
-                )
                 try {
                     val responseUri = server.awaitResponseUri(options.redirectTimeout)
-                    println("[Lokksmith DIAG] watcher received responseUri=$responseUri")
                     client.recordResponseUri(responseUri)
                 } catch (e: TimeoutCancellationException) {
                     // TimeoutCancellationException is a CancellationException — must precede the
@@ -88,9 +91,6 @@ internal class JvmRedirectUriHandler(
         // invokeOnCompletion fires even when the watcher is cancelled before it starts (e.g. when
         // release() runs before the dispatcher gets to it), so it's the right hook for cleanup.
         watcher.invokeOnCompletion { cause ->
-            println(
-                "[Lokksmith DIAG] watcher completed (cause=$cause), closing server ${server.redirectUri}"
-            )
             if (cause is CancellationException) {
                 // Cancel path: there's no response we want to flush, so close immediately.
                 // close(0, 0) returns quickly, which is acceptable to run on whatever thread

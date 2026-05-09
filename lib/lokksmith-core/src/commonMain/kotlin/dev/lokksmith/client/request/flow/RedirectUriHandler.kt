@@ -32,17 +32,37 @@ package dev.lokksmith.client.request.flow
  */
 public interface RedirectUriHandler {
 
-    /** Returns the URI to embed in the auth request. Called once per [AbstractAuthFlow.prepare]. */
-    public suspend fun resolve(requestRedirectUri: String, state: String): String
+    /**
+     * Returns the URI to embed in the auth request. Called once per [AbstractAuthFlow.prepare].
+     *
+     * [purpose] lets platform implementations branch on which flow this is — e.g. on JVM the
+     * loopback server can render a different success page for [Purpose.Authorization] versus
+     * [Purpose.EndSession].
+     */
+    public suspend fun resolve(requestRedirectUri: String, state: String, purpose: Purpose): String
 
     /** Releases per-state resources (e.g. closes a loopback server). Idempotent. */
     public suspend fun release(state: String)
+
+    /**
+     * What the redirect is for, so platform implementations can present an appropriate response.
+     */
+    public enum class Purpose {
+        /** Authorization Code Flow — redirect carries the auth code back to the app. */
+        Authorization,
+
+        /** RP-Initiated Logout (End Session) — redirect signals end-of-session back to the app. */
+        EndSession,
+    }
 }
 
 /** Pass-through handler used on platforms where the redirect URI is known up-front (mobile). */
 public object IdentityRedirectUriHandler : RedirectUriHandler {
-    override suspend fun resolve(requestRedirectUri: String, state: String): String =
-        requestRedirectUri
+    override suspend fun resolve(
+        requestRedirectUri: String,
+        state: String,
+        purpose: RedirectUriHandler.Purpose,
+    ): String = requestRedirectUri
 
     override suspend fun release(state: String): Unit = Unit
 }

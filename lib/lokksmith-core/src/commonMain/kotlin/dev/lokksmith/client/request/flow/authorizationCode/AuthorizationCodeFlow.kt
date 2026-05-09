@@ -21,6 +21,7 @@ import dev.lokksmith.client.request.Random
 import dev.lokksmith.client.request.RequestException
 import dev.lokksmith.client.request.flow.AbstractAuthFlow
 import dev.lokksmith.client.request.flow.AuthFlow
+import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.request.flow.addAdditionalParameters
 import dev.lokksmith.client.request.flow.addOptionalParameter
 import dev.lokksmith.client.request.parameter.CodeChallengeMethod
@@ -155,6 +156,9 @@ private constructor(
 
     override val rawRedirectUri: String
         get() = request.redirectUri
+
+    override val redirectPurpose: RedirectUriHandler.Purpose =
+        RedirectUriHandler.Purpose.Authorization
 
     override fun createEphemeralFlowState(redirectUri: String): Snapshot.EphemeralFlowState =
         Snapshot.EphemeralAuthorizationCodeFlowState(

@@ -31,6 +31,12 @@ internal constructor(
     /** The redirect URI as supplied by the consumer in the [AuthFlow.Request]. */
     internal abstract val rawRedirectUri: String
 
+    /**
+     * What the redirect is for. Lets the [redirectUriHandler] tailor its response (e.g. JVM picks a
+     * different success page for sign-in vs sign-out).
+     */
+    internal abstract val redirectPurpose: RedirectUriHandler.Purpose
+
     /** Returns the URL to initiate the flow, using the resolved [redirectUri]. */
     internal abstract suspend fun onPrepare(redirectUri: String): String
 
@@ -42,7 +48,7 @@ internal constructor(
     internal open fun onPrepareUpdateSnapshot(snapshot: Snapshot): Snapshot = snapshot
 
     override suspend fun prepare(): Initiation {
-        val redirectUri = redirectUriHandler.resolve(rawRedirectUri, state)
+        val redirectUri = redirectUriHandler.resolve(rawRedirectUri, state, redirectPurpose)
         val requestUrl = onPrepare(redirectUri)
 
         client.updateSnapshot {
