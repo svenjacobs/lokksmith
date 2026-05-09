@@ -36,11 +36,18 @@ public fun interface ResponseHtml {
     public suspend fun render(): String
 
     public companion object {
-        /** Minimal default HTML telling the user authentication is complete. */
-        public val Default: ResponseHtml = ResponseHtml { DEFAULT_HTML }
+        /** Minimal default HTML shown after the Authorization Code Flow redirect. */
+        public val defaultAuthorization: ResponseHtml = ResponseHtml {
+            defaultHtml(title = "Sign-in completed", heading = "Sign-in completed")
+        }
+
+        /** Minimal default HTML shown after the End Session (RP-Initiated Logout) redirect. */
+        public val defaultEndSession: ResponseHtml = ResponseHtml {
+            defaultHtml(title = "Sign-out completed", heading = "Sign-out completed")
+        }
 
         @Language("HTML")
-        private val DEFAULT_HTML =
+        private fun defaultHtml(title: String, heading: String) =
             """
             <!DOCTYPE html>
             <html lang="en">
@@ -48,7 +55,7 @@ public fun interface ResponseHtml {
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <meta name="color-scheme" content="light dark">
-                <title>Authentication complete</title>
+                <title>$title</title>
                 <style>
                   :root {
                     color-scheme: light dark;
@@ -78,7 +85,7 @@ public fun interface ResponseHtml {
               </head>
               <body>
                 <main>
-                  <h1>Authentication complete</h1>
+                  <h1>$heading</h1>
                   <p>You can close this window and return to the app.</p>
                 </main>
               </body>

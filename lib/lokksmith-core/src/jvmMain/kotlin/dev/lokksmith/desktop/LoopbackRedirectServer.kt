@@ -108,7 +108,7 @@ private constructor(
         suspend fun create(
             expectedState: String,
             path: String = DEFAULT_REDIRECT_PATH,
-            responseHtml: ResponseHtml = ResponseHtml.Default,
+            responseHtml: ResponseHtml = ResponseHtml.defaultAuthorization,
         ): LoopbackRedirectServer {
             require(expectedState.isNotBlank()) { "expectedState must not be blank" }
             require(path.startsWith("/")) { "path must start with '/'" }

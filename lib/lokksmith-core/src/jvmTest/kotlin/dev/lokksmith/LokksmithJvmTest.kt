@@ -47,12 +47,14 @@ class LokksmithJvmTest {
 
     @Test
     fun `createLokksmith exposes supplied DesktopOptions on the container`() {
-        val customResponseHtml = ResponseHtml { "<html></html>" }
+        val authorizationHtml = ResponseHtml { "<html><body>authorization done</body></html>" }
+        val endSessionHtml = ResponseHtml { "<html><body>session ended</body></html>" }
         val customBrowser = BrowserLauncher { /* no-op */ }
         val desktop =
             DesktopOptions(
                 redirectPath = "/auth-callback",
-                responseHtml = customResponseHtml,
+                authorizationResponseHtml = authorizationHtml,
+                endSessionResponseHtml = endSessionHtml,
                 browserLauncher = customBrowser,
                 redirectTimeout = 30.seconds,
             )
@@ -66,7 +68,8 @@ class LokksmithJvmTest {
         try {
             val container = assertIs<JvmContainer>(lokksmith.container)
             assertEquals("/auth-callback", container.desktopOptions.redirectPath)
-            assertSame(customResponseHtml, container.desktopOptions.responseHtml)
+            assertSame(authorizationHtml, container.desktopOptions.authorizationResponseHtml)
+            assertSame(endSessionHtml, container.desktopOptions.endSessionResponseHtml)
             assertSame(customBrowser, container.desktopOptions.browserLauncher)
             assertEquals(30.seconds, container.desktopOptions.redirectTimeout)
         } finally {

@@ -17,6 +17,7 @@ package dev.lokksmith.desktop
 
 import dev.lokksmith.DesktopOptions
 import dev.lokksmith.client.createTestClient
+import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult
 import java.net.ConnectException
@@ -49,7 +50,12 @@ class JvmRedirectUriHandlerTest {
                 options = DesktopOptions(redirectPath = "/auth", redirectTimeout = 5.seconds),
             )
 
-        val resolved = handler.resolve(requestRedirectUri = "ignored", state = STATE)
+        val resolved =
+            handler.resolve(
+                requestRedirectUri = "ignored",
+                state = STATE,
+                purpose = RedirectUriHandler.Purpose.Authorization,
+            )
 
         assertTrue(
             resolved.startsWith("http://127.0.0.1:"),
@@ -70,7 +76,12 @@ class JvmRedirectUriHandlerTest {
                 options = DesktopOptions(redirectTimeout = 5.seconds),
             )
 
-        val resolved = handler.resolve(requestRedirectUri = "ignored", state = STATE)
+        val resolved =
+            handler.resolve(
+                requestRedirectUri = "ignored",
+                state = STATE,
+                purpose = RedirectUriHandler.Purpose.Authorization,
+            )
 
         val (status, _) = httpGet("$resolved?code=auth-xyz&state=$STATE")
         assertEquals(200, status)
@@ -87,6 +98,64 @@ class JvmRedirectUriHandlerTest {
     }
 
     @Test
+    fun `purpose Authorization renders the authorization response HTML`() = runTest {
+        val authorizationHtml = "<html><body>authorization done</body></html>"
+        val endSessionHtml = "<html><body>session ended</body></html>"
+        val client = createTestClient(initialSnapshot = withAuthorizationCodeEphemeralState())
+        val handler =
+            JvmRedirectUriHandler(
+                client = client,
+                scope = backgroundScope,
+                options =
+                    DesktopOptions(
+                        authorizationResponseHtml = ResponseHtml { authorizationHtml },
+                        endSessionResponseHtml = ResponseHtml { endSessionHtml },
+                        redirectTimeout = 5.seconds,
+                    ),
+            )
+
+        val resolved =
+            handler.resolve(
+                requestRedirectUri = "ignored",
+                state = STATE,
+                purpose = RedirectUriHandler.Purpose.Authorization,
+            )
+
+        val (status, body) = httpGet("$resolved?code=auth-xyz&state=$STATE")
+        assertEquals(200, status)
+        assertEquals(authorizationHtml, body)
+    }
+
+    @Test
+    fun `purpose EndSession renders the end-session response HTML`() = runTest {
+        val authorizationHtml = "<html><body>authorization done</body></html>"
+        val endSessionHtml = "<html><body>session ended</body></html>"
+        val client = createTestClient(initialSnapshot = withAuthorizationCodeEphemeralState())
+        val handler =
+            JvmRedirectUriHandler(
+                client = client,
+                scope = backgroundScope,
+                options =
+                    DesktopOptions(
+                        authorizationResponseHtml = ResponseHtml { authorizationHtml },
+                        endSessionResponseHtml = ResponseHtml { endSessionHtml },
+                        redirectTimeout = 5.seconds,
+                    ),
+            )
+
+        val resolved =
+            handler.resolve(
+                requestRedirectUri = "ignored",
+                state = STATE,
+                purpose = RedirectUriHandler.Purpose.EndSession,
+            )
+
+        val (status, body) = httpGet("$resolved?code=auth-xyz&state=$STATE")
+        assertEquals(200, status)
+        assertEquals(endSessionHtml, body)
+    }
+
+    @Test
     fun `redirect timeout records a generic error on the snapshot`() = runTest {
         val client = createTestClient(initialSnapshot = withAuthorizationCodeEphemeralState())
         val handler =
@@ -96,7 +165,11 @@ class JvmRedirectUriHandlerTest {
                 options = DesktopOptions(redirectTimeout = 100.milliseconds),
             )
 
-        handler.resolve(requestRedirectUri = "ignored", state = STATE)
+        handler.resolve(
+            requestRedirectUri = "ignored",
+            state = STATE,
+            purpose = RedirectUriHandler.Purpose.Authorization,
+        )
 
         advanceTimeBy(500.milliseconds)
         runCurrent()
@@ -117,7 +190,12 @@ class JvmRedirectUriHandlerTest {
                 options = DesktopOptions(redirectTimeout = 5.seconds),
             )
 
-        val resolved = handler.resolve(requestRedirectUri = "ignored", state = STATE)
+        val resolved =
+            handler.resolve(
+                requestRedirectUri = "ignored",
+                state = STATE,
+                purpose = RedirectUriHandler.Purpose.Authorization,
+            )
         handler.release(STATE)
 
         // Server is gone — connection refused.
