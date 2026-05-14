@@ -22,6 +22,8 @@ import dev.lokksmith.client.jwt.JwtEncoder
 import dev.lokksmith.client.request.OAuthError
 import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.flow.AuthFlow
+import dev.lokksmith.client.request.flow.IdentityRedirectUriHandler
+import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow
 import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
 import dev.lokksmith.client.request.parameter.GrantType
@@ -396,6 +398,9 @@ internal data class TestProvider(
         { client, request ->
             EndSessionFlow.createOrNull(client = client, request = request)
         },
+    override val redirectUriHandler: (InternalClient) -> RedirectUriHandler = {
+        IdentityRedirectUriHandler
+    },
 ) : InternalClient.Provider
 
 @OptIn(ExperimentalCoroutinesApi::class)

@@ -128,6 +128,11 @@ abstract interface dev.lokksmith.client.request.flow/AuthFlow { // dev.lokksmith
     }
 }
 
+abstract interface dev.lokksmith.client.request.flow/RedirectUriHandler { // dev.lokksmith.client.request.flow/RedirectUriHandler|null[0]
+    abstract suspend fun release(kotlin/String) // dev.lokksmith.client.request.flow/RedirectUriHandler.release|release(kotlin.String){}[0]
+    abstract suspend fun resolve(kotlin/String, kotlin/String): kotlin/String // dev.lokksmith.client.request.flow/RedirectUriHandler.resolve|resolve(kotlin.String;kotlin.String){}[0]
+}
+
 abstract interface dev.lokksmith.client.snapshot/SnapshotStore { // dev.lokksmith.client.snapshot/SnapshotStore|null[0]
     abstract fun observe(dev.lokksmith.client/Key): kotlinx.coroutines.flow/Flow<dev.lokksmith.client.snapshot/Snapshot?> // dev.lokksmith.client.snapshot/SnapshotStore.observe|observe(dev.lokksmith.client.Key){}[0]
     abstract suspend fun delete(dev.lokksmith.client/Key): kotlin/Boolean // dev.lokksmith.client.snapshot/SnapshotStore.delete|delete(dev.lokksmith.client.Key){}[0]
@@ -396,6 +401,8 @@ abstract interface dev.lokksmith.client/InternalClient : dev.lokksmith.client/Cl
             abstract fun <get-refreshTokenRequest>(): kotlin/Function1<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.refresh/RefreshTokenRequest> // dev.lokksmith.client/InternalClient.Provider.refreshTokenRequest.<get-refreshTokenRequest>|<get-refreshTokenRequest>(){}[0]
         abstract val timeProvider // dev.lokksmith.client/InternalClient.Provider.timeProvider|{}timeProvider[0]
             abstract fun <get-timeProvider>(): kotlin.coroutines/SuspendFunction0<kotlin.time/Instant> // dev.lokksmith.client/InternalClient.Provider.timeProvider.<get-timeProvider>|<get-timeProvider>(){}[0]
+        open val redirectUriHandler // dev.lokksmith.client/InternalClient.Provider.redirectUriHandler|{}redirectUriHandler[0]
+            open fun <get-redirectUriHandler>(): kotlin/Function1<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow/RedirectUriHandler> // dev.lokksmith.client/InternalClient.Provider.redirectUriHandler.<get-redirectUriHandler>|<get-redirectUriHandler>(){}[0]
     }
 
     abstract interface SnapshotContract { // dev.lokksmith.client/InternalClient.SnapshotContract|null[0]
@@ -793,7 +800,7 @@ final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCod
 }
 
 final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler : dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler|null[0]
-    constructor <init>(kotlinx.serialization.json/Json, kotlin/String, dev.lokksmith.client/InternalClient, io.ktor.client/HttpClient, kotlin/String, kotlin/String?, kotlin/Int? = ..., dev.lokksmith.client.request.token/TokenRequest = ..., dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler.<init>|<init>(kotlinx.serialization.json.Json;kotlin.String;dev.lokksmith.client.InternalClient;io.ktor.client.HttpClient;kotlin.String;kotlin.String?;kotlin.Int?;dev.lokksmith.client.request.token.TokenRequest;dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowTokenResponseValidator){}[0]
+    constructor <init>(kotlinx.serialization.json/Json, kotlin/String, dev.lokksmith.client/InternalClient, io.ktor.client/HttpClient, kotlin/String?, kotlin/Int? = ..., dev.lokksmith.client.request.token/TokenRequest = ..., dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler.<init>|<init>(kotlinx.serialization.json.Json;kotlin.String;dev.lokksmith.client.InternalClient;io.ktor.client.HttpClient;kotlin.String?;kotlin.Int?;dev.lokksmith.client.request.token.TokenRequest;dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowTokenResponseValidator){}[0]
 }
 
 final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator : dev.lokksmith.client.request.token/TokenResponseValidator<dev.lokksmith.client/Client.Tokens.IdToken> { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator|null[0]
@@ -1552,6 +1559,11 @@ final object dev.lokksmith.client.request.flow/AuthFlowResultProvider { // dev.l
             final fun toString(): kotlin/String // dev.lokksmith.client.request.flow/AuthFlowResultProvider.Result.Undefined.toString|toString(){}[0]
         }
     }
+}
+
+final object dev.lokksmith.client.request.flow/IdentityRedirectUriHandler : dev.lokksmith.client.request.flow/RedirectUriHandler { // dev.lokksmith.client.request.flow/IdentityRedirectUriHandler|null[0]
+    final suspend fun release(kotlin/String) // dev.lokksmith.client.request.flow/IdentityRedirectUriHandler.release|release(kotlin.String){}[0]
+    final suspend fun resolve(kotlin/String, kotlin/String): kotlin/String // dev.lokksmith.client.request.flow/IdentityRedirectUriHandler.resolve|resolve(kotlin.String;kotlin.String){}[0]
 }
 
 final object dev.lokksmith.client.request.parameter/Parameter { // dev.lokksmith.client.request.parameter/Parameter|null[0]

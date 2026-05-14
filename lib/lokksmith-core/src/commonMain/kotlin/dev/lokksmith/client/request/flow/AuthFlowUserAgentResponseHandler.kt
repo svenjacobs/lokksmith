@@ -16,7 +16,6 @@
 package dev.lokksmith.client.request.flow
 
 import dev.lokksmith.Lokksmith
-import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult
 import dev.lokksmith.getInternal
 
@@ -33,27 +32,12 @@ public class AuthFlowUserAgentResponseHandler(private val lokksmith: Lokksmith) 
 
     /** Stores the [responseUri] in the client's ephemeral flow state for further processing. */
     public suspend fun onResponse(key: String, responseUri: String) {
-        val client = lokksmith.getInternal(key)
-        client.updateSnapshot {
-            val updatedFlowState =
-                when (val state = ephemeralFlowState) {
-                    is Snapshot.EphemeralAuthorizationCodeFlowState ->
-                        state.copy(responseUri = responseUri)
-
-                    is Snapshot.EphemeralEndSessionFlowState ->
-                        state.copy(responseUri = responseUri)
-
-                    null -> throw IllegalStateException("ephemeralFlowState is null")
-                }
-
-            copy(ephemeralFlowState = updatedFlowState)
-        }
+        lokksmith.getInternal(key).recordResponseUri(responseUri)
     }
 
     /** Marks the flow result as cancelled. */
     public suspend fun onCancel(key: String, state: String) {
-        val client = lokksmith.getInternal(key)
-        AuthFlowCancellation(client).cancel(state)
+        AuthFlowCancellation(lokksmith.getInternal(key)).cancel(state)
     }
 
     /** Marks the flow result as erroneous. */
@@ -63,11 +47,6 @@ public class AuthFlowUserAgentResponseHandler(private val lokksmith: Lokksmith) 
         message: String?,
         type: FlowResult.Error.Type = FlowResult.Error.Type.Generic,
     ) {
-        val client = lokksmith.getInternal(key)
-        val stateFinalizer = AuthFlowStateFinalizer(client)
-
-        stateFinalizer.finalize {
-            copy(flowResult = FlowResult.Error(state = state, type = type, message = message))
-        }
+        lokksmith.getInternal(key).recordError(state = state, message = message, type = type)
     }
 }

@@ -1,8 +1,6 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SourcesJar
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     id("multiplatform-conventions")
     alias(libs.plugins.kotlin.serialization)
@@ -18,9 +16,6 @@ kotlin {
     android {
         namespace = "dev.lokksmith.android"
         compileSdk { version = release(libs.versions.android.compileSdk.get().toInt()) }
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
     }
 
     sourceSets {
@@ -55,6 +50,12 @@ kotlin {
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.server.core)
+            implementation(libs.ktor.server.cio)
         }
     }
 }

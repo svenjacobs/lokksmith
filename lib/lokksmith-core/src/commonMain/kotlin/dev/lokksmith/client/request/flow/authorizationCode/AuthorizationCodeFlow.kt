@@ -21,6 +21,7 @@ import dev.lokksmith.client.request.Random
 import dev.lokksmith.client.request.RequestException
 import dev.lokksmith.client.request.flow.AbstractAuthFlow
 import dev.lokksmith.client.request.flow.AuthFlow
+import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.request.flow.addAdditionalParameters
 import dev.lokksmith.client.request.flow.addOptionalParameter
 import dev.lokksmith.client.request.parameter.CodeChallengeMethod
@@ -153,19 +154,24 @@ private constructor(
 
     private val scopes = request.scope.plus(Scope.OpenId).joinToString(" ") { scope -> scope.value }
 
-    override val ephemeralFlowState: Snapshot.EphemeralFlowState
-        get() =
-            Snapshot.EphemeralAuthorizationCodeFlowState(
-                state = state,
-                redirectUri = request.redirectUri,
-                codeVerifier = codeVerifier,
-                responseUri = null,
-                maxAge = request.maxAge,
-            )
+    override val rawRedirectUri: String
+        get() = request.redirectUri
+
+    override val redirectPurpose: RedirectUriHandler.Purpose =
+        RedirectUriHandler.Purpose.Authorization
+
+    override fun createEphemeralFlowState(redirectUri: String): Snapshot.EphemeralFlowState =
+        Snapshot.EphemeralAuthorizationCodeFlowState(
+            state = state,
+            redirectUri = redirectUri,
+            codeVerifier = codeVerifier,
+            responseUri = null,
+            maxAge = request.maxAge,
+        )
 
     override fun onPrepareUpdateSnapshot(snapshot: Snapshot) = snapshot.copy(nonce = nonce)
 
-    override suspend fun onPrepare(): String {
+    override suspend fun onPrepare(redirectUri: String): String {
         val codeChallengeStrategy =
             CodeChallengeStrategy.create(request.codeChallengeMethod, codeVerifier)
 
@@ -176,7 +182,7 @@ private constructor(
                     parameters[Parameter.SCOPE] = scopes
                     parameters[Parameter.RESPONSE_TYPE] = ResponseType.Code.value
                     parameters[Parameter.CLIENT_ID] = client.id.value
-                    parameters[Parameter.REDIRECT_URI] = request.redirectUri
+                    parameters[Parameter.REDIRECT_URI] = redirectUri
 
                     stateVerifierStrategy.addParameter()
                     nonceVerifierStrategy.addParameter()
@@ -247,7 +253,6 @@ private constructor(
                     state = state,
                     client = client,
                     httpClient = httpClient,
-                    redirectUri = request.redirectUri,
                     codeVerifier = codeVerifier,
                     maxAge = request.maxAge,
                 )

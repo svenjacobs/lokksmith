@@ -27,6 +27,9 @@ import dev.lokksmith.client.jwt.Jwt
 import dev.lokksmith.client.jwt.JwtEncoder
 import dev.lokksmith.client.request.OAuthError
 import dev.lokksmith.client.request.OAuthResponseException
+import dev.lokksmith.client.request.flow.IdentityRedirectUriHandler
+import dev.lokksmith.client.request.flow.RecordingRedirectUriHandler
+import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.request.parameter.CodeChallengeMethod
 import dev.lokksmith.client.request.parameter.Display
 import dev.lokksmith.client.request.parameter.GrantType
@@ -482,6 +485,58 @@ class AuthorizationCodeFlowTest {
         assertEquals(nonce, client.snapshots.value.nonce)
         assertEquals(FlowResult.Cancelled(state = flow.state), client.snapshots.value.flowResult)
     }
+
+    @Test
+    fun `prepare should use redirect URI resolved by RedirectUriHandler`() = runTest {
+        val resolved = "http://127.0.0.1:54321/callback"
+        val handler = RecordingRedirectUriHandler(resolved = resolved)
+
+        val (flow, client) =
+            createFlow(
+                request =
+                    AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect"),
+                redirectUriHandler = handler,
+            )
+
+        val initiation = flow.prepare()
+        runCurrent()
+        val requestUrl = Url(initiation.requestUrl)
+
+        // resolve() was called with the consumer-supplied URI, the flow's state, and the
+        // Authorization purpose.
+        assertEquals(
+            listOf(
+                RecordingRedirectUriHandler.ResolveCall(
+                    requestRedirectUri = "https://example.com/app/redirect",
+                    state = flow.state,
+                    purpose = RedirectUriHandler.Purpose.Authorization,
+                )
+            ),
+            handler.resolveCalls,
+        )
+
+        // The resolved URI ends up in the auth request URL …
+        assertEquals(resolved, requestUrl.parameters[Parameter.REDIRECT_URI])
+
+        // … and in the persisted ephemeral state, so the token-exchange step uses the same URI.
+        val flowState =
+            assertIs<EphemeralAuthorizationCodeFlowState>(client.snapshots.value.ephemeralFlowState)
+        assertEquals(resolved, flowState.redirectUri)
+    }
+
+    @Test
+    fun `cancel should release RedirectUriHandler resources`() = runTest {
+        val handler = RecordingRedirectUriHandler(resolved = "http://127.0.0.1:54321/callback")
+
+        val (flow, _) = createFlow(redirectUriHandler = handler)
+
+        flow.prepare()
+        runCurrent()
+        flow.cancel()
+        runCurrent()
+
+        assertEquals(listOf(flow.state), handler.releaseCalls)
+    }
 }
 
 private data class TestState(var codeVerifier: String? = null, var nonce: String? = null)
@@ -491,6 +546,7 @@ private suspend fun TestScope.createFlow(
     id: Id = "clientId".asId(),
     request: AuthorizationCodeFlow.Request =
         AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect"),
+    redirectUriHandler: RedirectUriHandler = IdentityRedirectUriHandler,
     requestHandler: (TestState) -> MockRequestHandleScope.(HttpRequestData) -> HttpResponseData = {
         { respondBadRequest() }
     },
@@ -500,7 +556,12 @@ private suspend fun TestScope.createFlow(
     val httpClient = createHttpClient(mockEngine)
 
     val client =
-        createTestClient(key = key, id = id, provider = TestProvider(httpClient = httpClient))
+        createTestClient(
+            key = key,
+            id = id,
+            provider =
+                TestProvider(httpClient = httpClient, redirectUriHandler = { redirectUriHandler }),
+        )
 
     return Triple(
         AuthorizationCodeFlow.create(
