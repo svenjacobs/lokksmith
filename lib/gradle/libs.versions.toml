@@ -48,7 +48,7 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-m
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-buildconfig = "com.github.gmazzo.buildconfig:6.0.9"
+buildconfig = "com.github.gmazzo.buildconfig:6.0.10"
 dokka = "org.jetbrains.dokka:2.2.0"
 poko = "dev.drewhamilton.poko:0.22.1"
 maven-publish = "com.vanniktech.maven.publish:0.36.0"
