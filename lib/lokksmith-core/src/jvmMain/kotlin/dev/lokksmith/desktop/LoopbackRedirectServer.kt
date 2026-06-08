@@ -15,7 +15,6 @@
  */
 package dev.lokksmith.desktop
 
-import dev.lokksmith.desktop.LoopbackRedirectServer.Companion.create
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
