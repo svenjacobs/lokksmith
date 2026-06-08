@@ -21,6 +21,7 @@ import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.compose.AuthFlowLauncher.PlatformLauncher
 import dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions
 import dev.lokksmith.ios.launchAuthFlow
+import platform.Foundation.NSLog
 
 @Composable
 public actual fun rememberAuthFlowLauncher(): AuthFlowLauncher =
@@ -42,6 +43,8 @@ private class IosPlatformLauncher : PlatformLauncher {
     }
 
     override fun logException(msg: String, e: Exception) {
-        // TODO
+        // "%@" placeholder rather than interpolating into the format string, so a '%' in msg or
+        // the stack trace can't be misread as a format specifier.
+        NSLog("%@", "Lokksmith: $msg\n${e.stackTraceToString()}")
     }
 }
