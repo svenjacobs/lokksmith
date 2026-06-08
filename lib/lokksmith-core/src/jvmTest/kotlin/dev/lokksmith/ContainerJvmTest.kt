@@ -100,8 +100,8 @@ class ContainerJvmTest {
     }
 
     @Test
-    fun `platformUserAgentSuffix is JVM`() {
-        assertEquals("JVM", platformUserAgentSuffix)
+    fun `platformUserAgentSuffix is JVM with operating system`() {
+        assertEquals("JVM (${OperatingSystem.current})", platformUserAgentSuffix)
     }
 
     @Test
