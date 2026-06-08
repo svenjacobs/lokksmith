@@ -79,10 +79,10 @@ private fun ensurePosixOwnerOnlyDirectory(path: Path) {
 internal fun ensureWindowsOwnerOnlyDirectory(path: Path) {
     Files.createDirectories(path)
     val view = Files.getFileAttributeView(path, AclFileAttributeView::class.java) ?: return
-    val owner =
-        path.fileSystem.userPrincipalLookupService.lookupPrincipalByName(
-            System.getProperty(USER_NAME_PROPERTY)
-        )
+    val userName =
+        System.getProperty(USER_NAME_PROPERTY)
+            ?: error("system property '$USER_NAME_PROPERTY' is not set")
+    val owner = path.fileSystem.userPrincipalLookupService.lookupPrincipalByName(userName)
     val entry =
         AclEntry.newBuilder()
             .setType(AclEntryType.ALLOW)
