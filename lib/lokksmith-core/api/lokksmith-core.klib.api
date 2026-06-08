@@ -130,7 +130,18 @@ abstract interface dev.lokksmith.client.request.flow/AuthFlow { // dev.lokksmith
 
 abstract interface dev.lokksmith.client.request.flow/RedirectUriHandler { // dev.lokksmith.client.request.flow/RedirectUriHandler|null[0]
     abstract suspend fun release(kotlin/String) // dev.lokksmith.client.request.flow/RedirectUriHandler.release|release(kotlin.String){}[0]
-    abstract suspend fun resolve(kotlin/String, kotlin/String): kotlin/String // dev.lokksmith.client.request.flow/RedirectUriHandler.resolve|resolve(kotlin.String;kotlin.String){}[0]
+    abstract suspend fun resolve(kotlin/String, kotlin/String, dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose): kotlin/String // dev.lokksmith.client.request.flow/RedirectUriHandler.resolve|resolve(kotlin.String;kotlin.String;dev.lokksmith.client.request.flow.RedirectUriHandler.Purpose){}[0]
+
+    final enum class Purpose : kotlin/Enum<dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose> { // dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose|null[0]
+        enum entry Authorization // dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose.Authorization|null[0]
+        enum entry EndSession // dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose.EndSession|null[0]
+
+        final val entries // dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose.entries|#static{}entries[0]
+            final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose> // dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose.entries.<get-entries>|<get-entries>#static(){}[0]
+
+        final fun valueOf(kotlin/String): dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose // dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose.valueOf|valueOf#static(kotlin.String){}[0]
+        final fun values(): kotlin/Array<dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose> // dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose.values|values#static(){}[0]
+    }
 }
 
 abstract interface dev.lokksmith.client.snapshot/SnapshotStore { // dev.lokksmith.client.snapshot/SnapshotStore|null[0]
@@ -1563,7 +1574,7 @@ final object dev.lokksmith.client.request.flow/AuthFlowResultProvider { // dev.l
 
 final object dev.lokksmith.client.request.flow/IdentityRedirectUriHandler : dev.lokksmith.client.request.flow/RedirectUriHandler { // dev.lokksmith.client.request.flow/IdentityRedirectUriHandler|null[0]
     final suspend fun release(kotlin/String) // dev.lokksmith.client.request.flow/IdentityRedirectUriHandler.release|release(kotlin.String){}[0]
-    final suspend fun resolve(kotlin/String, kotlin/String): kotlin/String // dev.lokksmith.client.request.flow/IdentityRedirectUriHandler.resolve|resolve(kotlin.String;kotlin.String){}[0]
+    final suspend fun resolve(kotlin/String, kotlin/String, dev.lokksmith.client.request.flow/RedirectUriHandler.Purpose): kotlin/String // dev.lokksmith.client.request.flow/IdentityRedirectUriHandler.resolve|resolve(kotlin.String;kotlin.String;dev.lokksmith.client.request.flow.RedirectUriHandler.Purpose){}[0]
 }
 
 final object dev.lokksmith.client.request.parameter/Parameter { // dev.lokksmith.client.request.parameter/Parameter|null[0]

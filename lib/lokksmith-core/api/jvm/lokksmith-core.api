@@ -55,19 +55,21 @@ public final class dev/lokksmith/DataDirectory$Default : dev/lokksmith/DataDirec
 }
 
 public final class dev/lokksmith/DesktopOptions {
-	public synthetic fun <init> (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ldev/lokksmith/desktop/ResponseHtml;
-	public final fun component3 ()Ldev/lokksmith/desktop/BrowserLauncher;
-	public final fun component4-UwyO8pc ()J
-	public final fun copy-Wn2Vu4Y (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;J)Ldev/lokksmith/DesktopOptions;
-	public static synthetic fun copy-Wn2Vu4Y$default (Ldev/lokksmith/DesktopOptions;Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JILjava/lang/Object;)Ldev/lokksmith/DesktopOptions;
+	public final fun component3 ()Ldev/lokksmith/desktop/ResponseHtml;
+	public final fun component4 ()Ldev/lokksmith/desktop/BrowserLauncher;
+	public final fun component5-UwyO8pc ()J
+	public final fun copy-9VgGkz4 (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;J)Ldev/lokksmith/DesktopOptions;
+	public static synthetic fun copy-9VgGkz4$default (Ldev/lokksmith/DesktopOptions;Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JILjava/lang/Object;)Ldev/lokksmith/DesktopOptions;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAuthorizationResponseHtml ()Ldev/lokksmith/desktop/ResponseHtml;
 	public final fun getBrowserLauncher ()Ldev/lokksmith/desktop/BrowserLauncher;
+	public final fun getEndSessionResponseHtml ()Ldev/lokksmith/desktop/ResponseHtml;
 	public final fun getRedirectPath ()Ljava/lang/String;
 	public final fun getRedirectTimeout-UwyO8pc ()J
-	public final fun getResponseHtml ()Ldev/lokksmith/desktop/ResponseHtml;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -939,12 +941,20 @@ public final class dev/lokksmith/client/request/flow/AuthFlowUserAgentResponseHa
 public final class dev/lokksmith/client/request/flow/IdentityRedirectUriHandler : dev/lokksmith/client/request/flow/RedirectUriHandler {
 	public static final field INSTANCE Ldev/lokksmith/client/request/flow/IdentityRedirectUriHandler;
 	public fun release (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public fun resolve (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun resolve (Ljava/lang/String;Ljava/lang/String;Ldev/lokksmith/client/request/flow/RedirectUriHandler$Purpose;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class dev/lokksmith/client/request/flow/RedirectUriHandler {
 	public abstract fun release (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public abstract fun resolve (Ljava/lang/String;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun resolve (Ljava/lang/String;Ljava/lang/String;Ldev/lokksmith/client/request/flow/RedirectUriHandler$Purpose;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class dev/lokksmith/client/request/flow/RedirectUriHandler$Purpose : java/lang/Enum {
+	public static final field Authorization Ldev/lokksmith/client/request/flow/RedirectUriHandler$Purpose;
+	public static final field EndSession Ldev/lokksmith/client/request/flow/RedirectUriHandler$Purpose;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Ldev/lokksmith/client/request/flow/RedirectUriHandler$Purpose;
+	public static fun values ()[Ldev/lokksmith/client/request/flow/RedirectUriHandler$Purpose;
 }
 
 public final class dev/lokksmith/client/request/flow/authorizationCode/AuthorizationCodeFlow : dev/lokksmith/client/request/flow/AbstractAuthFlow {
@@ -1556,7 +1566,8 @@ public abstract interface class dev/lokksmith/desktop/ResponseHtml {
 }
 
 public final class dev/lokksmith/desktop/ResponseHtml$Companion {
-	public final fun getDefault ()Ldev/lokksmith/desktop/ResponseHtml;
+	public final fun getDefaultAuthorization ()Ldev/lokksmith/desktop/ResponseHtml;
+	public final fun getDefaultEndSession ()Ldev/lokksmith/desktop/ResponseHtml;
 }
 
 public final class dev/lokksmith/internal/UtilitiesKt {
