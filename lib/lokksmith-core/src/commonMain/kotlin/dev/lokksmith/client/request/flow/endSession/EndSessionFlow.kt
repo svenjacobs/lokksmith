@@ -21,6 +21,7 @@ import dev.lokksmith.client.request.Random
 import dev.lokksmith.client.request.RequestException
 import dev.lokksmith.client.request.flow.AbstractAuthFlow
 import dev.lokksmith.client.request.flow.AuthFlow
+import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.request.flow.addAdditionalParameters
 import dev.lokksmith.client.request.flow.addOptionalParameter
 import dev.lokksmith.client.request.parameter.Parameter
@@ -80,16 +81,21 @@ internal constructor(
         override val additionalParameters: Map<String, String> = emptyMap(),
     ) : AuthFlow.Request
 
-    override val ephemeralFlowState: Snapshot.EphemeralFlowState
-        get() = Snapshot.EphemeralEndSessionFlowState(state = state, responseUri = null)
+    override val rawRedirectUri: String
+        get() = request.redirectUri
 
-    override suspend fun onPrepare(): String =
+    override val redirectPurpose: RedirectUriHandler.Purpose = RedirectUriHandler.Purpose.EndSession
+
+    override fun createEphemeralFlowState(redirectUri: String): Snapshot.EphemeralFlowState =
+        Snapshot.EphemeralEndSessionFlowState(state = state, responseUri = null)
+
+    override suspend fun onPrepare(redirectUri: String): String =
         try {
             buildUrl {
                     takeFrom(endpoint)
 
                     parameters[Parameter.STATE] = state
-                    parameters[Parameter.POST_LOGOUT_REDIRECT_URI] = request.redirectUri
+                    parameters[Parameter.POST_LOGOUT_REDIRECT_URI] = redirectUri
                     parameters[Parameter.CLIENT_ID] = client.id.value
 
                     addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)

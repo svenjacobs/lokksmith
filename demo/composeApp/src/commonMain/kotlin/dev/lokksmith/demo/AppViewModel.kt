@@ -6,6 +6,7 @@ import co.touchlab.kermit.Logger
 import dev.lokksmith.SingletonLokksmithProvider.lokksmith
 import dev.lokksmith.client.Client
 import dev.lokksmith.client.request.OAuthResponseException
+import dev.lokksmith.client.request.flow.AuthFlow as CoreAuthFlow
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result
 import dev.lokksmith.client.request.flow.authFlowResult
@@ -55,6 +56,7 @@ class AppViewModel : ViewModel() {
     private val runWithTokensResponse = MutableStateFlow<String?>(null)
 
     private var job: Job? = null
+    private var currentFlow: CoreAuthFlow? = null
 
     val uiState: StateFlow<UiState> = combine(
         client.map { it != null },
@@ -90,15 +92,20 @@ class AppViewModel : ViewModel() {
 
                         is Result.Cancelled -> {
                             isLoading.value = false
+                            currentFlow = null
                             error.value = "Flow was cancelled"
                         }
 
                         is Result.Error -> {
                             isLoading.value = false
+                            currentFlow = null
                             error.value = result.message
                         }
 
-                        is Result.Success -> isLoading.value = false
+                        is Result.Success -> {
+                            isLoading.value = false
+                            currentFlow = null
+                        }
 
                         Result.Undefined -> isLoading.value = false
                     }
@@ -148,6 +155,8 @@ class AppViewModel : ViewModel() {
             )
         ) ?: return
 
+        currentFlow = flow
+
         viewModelScope.launch(exceptionHandler) {
             authFlow.value = AuthFlow(
                 initiation = flow.prepare(),
@@ -164,12 +173,20 @@ class AppViewModel : ViewModel() {
             )
         ) ?: return
 
+        currentFlow = flow
+
         viewModelScope.launch(exceptionHandler) {
             authFlow.value = AuthFlow(
                 initiation = flow.prepare(),
                 redirectScheme = redirectUri.split(":").first(),
             )
         }
+    }
+
+    fun onCancelLoadingClick() {
+        val flow = currentFlow ?: return
+        currentFlow = null
+        viewModelScope.launch(exceptionHandler) { flow.cancel() }
     }
 
     fun onConfirmAuthFlow() {

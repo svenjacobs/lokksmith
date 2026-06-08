@@ -23,6 +23,7 @@ import dev.lokksmith.client.request.parameter.GrantType
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.request.token.TokenRequest
 import dev.lokksmith.client.request.token.TokenValidationException
+import dev.lokksmith.client.snapshot.Snapshot
 import io.ktor.client.HttpClient
 import io.ktor.http.Url
 import kotlinx.coroutines.CancellationException
@@ -33,7 +34,6 @@ public class AuthorizationCodeFlowResponseHandler(
     state: String,
     client: InternalClient,
     httpClient: HttpClient,
-    private val redirectUri: String,
     private val codeVerifier: String?,
     private val maxAge: Int? = null,
     private val tokenRequest: TokenRequest = TokenRequest(client, httpClient),
@@ -53,11 +53,13 @@ public class AuthorizationCodeFlowResponseHandler(
                     reason = ResponseException.Reason.InvalidResponse,
                 )
 
+        val redirectUri = readRedirectUriFromSnapshot()
+
         val response = tokenRequest {
             append(Parameter.GRANT_TYPE, GrantType.AuthorizationCode.value)
             append(Parameter.CLIENT_ID, client.id.value)
             append(Parameter.CODE, code)
-            append(Parameter.REDIRECT_URI, this@AuthorizationCodeFlowResponseHandler.redirectUri)
+            append(Parameter.REDIRECT_URI, redirectUri)
             codeVerifier?.let { append(Parameter.CODE_VERIFIER, it) }
         }
 
@@ -82,5 +84,13 @@ public class AuthorizationCodeFlowResponseHandler(
                     )
             )
         }
+    }
+
+    private fun readRedirectUriFromSnapshot(): String {
+        val ephemeral = client.snapshots.value.ephemeralFlowState
+        check(ephemeral is Snapshot.EphemeralAuthorizationCodeFlowState) {
+            "Expected EphemeralAuthorizationCodeFlowState, got ${ephemeral?.let { it::class.simpleName }}"
+        }
+        return ephemeral.redirectUri
     }
 }

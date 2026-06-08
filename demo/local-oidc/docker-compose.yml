@@ -1,0 +1,27 @@
+# Local OIDC provider for testing the Desktop/JVM demo end-to-end.
+#
+# Uses navikt/mock-oauth2-server, a lightweight mock that serves OIDC discovery + JWKS,
+# supports PKCE, and accepts ANY client_id and ANY redirect_uri. The last part matters:
+# the desktop loopback flow (RFC 8252) redirects to http://127.0.0.1:<ephemeral-port>/callback
+# with a port that changes every run, so a provider that requires exact redirect-URI
+# registration cannot be used. This mock needs none.
+#
+# Discovery URL to use in the demo:
+#   http://localhost:8080/default/.well-known/openid-configuration
+# ("default" is an arbitrary issuer id; the issuer becomes http://localhost:8080/default)
+#
+# Start:  docker compose -f local-oidc/docker-compose.yml up -d
+# Stop:   docker compose -f local-oidc/docker-compose.yml down
+
+services:
+  mock-oauth2-server:
+    image: ghcr.io/navikt/mock-oauth2-server:2.1.10
+    ports:
+      - "8080:8080"
+    environment:
+      # Show an interactive login page on the authorization endpoint so you can pick the
+      # subject and claims for the issued tokens. Set to false to auto-issue without a form.
+      JSON_CONFIG: |
+        {
+          "interactiveLogin": true
+        }

@@ -16,35 +16,51 @@
 package dev.lokksmith.compose
 
 import androidx.compose.runtime.Composable
+import dev.lokksmith.JvmContainer
 import dev.lokksmith.SingletonLokksmithProvider.lokksmith
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
+import dev.lokksmith.client.request.flow.AuthFlowUserAgentResponseHandler
 import dev.lokksmith.compose.AuthFlowLauncher.PlatformLauncher
 import dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions
-import dev.lokksmith.ios.launchAuthFlow
-import platform.Foundation.NSLog
+import java.util.logging.Level
+import java.util.logging.Logger
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 
 @Composable
 public actual fun rememberAuthFlowLauncher(): AuthFlowLauncher =
-    rememberAuthFlowLauncher(IosPlatformLauncher())
+    rememberAuthFlowLauncher(JvmPlatformLauncher())
 
-private class IosPlatformLauncher : PlatformLauncher {
+private class JvmPlatformLauncher : PlatformLauncher {
 
     override suspend fun launchBrowser(
         initiation: Initiation,
         headers: Map<String, String>,
         options: PlatformOptions,
     ) {
-        @Suppress("UNCHECKED_CAST")
-        lokksmith.launchAuthFlow(
-            initiation = initiation,
-            additionalHeaderFields = headers as Map<Any?, *>,
-            prefersEphemeralWebBrowserSession = options.iOS.prefersEphemeralWebBrowserSession,
-        )
+        val container = lokksmith.container as JvmContainer
+        try {
+            container.desktopOptions.browserLauncher.open(initiation.requestUrl)
+        } catch (e: Exception) {
+            withContext(NonCancellable) {
+                runCatching {
+                    AuthFlowUserAgentResponseHandler(lokksmith)
+                        .onError(
+                            key = initiation.clientKey,
+                            state = initiation.state,
+                            message = e.message,
+                        )
+                }
+            }
+            throw e
+        }
     }
 
     override fun logException(msg: String, e: Exception) {
-        // "%@" placeholder rather than interpolating into the format string, so a '%' in msg or
-        // the stack trace can't be misread as a format specifier.
-        NSLog("%@", "Lokksmith: $msg\n${e.stackTraceToString()}")
+        logger.log(Level.SEVERE, msg, e)
+    }
+
+    private companion object {
+        val logger: Logger = Logger.getLogger(JvmPlatformLauncher::class.java.name)
     }
 }
