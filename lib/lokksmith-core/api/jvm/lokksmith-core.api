@@ -17,7 +17,6 @@ public abstract interface class dev/lokksmith/Container {
 }
 
 public final class dev/lokksmith/CreateContext {
-	public fun <init> ()V
 }
 
 public final class dev/lokksmith/CreateContextKt {
@@ -113,7 +112,6 @@ public final class dev/lokksmith/Lokksmith$Options {
 }
 
 public class dev/lokksmith/LokksmithException : java/lang/Exception {
-	public fun <init> ()V
 }
 
 public final class dev/lokksmith/Lokksmith_jvmKt {
@@ -455,7 +453,6 @@ public final class dev/lokksmith/client/MigrationKt {
 }
 
 public final class dev/lokksmith/client/discovery/MetadataDiscoveryException : dev/lokksmith/LokksmithException {
-	public fun <init> ()V
 }
 
 public abstract interface class dev/lokksmith/client/discovery/MetadataDiscoveryRequest {
@@ -731,7 +728,6 @@ public final class dev/lokksmith/client/request/RequestException$Reason : java/l
 }
 
 public class dev/lokksmith/client/request/ResponseException : dev/lokksmith/LokksmithException {
-	public fun <init> ()V
 	public final fun getReason ()Ldev/lokksmith/client/request/ResponseException$Reason;
 }
 
@@ -958,7 +954,6 @@ public final class dev/lokksmith/client/request/flow/RedirectUriHandler$Purpose 
 }
 
 public final class dev/lokksmith/client/request/flow/authorizationCode/AuthorizationCodeFlow : dev/lokksmith/client/request/flow/AbstractAuthFlow {
-	public synthetic fun <init> (Ldev/lokksmith/client/InternalClient;Ljava/lang/String;Ldev/lokksmith/client/request/flow/authorizationCode/AuthorizationCodeFlowResponseHandler;Ldev/lokksmith/client/request/flow/authorizationCode/AuthorizationCodeFlow$Request;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class dev/lokksmith/client/request/flow/authorizationCode/AuthorizationCodeFlow$Request : dev/lokksmith/client/request/flow/AuthFlow$Request {
@@ -1238,11 +1233,9 @@ public final class dev/lokksmith/client/request/token/TokenResponseValidator$Res
 }
 
 public final class dev/lokksmith/client/request/token/TokenTemporalValidationException : dev/lokksmith/client/request/token/TokenValidationException {
-	public fun <init> ()V
 }
 
 public class dev/lokksmith/client/request/token/TokenValidationException : dev/lokksmith/LokksmithException {
-	public fun <init> ()V
 }
 
 public final class dev/lokksmith/client/snapshot/Snapshot {
