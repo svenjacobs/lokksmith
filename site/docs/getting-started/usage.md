@@ -14,7 +14,11 @@ val lokksmith = createLokksmith()
 ```
 
 !!! info
-    On Android the factory function also requires the current `Context`.
+    The factory function differs slightly per platform:
+
+    - On **Android** it also requires the current `Context`.
+    - On **Desktop** it requires a `dataDirectory` specifying where Lokksmith stores its data, for
+      example `createLokksmith(dataDirectory = DataDirectory.Default("my-app"))`.
 
 Use `getOrCreate()` to retrieve an existing client by its unique key, or create a new one if it does
 not exist. This key is independent of the OAuth client ID, but you may use the same value if it
@@ -92,6 +96,8 @@ integrate secure authentication flows in your application.
 
 ### Compose Multiplatform
 
+The `AuthFlowLauncher` shown here works on Android, iOS and Desktop.
+
 Once you receive the `Initiation` object, use `AuthFlowLauncher` to start the authentication flow
 from your Composable. For example:
 
@@ -131,3 +137,40 @@ use `launchAuthFlow()`:
 ```kotlin
 lokksmith.launchAuthFlow(initiation)
 ```
+
+### Desktop
+
+On Desktop, Lokksmith implements the loopback redirect described in [RFC 8252](https://www.rfc-editor.org/rfc/rfc8252)
+("OAuth 2.0 for Native Apps"). When you prepare an auth flow, Lokksmith starts a temporary HTTP
+server bound to `127.0.0.1` on an ephemeral port and uses `http://127.0.0.1:<port>/callback` as the
+redirect URI. The `redirectUri` you pass to `AuthorizationCodeFlow.Request` (or
+`EndSessionFlow.Request`) is therefore **ignored and replaced** by this loopback URL.
+
+!!! warning
+    Because the port is chosen at runtime, your OpenID provider must allow loopback redirect URIs
+    (`http://127.0.0.1` / `http://localhost`) with an arbitrary port, as recommended by RFC 8252. No
+    custom URI scheme or manifest configuration is required on Desktop.
+
+Use the Compose `rememberAuthFlowLauncher()` exactly as described under
+[Compose Multiplatform](#compose-multiplatform). It opens the system browser, waits for the redirect
+on the loopback server, and completes the flow.
+
+The Desktop behaviour can be customized via `DesktopOptions` when creating the instance:
+
+```kotlin
+val lokksmith = createLokksmith(
+    dataDirectory = DataDirectory.Default("my-app"),
+    desktop = DesktopOptions(
+        redirectPath = "/callback",  // (1)!
+        redirectTimeout = 5.minutes, // (2)!
+        // browserLauncher, authorizationResponseHtml, endSessionResponseHtml, ...
+    ),
+)
+```
+
+1. Path of the loopback redirect URI.
+2. How long to wait for the redirect before the flow times out.
+
+!!! tip
+    See the [Demo](demo.md) for a complete, runnable Desktop example, including how to test the flow
+    against a local OpenID provider.
