@@ -22,6 +22,8 @@ import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.AuthFlowUserAgentResponseHandler
 import dev.lokksmith.compose.AuthFlowLauncher.PlatformLauncher
 import dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions
+import java.util.logging.Level
+import java.util.logging.Logger
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 
@@ -55,6 +57,10 @@ private class JvmPlatformLauncher : PlatformLauncher {
     }
 
     override fun logException(msg: String, e: Exception) {
-        // TODO
+        logger.log(Level.SEVERE, msg, e)
+    }
+
+    private companion object {
+        val logger: Logger = Logger.getLogger(JvmPlatformLauncher::class.java.name)
     }
 }
