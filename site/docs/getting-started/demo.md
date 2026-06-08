@@ -3,7 +3,7 @@
 Please have a look at our Compose Multiplatform [demo](https://github.com/svenjacobs/lokksmith/tree/main/demo)
 application.
 
-## Desktop (JVM)
+## Desktop
 
 The demo also runs as a desktop app (`./gradlew :composeApp:run`). Because the Desktop target uses
 an RFC 8252 loopback redirect (`http://127.0.0.1:<ephemeral-port>/callback`), you need an OIDC
