@@ -13,7 +13,7 @@ androidx-testExt = "1.3.0"
 compose-multiplatform = "1.11.1"
 junit = "4.13.2"
 kotlin = "2.4.0"
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
