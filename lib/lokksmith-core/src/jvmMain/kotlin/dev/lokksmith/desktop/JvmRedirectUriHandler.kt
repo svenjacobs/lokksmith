@@ -88,9 +88,15 @@ internal class JvmRedirectUriHandler(
                 }
             }
 
+        val thisResources = Resources(server, watcher)
+
         // invokeOnCompletion fires even when the watcher is cancelled before it starts (e.g. when
         // release() runs before the dispatcher gets to it), so it's the right hook for cleanup.
         watcher.invokeOnCompletion { cause ->
+            // Self-remove so successful flows (which never call release()) don't leak their entry.
+            // remove(key, value) only removes when this exact entry is still mapped, so it won't
+            // clobber a newer flow that happened to reuse the same state.
+            resources.remove(state, thisResources)
             if (cause is CancellationException) {
                 // Cancel path: there's no response we want to flush, so close immediately.
                 // close(0, 0) returns quickly, which is acceptable to run on whatever thread
@@ -104,7 +110,7 @@ internal class JvmRedirectUriHandler(
             }
         }
 
-        resources.put(state, Resources(server, watcher))?.watcher?.cancel()
+        resources.put(state, thisResources)?.watcher?.cancel()
 
         return server.redirectUri
     }
