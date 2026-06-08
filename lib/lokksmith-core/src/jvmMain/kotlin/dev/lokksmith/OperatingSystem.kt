@@ -27,6 +27,14 @@ internal enum class OperatingSystem {
     companion object {
         val current: OperatingSystem by lazy { fromOsName(System.getProperty(OS_NAME_PROPERTY)) }
 
+        /**
+         * Maps the `os.name` system property to an [OperatingSystem].
+         *
+         * Anything that is neither Windows nor macOS is treated as [Linux]. This includes other
+         * POSIX systems such as FreeBSD, SunOS or AIX: they get the POSIX owner-only permissioning
+         * (which is correct) and the Linux `XDG_DATA_HOME`/`~/.local/share` data directory (which
+         * may not match their native convention). See [DataDirectory.Default].
+         */
         internal fun fromOsName(osName: String?): OperatingSystem {
             checkNotNull(osName) { "system property '$OS_NAME_PROPERTY' is not set" }
             val name = osName.lowercase()

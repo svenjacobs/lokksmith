@@ -25,6 +25,10 @@ public sealed interface DataDirectory {
      * - **macOS**: `~/Library/Application Support/<appName>`
      * - **Windows**: `%APPDATA%/<appName>`
      *
+     * Non-Linux POSIX systems (FreeBSD, SunOS, AIX, …) are classified as Linux by [OperatingSystem]
+     * and therefore use the Linux location, which may not match their native convention. Use
+     * [Custom] if a different location is required on such systems.
+     *
      * [appName] must be a single directory segment: blank values, path separators (`/`, `\`), `..`,
      * and NUL characters are rejected to prevent path traversal (CWE-22).
      */
