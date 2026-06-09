@@ -88,6 +88,47 @@ SingletonLokksmithProvider.set(
 )
 ```
 
+## Platform-specific configuration
+
+Some request values legitimately differ per platform. The most common is the **redirect URI**: a
+multiplatform app often registers a different URI per platform — for example a verified
+[App Link](installation.md#optional-using-app-links-for-redirection) / Universal Link such as
+`https://app.example.com/redirect` on Android and iOS, but a same-origin URL like
+`https://example.com/redirect` on [Web](#web). On [Desktop](#desktop) the redirect URI is ignored
+and replaced by the loopback URL, so its value does not matter there.
+
+Keep your shared flow code identical by delegating the platform-dependent value to an
+`expect`/`actual` declaration:
+
+```kotlin title="commonMain"
+expect val redirectUri: String
+```
+
+```kotlin title="androidMain / iosMain"
+actual val redirectUri = "https://app.example.com/redirect"
+```
+
+```kotlin title="wasmJsMain"
+actual val redirectUri = "https://example.com/redirect"
+```
+
+```kotlin title="jvmMain (Desktop)"
+actual val redirectUri = "http://localhost/callback" // ignored; replaced by the loopback URL
+```
+
+Then build the request from shared code as usual:
+
+```kotlin title="commonMain"
+val authFlow = client.authorizationCodeFlow(
+    AuthorizationCodeFlow.Request(redirectUri = redirectUri)
+)
+```
+
+!!! tip
+    If more than the redirect URI differs between platforms, delegate the construction of the whole
+    `AuthorizationCodeFlow.Request` (and `EndSessionFlow.Request`) to an `expect`/`actual` function
+    instead of just the URI.
+
 ## Platform implementations
 
 Calling the system browser and handling the authentication response on mobile platforms involves
