@@ -128,9 +128,9 @@ Steps:
    redirects back to `http://localhost:8081/?code=…&state=…`; the app reloads and `createLokksmith()`
    completes the flow (PKCE) and persists the tokens.
 
-6. Because the full-page redirect restarts the app, the UI starts fresh. Re-enter the **same**
-   Client ID and Discovery URL and press *Get or create client* again — the persisted client is
-   loaded and its tokens are displayed. (App state is stored in the browser's `localStorage`.)
+6. The full-page redirect restarts the app, but the demo remembers the last client (in the
+   browser's `localStorage`) and reloads it automatically, so the issued tokens are displayed
+   without any further action.
 
 7. The *End Session* flow works the same way; use `http://localhost:8081/` as its redirect URI too.
 

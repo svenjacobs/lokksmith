@@ -80,6 +80,12 @@ fun App(
     viewModel: AppViewModel = viewModel { AppViewModel() },
     onIntentCreated: (Any) -> Unit = {},
     onCopyToClipboard: (String) -> Unit,
+    // Used by the Web demo to restore the previously selected client after the full-page redirect
+    // reload, so the issued tokens are displayed without re-creating the client. Other platforms
+    // keep their in-memory state across the auth flow and leave these at their defaults.
+    initialClientId: String? = null,
+    initialDiscoveryUrl: String? = null,
+    onClientPersist: (clientId: String, discoveryUrl: String) -> Unit = { _, _ -> },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -87,6 +93,13 @@ fun App(
 
     LaunchedEffect(launcher.result) {
         Logger.d(tag = "App") { "Received auth flow result: ${launcher.result}" }
+    }
+
+    // Restore the previously selected client on startup (Web: after the redirect reload).
+    LaunchedEffect(Unit) {
+        if (initialClientId != null && initialDiscoveryUrl != null) {
+            viewModel.onGetOrCreateClientClick(initialClientId, initialDiscoveryUrl)
+        }
     }
 
     LifecycleStartEffect(Unit) {
@@ -149,7 +162,12 @@ fun App(
                 ) {
                     ClientSection(
                         modifier = Modifier.padding(bottom = 16.dp),
-                        onGetOrCreateClientClick = viewModel::onGetOrCreateClientClick,
+                        initialClientId = initialClientId,
+                        initialDiscoveryUrl = initialDiscoveryUrl,
+                        onGetOrCreateClientClick = { clientId, discoveryUrl ->
+                            onClientPersist(clientId, discoveryUrl)
+                            viewModel.onGetOrCreateClientClick(clientId, discoveryUrl)
+                        },
                     )
 
                     FlowsSection(
@@ -214,9 +232,13 @@ fun App(
 private fun ClientSection(
     onGetOrCreateClientClick: (String, String) -> Unit,
     modifier: Modifier = Modifier,
+    initialClientId: String? = null,
+    initialDiscoveryUrl: String? = null,
 ) {
-    var clientId by remember { mutableStateOf("my-client-id") }
-    var discoveryUrl by remember { mutableStateOf("https://example.com/.well-known/openid-configuration") }
+    var clientId by remember { mutableStateOf(initialClientId ?: "my-client-id") }
+    var discoveryUrl by remember {
+        mutableStateOf(initialDiscoveryUrl ?: "https://example.com/.well-known/openid-configuration")
+    }
 
     Column(modifier = modifier) {
         Text(
