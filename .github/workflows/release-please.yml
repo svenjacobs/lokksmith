@@ -34,4 +34,4 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           TAG="${{ steps.release.outputs.tag_name }}"
-          gh release edit "$TAG" --title "${TAG#v}"
+          gh release edit "$TAG" --repo "${{ github.repository }}" --title "${TAG#v}"
