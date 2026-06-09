@@ -52,13 +52,22 @@ public fun Lokksmith.launchAuthFlow(initiation: Initiation) {
  *
  * Reads the `state` parameter from `window.location` and, if it matches a pending flow in the
  * snapshot store, hands the full URL to [AuthFlowStateResponseHandler] to validate the response and
- * update the client state. Call this once during application startup.
+ * update the client state.
+ *
+ * **You normally do not need to call this directly:** [dev.lokksmith.createLokksmith] invokes it
+ * for you on startup unless created with `handleRedirectOnStartup = false`. Call it manually only
+ * when opting out of the automatic handling.
+ *
+ * The completed outcome (success or error) is observed through common code via
+ * [dev.lokksmith.client.Client] `authFlowResult` / `tokens`, the same as on every other platform —
+ * not via `rememberAuthFlowLauncher().result`, which is not restored after the full-page reload.
  *
  * @param cleanUrl When `true` (default), removes the query string from the address bar via
  *   `history.replaceState` after a successful handover so a page reload does not reprocess the
  *   response.
  * @return `true` if the current URL was a recognized redirect response and was handled; `false`
  *   otherwise (e.g. a normal page load without a matching pending flow).
+ * @see dev.lokksmith.createLokksmith
  */
 @OptIn(ExperimentalWasmJsInterop::class)
 public suspend fun Lokksmith.completeAuthFlowFromRedirect(cleanUrl: Boolean = true): Boolean {

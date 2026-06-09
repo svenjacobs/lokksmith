@@ -1674,16 +1674,21 @@ final fun (kotlin/String).dev.lokksmith.client/asId(): dev.lokksmith.client/Id /
 final fun (kotlin/String).dev.lokksmith.client/asKey(): dev.lokksmith.client/Key // dev.lokksmith.client/asKey|asKey@kotlin.String(){}[0]
 final fun dev.lokksmith.internal/getRedirectScheme(kotlin/String): kotlin/String // dev.lokksmith.internal/getRedirectScheme|getRedirectScheme(kotlin.String){}[0]
 final fun dev.lokksmith.internal/getRedirectUri(kotlin/String): io.ktor.http/Url // dev.lokksmith.internal/getRedirectUri|getRedirectUri(kotlin.String){}[0]
-final fun dev.lokksmith/createLokksmith(dev.lokksmith/Lokksmith.Options = ...): dev.lokksmith/Lokksmith // dev.lokksmith/createLokksmith|createLokksmith(dev.lokksmith.Lokksmith.Options){}[0]
 final suspend fun (dev.lokksmith.client/Client).dev.lokksmith.client.request.flow/confirmAuthFlowResultConsumed() // dev.lokksmith.client.request.flow/confirmAuthFlowResultConsumed|confirmAuthFlowResultConsumed@dev.lokksmith.client.Client(){}[0]
 final suspend fun (dev.lokksmith.client/Client).dev.lokksmith.client.usecase/refreshOrReset(kotlin.collections/List<dev.lokksmith.client.request/OAuthError> = ...): dev.lokksmith.client/Client.Tokens? // dev.lokksmith.client.usecase/refreshOrReset|refreshOrReset@dev.lokksmith.client.Client(kotlin.collections.List<dev.lokksmith.client.request.OAuthError>){}[0]
 final suspend fun (dev.lokksmith.client/Client).dev.lokksmith.client.usecase/runWithTokensOrReset(kotlin.collections/List<dev.lokksmith.client.request/OAuthError> = ..., kotlin.coroutines/SuspendFunction2<dev.lokksmith.client.usecase/RunWithTokensOrResetUseCase.RunWithTokensOrResetScope, dev.lokksmith.client/Client.Tokens, kotlin/Unit>): kotlin/Boolean // dev.lokksmith.client.usecase/runWithTokensOrReset|runWithTokensOrReset@dev.lokksmith.client.Client(kotlin.collections.List<dev.lokksmith.client.request.OAuthError>;kotlin.coroutines.SuspendFunction2<dev.lokksmith.client.usecase.RunWithTokensOrResetUseCase.RunWithTokensOrResetScope,dev.lokksmith.client.Client.Tokens,kotlin.Unit>){}[0]
+
+// Targets: [ios]
+final fun dev.lokksmith/createLokksmith(dev.lokksmith/Lokksmith.Options = ...): dev.lokksmith/Lokksmith // dev.lokksmith/createLokksmith|createLokksmith(dev.lokksmith.Lokksmith.Options){}[0]
 
 // Targets: [ios]
 final suspend fun (dev.lokksmith/Lokksmith).dev.lokksmith.ios/launchAuthFlow(dev.lokksmith.client.request.flow/AuthFlow.Initiation, kotlin/Boolean = ..., kotlin.collections/Map<kotlin/Any?, *>? = ...) // dev.lokksmith.ios/launchAuthFlow|launchAuthFlow@dev.lokksmith.Lokksmith(dev.lokksmith.client.request.flow.AuthFlow.Initiation;kotlin.Boolean;kotlin.collections.Map<kotlin.Any?,*>?){}[0]
 
 // Targets: [wasmJs]
 final fun (dev.lokksmith/Lokksmith).dev.lokksmith.web/launchAuthFlow(dev.lokksmith.client.request.flow/AuthFlow.Initiation) // dev.lokksmith.web/launchAuthFlow|launchAuthFlow@dev.lokksmith.Lokksmith(dev.lokksmith.client.request.flow.AuthFlow.Initiation){}[0]
+
+// Targets: [wasmJs]
+final fun dev.lokksmith/createLokksmith(dev.lokksmith/Lokksmith.Options = ..., kotlin/Boolean = ...): dev.lokksmith/Lokksmith // dev.lokksmith/createLokksmith|createLokksmith(dev.lokksmith.Lokksmith.Options;kotlin.Boolean){}[0]
 
 // Targets: [wasmJs]
 final suspend fun (dev.lokksmith/Lokksmith).dev.lokksmith.web/completeAuthFlowFromRedirect(kotlin/Boolean = ...): kotlin/Boolean // dev.lokksmith.web/completeAuthFlowFromRedirect|completeAuthFlowFromRedirect@dev.lokksmith.Lokksmith(kotlin.Boolean){}[0]
