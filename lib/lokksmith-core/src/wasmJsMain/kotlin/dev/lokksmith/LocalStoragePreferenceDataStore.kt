@@ -41,6 +41,9 @@ import kotlinx.serialization.json.Json
  * Limitations compared to the official implementation:
  * - No cross-tab synchronization (changes made in another tab are not observed by [data]).
  * - Only [String] preference values are supported.
+ *
+ * Security note: `localStorage` is not encrypted and is readable by any script on the same origin,
+ * so persisted data (including tokens) is exposed to cross-site scripting (XSS) attacks.
  */
 internal class LocalStoragePreferenceDataStore(
     private val name: String,
@@ -73,7 +76,10 @@ internal class LocalStoragePreferenceDataStore(
 
     private fun writeToStorage(preferences: Preferences) {
         val map =
-            preferences.asMap().entries.associate { (key, value) -> key.name to value.toString() }
+            preferences.asMap().entries.associate { (key, value) ->
+                // Only String values are supported (see KDoc); cast fails fast otherwise.
+                key.name to (value as String)
+            }
         localStorage.setItem(name, json.encodeToString(map))
     }
 }

@@ -51,6 +51,15 @@ import kotlinx.coroutines.launch
  * lokksmith.completeAuthFlowFromRedirect()
  * ```
  *
+ * ## Security
+ *
+ * On the Web, Lokksmith persists its state — including tokens — in the browser's `localStorage`, as
+ * there is no OS-backed secure storage like on Android or iOS. `localStorage` is **not encrypted**
+ * and is readable by any JavaScript running on the same origin, so a cross-site scripting (XSS)
+ * vulnerability in the hosting page can expose tokens. A strong Content Security Policy and the
+ * usual XSS defenses should be considered part of your threat model when using Lokksmith on the
+ * Web.
+ *
  * @param options Cross-platform configuration options for the [Lokksmith] instance.
  * @param handleRedirectOnStartup Whether to automatically complete a pending auth/end-session flow
  *   from the current browser URL on startup. Defaults to `true`.

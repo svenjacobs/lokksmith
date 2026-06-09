@@ -19,6 +19,7 @@ import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
 import dev.lokksmith.client.request.flow.AuthFlowStateResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
+import io.ktor.http.URLBuilder
 import io.ktor.http.Url
 import kotlin.js.ExperimentalWasmJsInterop
 import kotlinx.browser.window
@@ -62,9 +63,9 @@ public fun Lokksmith.launchAuthFlow(initiation: Initiation) {
  * [dev.lokksmith.client.Client] `authFlowResult` / `tokens`, the same as on every other platform —
  * not via `rememberAuthFlowLauncher().result`, which is not restored after the full-page reload.
  *
- * @param cleanUrl When `true` (default), removes the query string from the address bar via
- *   `history.replaceState` after a successful handover so a page reload does not reprocess the
- *   response.
+ * @param cleanUrl When `true` (default), removes the OAuth response parameters from the address bar
+ *   via `history.replaceState` — preserving any unrelated query parameters and the fragment — so a
+ *   page reload does not reprocess the response.
  * @return `true` if the current URL was a recognized redirect response and was handled; `false`
  *   otherwise (e.g. a normal page load without a matching pending flow).
  * @see dev.lokksmith.createLokksmith
@@ -75,11 +76,32 @@ public suspend fun Lokksmith.completeAuthFlowFromRedirect(cleanUrl: Boolean = tr
     val state = Url(href).parameters[Parameter.STATE] ?: return false
     if (container.snapshotStore.getForState(state) == null) return false
 
-    AuthFlowStateResponseHandler(this).onResponse(href)
-
-    if (cleanUrl) {
-        window.history.replaceState(null, "", window.location.pathname)
+    try {
+        AuthFlowStateResponseHandler(this).onResponse(href)
+    } finally {
+        // Remove only the OAuth response parameters (preserving any unrelated query parameters and
+        // the fragment) so a reload does not reprocess the response. Runs on both success and
+        // failure — on failure the error has already been recorded to the client snapshot.
+        if (cleanUrl) {
+            window.history.replaceState(null, "", hrefWithoutRedirectParameters())
+        }
     }
 
     return true
 }
+
+private fun hrefWithoutRedirectParameters(): String =
+    URLBuilder(window.location.href)
+        .apply { redirectResponseParameters.forEach { parameters.remove(it) } }
+        .buildString()
+
+private val redirectResponseParameters =
+    listOf(
+        Parameter.STATE,
+        Parameter.CODE,
+        Parameter.ERROR,
+        Parameter.ERROR_DESCRIPTION,
+        Parameter.ERROR_URI,
+        "iss",
+        "session_state",
+    )
