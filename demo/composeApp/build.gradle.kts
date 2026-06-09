@@ -11,6 +11,10 @@ plugins {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     android {
         namespace = "dev.lokksmith.demo.shared"
         compileSdk { version = release(libs.versions.android.compileSdk.get().toInt()) }

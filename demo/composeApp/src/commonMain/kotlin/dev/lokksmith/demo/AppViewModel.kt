@@ -55,6 +55,8 @@ class AppViewModel : ViewModel() {
     private val isLoading = MutableStateFlow(false)
     private val runWithTokensResponse = MutableStateFlow<String?>(null)
 
+    private val clientPersistence = ClientPersistence()
+
     private var job: Job? = null
     private var currentFlow: CoreAuthFlow? = null
 
@@ -83,6 +85,17 @@ class AppViewModel : ViewModel() {
     fun onStart() {
         job?.cancel()
         job = viewModelScope.launch {
+            // Restore the previously selected client (Web: after the full-page redirect reload)
+            // so the issued tokens are displayed without re-creating the client.
+            if (client.value == null) {
+                clientPersistence.load()?.let { persisted ->
+                    runCatching { getOrCreateClient(persisted.clientId, persisted.discoveryUrl) }
+                        .onFailure {
+                            Logger.e(it, tag = TAG) { "Failed to restore persisted client" }
+                        }
+                }
+            }
+
             client
                 .flatMapLatest { client -> client?.authFlowResult ?: flowOf(null) }
                 .filterNotNull()
@@ -135,14 +148,18 @@ class AppViewModel : ViewModel() {
         url: String,
     ) {
         viewModelScope.launch(exceptionHandler) {
-            val client = lokksmith.getOrCreate(
-                key = clientId,
-                options = Client.Options(leewaySeconds = 30),
-            ) {
-                id = clientId
-                discoveryUrl = url
-            }
-            this@AppViewModel.client.value = client
+            clientPersistence.save(PersistedClient(clientId = clientId, discoveryUrl = url))
+            getOrCreateClient(clientId, url)
+        }
+    }
+
+    private suspend fun getOrCreateClient(clientId: String, url: String) {
+        client.value = lokksmith.getOrCreate(
+            key = clientId,
+            options = Client.Options(leewaySeconds = 30),
+        ) {
+            id = clientId
+            discoveryUrl = url
         }
     }
 
