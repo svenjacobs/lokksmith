@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/svenjacobs/lokksmith/compare/v1.1.2...v1.1.3) (2026-06-09)
+
+
+### Bug Fixes
+
+* recompile workflow lock file ([#430](https://github.com/svenjacobs/lokksmith/issues/430)) ([63ebb7c](https://github.com/svenjacobs/lokksmith/commit/63ebb7ced02ee2ea0ef9bdad94542d4e88e82e9c))
+
 ## [1.1.2](https://github.com/svenjacobs/lokksmith/compare/v1.1.1...v1.1.2) (2026-06-09)
 
 
