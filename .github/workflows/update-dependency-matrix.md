@@ -2,6 +2,8 @@
 on:
   release:
     types: [published]
+  bots:
+    - lokksmith-release-please[bot]
 
 permissions:
   contents: read
