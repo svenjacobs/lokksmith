@@ -20,14 +20,13 @@ import dev.lokksmith.client.request.OAuthResponseException
 import dev.lokksmith.client.request.RequestException
 import dev.lokksmith.client.request.ResponseException
 import dev.lokksmith.client.request.bodyOrThrow
+import dev.lokksmith.internal.ioDispatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.request.forms.submitForm
 import io.ktor.http.Parameters
 import io.ktor.http.ParametersBuilder
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
 public class TokenRequest(private val client: Client, private val httpClient: HttpClient) {
@@ -35,7 +34,7 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
     public suspend operator fun invoke(builder: ParametersBuilder.() -> Unit): TokenResponse {
         val response =
             try {
-                withContext(Dispatchers.IO) {
+                withContext(ioDispatcher) {
                     httpClient.submitForm(
                         url = client.metadata.tokenEndpoint,
                         formParameters = Parameters.build(builder),

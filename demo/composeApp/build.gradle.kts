@@ -1,5 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -9,6 +11,10 @@ plugins {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     android {
         namespace = "dev.lokksmith.demo.shared"
         compileSdk { version = release(libs.versions.android.compileSdk.get().toInt()) }
@@ -34,6 +40,20 @@ kotlin {
         }
     }
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+                // Serve on 8081 so the dev server doesn't clash with the local OIDC mock server
+                // (local-oidc/docker-compose.yml), which uses 8080. See demo/README.md.
+                devServer =
+                    (devServer ?: KotlinWebpackConfig.DevServer()).apply { port = 8081 }
+            }
+        }
+        binaries.executable()
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(libs.lokksmith.core)
@@ -54,6 +74,10 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
         }
 
         commonTest.dependencies {

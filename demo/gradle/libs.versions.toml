@@ -29,6 +29,7 @@ androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:life
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 multiplatform-viewmodel = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0"
 kermit = "co.touchlab:kermit:2.1.0"
+kotlinx-browser = "org.jetbrains.kotlinx:kotlinx-browser:0.3"
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.8.0"
 lokksmith-core = { module = "dev.lokksmith:lokksmith-core" }
