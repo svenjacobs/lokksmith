@@ -1,6 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -40,6 +41,10 @@ kotlin {
         browser {
             commonWebpackConfig {
                 outputFileName = "composeApp.js"
+                // Serve on 8081 so the dev server doesn't clash with the local OIDC mock server
+                // (local-oidc/docker-compose.yml), which uses 8080. See demo/README.md.
+                devServer =
+                    (devServer ?: KotlinWebpackConfig.DevServer()).apply { port = 8081 }
             }
         }
         binaries.executable()
