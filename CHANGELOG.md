@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2](https://github.com/svenjacobs/lokksmith/compare/v1.1.1...v1.1.2) (2026-06-09)
+
+
+### Bug Fixes
+
+* allow release-please bot to trigger Update Dependency Matrix workflow ([#427](https://github.com/svenjacobs/lokksmith/issues/427)) ([d723158](https://github.com/svenjacobs/lokksmith/commit/d7231583a84ecf8a42b1c666d77782d7170b4154))
+* pass --repo to gh release edit to avoid missing git context ([#425](https://github.com/svenjacobs/lokksmith/issues/425)) ([8af8848](https://github.com/svenjacobs/lokksmith/commit/8af8848aa3794c83e6791f3878c918d4f7b7f3a9))
+
 ## [1.1.1](https://github.com/svenjacobs/lokksmith/compare/v1.1.0...v1.1.1) (2026-06-09)
 
 
