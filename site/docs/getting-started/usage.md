@@ -19,6 +19,8 @@ val lokksmith = createLokksmith()
     - On **Android** it also requires the current `Context`.
     - On **Desktop** it requires a `dataDirectory` specifying where Lokksmith stores its data, for
       example `createLokksmith(dataDirectory = DataDirectory.Default("my-app"))`.
+    - On **Web** it optionally accepts `handleRedirectOnStartup` (default `true`) to automatically
+      complete an auth flow after the redirect; see [Web](#web).
 
 Use `getOrCreate()` to retrieve an existing client by its unique key, or create a new one if it does
 not exist. This key is independent of the OAuth client ID, but you may use the same value if it
@@ -96,7 +98,7 @@ integrate secure authentication flows in your application.
 
 ### Compose Multiplatform
 
-The `AuthFlowLauncher` shown here works on Android, iOS and Desktop.
+The `AuthFlowLauncher` shown here works on Android, iOS, Desktop and Web.
 
 Once you receive the `Initiation` object, use `AuthFlowLauncher` to start the authentication flow
 from your Composable. For example:
@@ -174,3 +176,40 @@ val lokksmith = createLokksmith(
 !!! tip
     See the [Demo](demo.md) for a complete, runnable Desktop example, including how to test the flow
     against a local OpenID provider.
+
+### Web
+
+On the Web (Kotlin/Wasm in the browser) an auth flow is completed via a **full-page redirect**: the
+browser navigates to the OpenID provider and is redirected back to a **same-origin** URL, which
+reloads and restarts the whole application. The `redirectUri` you pass to
+`AuthorizationCodeFlow.Request` (or `EndSessionFlow.Request`) must therefore be a URL on your app's
+own origin, for example `https://myapp.example/`. Custom URI schemes do not work in the browser.
+
+Because the redirect restarts the app, there is no in-memory state to resume from. Lokksmith reads
+the response from the current URL on startup for you: by default `createLokksmith()` completes a
+pending flow automatically (controlled by the `handleRedirectOnStartup` argument). The result is then
+observed through common code via `Client.authFlowResult` or `client.tokens`, exactly as on the other
+platforms.
+
+Use the Compose `rememberAuthFlowLauncher()` exactly as described under
+[Compose Multiplatform](#compose-multiplatform) to start the flow. From non-Compose code you can
+launch it directly, which navigates the current document to the request URL:
+
+```kotlin
+lokksmith.launchAuthFlow(initiation)
+```
+
+!!! info "Manual redirect handling"
+    To control when the redirect is processed, create the instance with
+    `createLokksmith(handleRedirectOnStartup = false)` and call
+    `lokksmith.completeAuthFlowFromRedirect()` yourself, for example during application startup.
+
+!!! warning "Security"
+    On the Web, Lokksmith persists its state — including tokens — in the browser's `localStorage`,
+    which is **not encrypted** and is readable by any script on the same origin. A cross-site
+    scripting (XSS) vulnerability can therefore expose tokens. Apply a strong Content Security Policy
+    and the usual XSS defenses.
+
+!!! note
+    `rememberAuthFlowLauncher().result` is not restored after the full-page reload. Observe
+    `Client.authFlowResult` (for example from your `ViewModel`) to react to the completed result.

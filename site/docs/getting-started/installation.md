@@ -48,7 +48,7 @@ kotlin {
 ## Compose
 
 Lokksmith provides an additional artifact, `lokksmith-compose`, for seamless integration with Jetpack
-Compose and Compose Multiplatform for Android and iOS.
+Compose and Compose Multiplatform for Android, iOS, Desktop and Web.
 
 ### Add the Compose Artifact
 
