@@ -39,6 +39,10 @@ import kotlinx.browser.window
  *
  * @param initiation The initiation parameters produced by preparing an auth flow.
  */
+// Declared as a Lokksmith extension for parity with the other platforms (e.g. iOS
+// Lokksmith.launchAuthFlow) and a uniform call site, even though the Web implementation needs no
+// instance state.
+@Suppress("UnusedReceiverParameter")
 public fun Lokksmith.launchAuthFlow(initiation: Initiation) {
     window.location.assign(initiation.requestUrl)
 }
