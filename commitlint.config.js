@@ -3,6 +3,7 @@ export default {
   // Exception for the initial plan commit created by the AI coding agent
   ignores: [(commit) => ['input: Initial plan', 'Initial plan'].includes(commit.trim())],
   rules: {
-    'header-max-length': [1, 'always', 100]
+    'header-max-length': [1, 'always', 100],
+    'body-max-line-length': [0, 'always', 100]
   }
 };
