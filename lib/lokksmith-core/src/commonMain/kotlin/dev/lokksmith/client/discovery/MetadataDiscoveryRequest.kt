@@ -16,11 +16,10 @@
 package dev.lokksmith.client.discovery
 
 import dev.lokksmith.client.Client
+import dev.lokksmith.internal.ioDispatcher
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 
 /**
@@ -46,7 +45,7 @@ internal class MetadataDiscoveryRequestImpl(private val httpClient: HttpClient) 
     MetadataDiscoveryRequest {
 
     override suspend operator fun invoke(url: String): Client.Metadata =
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             val response: MetadataDiscoveryResponse = httpClient.get(url).body()
             Client.Metadata(
                 issuer = response.issuer,

@@ -36,6 +36,10 @@ kotlin {
             api(libs.androidx.browser)
             implementation(libs.compose.multiplatform.ui.tooling.preview)
         }
+
+        wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
+        }
     }
 }
 

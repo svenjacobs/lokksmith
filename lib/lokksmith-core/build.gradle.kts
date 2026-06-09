@@ -32,7 +32,7 @@ kotlin {
             api(libs.kotlinx.serialization.json)
             api(libs.ktor.client.core)
 
-            implementation(libs.androidx.datastore.preferences)
+            implementation(libs.androidx.datastore.preferences.core)
             implementation(libs.cryptography.core)
             implementation(libs.cryptography.provider.optimal)
             implementation(libs.ktor.client.content.negotiation)
@@ -61,6 +61,11 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.cio)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
+            implementation(libs.kotlinx.browser)
         }
     }
 }
