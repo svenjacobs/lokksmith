@@ -5,6 +5,11 @@ site_author: Sven Jacobs
 repo_url: https://github.com/svenjacobs/lokksmith
 repo_name: Lokksmith
 edit_uri: edit/main/site/docs/
+# Zensical validates links on the raw Markdown before macros expand, so
+# macro-templated links (e.g. {{ config.repo_url }}/...md) are false-positives.
+# See https://github.com/zensical/zensical/issues/730 (bug, "not fixable" for now).
+validation:
+  invalid_links: false
 nav:
   - About: index.md
   - Getting Started:
