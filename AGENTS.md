@@ -13,7 +13,7 @@ The repository contains three independent Gradle/build roots, each opened as a s
 - `lib/` — the published library (run all library Gradle commands from here).
 - `demo/` — a standalone KMP demo app that consumes `lib` via `includeBuild` + dependency
   substitution (so local library changes are picked up without publishing).
-- `site/` — MkDocs documentation (Python/`mkdocs.yml`), published to the docs site.
+- `site/` — Zensical documentation (Python/`zensical.toml`), published to the docs site.
 
 ## Common Commands
 
