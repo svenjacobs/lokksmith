@@ -27,7 +27,7 @@ jobs:
       - run: pip install -r ./site/requirements.txt
       - run: zensical build --clean
         working-directory: ./site
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: 'site/site'
       - uses: actions/deploy-pages@v5
