@@ -52,14 +52,14 @@ jobs:
           VERSION: ${{ github.event.release.tag_name }}
       - name: Update documentation
         run: |
-          yq -i ".extra.lokksmith_version = \"$VERSION\"" ./site/mkdocs.yml
-          yq -i ".extra.lokksmith_version_date = \"$(date -u "+%b %d, %Y")\"" ./site/mkdocs.yml
+          sed -i "s|^lokksmith_version = .*|lokksmith_version = \"$VERSION\"|" ./site/zensical.toml
+          sed -i "s|^lokksmith_version_date = .*|lokksmith_version_date = \"$(date -u "+%b %d, %Y")\"|" ./site/zensical.toml
       - name: Create PR for documentation
         uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "docs: update site documentation (${{ github.event.release.tag_name }})"
           title: "docs: update site documentation (${{ github.event.release.tag_name }})"
-          body: Update `extra.lokksmith_version` and `extra.lokksmith_version_date` in `site/mkdocs.yml` to reflect the new release.
+          body: Update `lokksmith_version` and `lokksmith_version_date` in `site/zensical.toml` to reflect the new release.
           branch: chore/update-documentation
           base: main
           labels: documentation
