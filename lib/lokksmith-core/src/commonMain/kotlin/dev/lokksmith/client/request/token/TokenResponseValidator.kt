@@ -63,7 +63,9 @@ public abstract class TokenResponseValidator<T : IdToken?>(
                 Tokens.AccessToken(
                     token = response.accessToken,
                     expiresAt =
-                        response.expiresIn?.let { it + client.provider.timeProvider().epochSeconds },
+                        response.expiresIn?.let {
+                            it + client.provider.timeProvider().epochSeconds
+                        },
                 ),
             refreshToken =
                 response.refreshToken?.let {

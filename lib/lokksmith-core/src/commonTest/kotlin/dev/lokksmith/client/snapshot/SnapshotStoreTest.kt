@@ -177,15 +177,14 @@ class PersistenceFake(initialData: Map<String, String> = emptyMap()) :
 }
 
 private fun newSnapshot(key: Key, state: String? = null): Snapshot {
-    val ephemeralFlowState =
-        state?.let {
-            Snapshot.EphemeralAuthorizationCodeFlowState(
-                state = state,
-                redirectUri = "redirectUri",
-                codeVerifier = null,
-                responseUri = null,
-            )
-        }
+    val ephemeralFlowState = state?.let {
+        Snapshot.EphemeralAuthorizationCodeFlowState(
+            state = state,
+            redirectUri = "redirectUri",
+            codeVerifier = null,
+            responseUri = null,
+        )
+    }
 
     return Snapshot(
         key = key,
