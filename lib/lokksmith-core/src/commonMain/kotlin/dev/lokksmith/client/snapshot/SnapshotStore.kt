@@ -99,8 +99,9 @@ internal class SnapshotStoreImpl(
             .mapNotNull { runCatching { serializer.decodeFromString<Snapshot>(it) }.getOrNull() }
             .find { it.ephemeralFlowState?.state == state }
 
-    override suspend fun set(key: Key, snapshot: Snapshot): Snapshot =
-        writeMutex.withLock { internalSet(key, snapshot) }
+    override suspend fun set(key: Key, snapshot: Snapshot): Snapshot = writeMutex.withLock {
+        internalSet(key, snapshot)
+    }
 
     override suspend fun delete(key: Key): Boolean {
         if (!exists(key)) return false
@@ -162,12 +163,11 @@ internal suspend fun InternalSnapshotStore.contract(
 
         override val snapshots: StateFlow<Snapshot> = snapshotsStateFlow
 
-        override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) =
-            writeMutex.withLock {
-                // We don't use `snapshotStateFlow.value` of the StateFlow at this point to fetch
-                // the current value because since it collects in a different coroutine, swift
-                // consecutive executions of `updateSnapshot` might see stale data.
-                internalSet(key, snapshots.first().body())
-            }
+        override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) = writeMutex.withLock {
+            // We don't use `snapshotStateFlow.value` of the StateFlow at this point to fetch
+            // the current value because since it collects in a different coroutine, swift
+            // consecutive executions of `updateSnapshot` might see stale data.
+            internalSet(key, snapshots.first().body())
+        }
     }
 }

@@ -93,8 +93,9 @@ internal class ContainerImpl(
 internal fun createDataStore(
     fileName: String,
     producePath: (fileName: String) -> String,
-): DataStore<Preferences> =
-    PreferenceDataStoreFactory.createWithPath { producePath(fileName).toPath(normalize = true) }
+): DataStore<Preferences> = PreferenceDataStoreFactory.createWithPath {
+    producePath(fileName).toPath(normalize = true)
+}
 
 internal expect fun createDataStore(
     fileName: String,

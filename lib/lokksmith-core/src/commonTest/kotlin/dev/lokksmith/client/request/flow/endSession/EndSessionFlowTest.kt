@@ -135,7 +135,9 @@ class EndSessionFlowTest {
                         EndSessionFlow.Request(
                             redirectUri = "https://example.com/app/redirect",
                             additionalParameters =
-                                mapOf(Parameter.POST_LOGOUT_REDIRECT_URI to "postLogoutRedirectUri"),
+                                mapOf(
+                                    Parameter.POST_LOGOUT_REDIRECT_URI to "postLogoutRedirectUri"
+                                ),
                         )
                 )
 

@@ -62,31 +62,30 @@ internal class JvmRedirectUriHandler(
                 responseHtml = responseHtml,
             )
 
-        val watcher =
-            scope.launch {
-                try {
-                    val responseUri = server.awaitResponseUri(options.redirectTimeout)
-                    client.recordResponseUri(responseUri)
-                } catch (e: TimeoutCancellationException) {
-                    // TimeoutCancellationException is a CancellationException — must precede the
-                    // CancellationException catch below, otherwise the timeout is silently
-                    // swallowed.
-                    withContext(NonCancellable) {
-                        runCatching {
-                            client.recordError(
-                                state = state,
-                                message = e.message ?: "Redirect timed out",
-                            )
-                        }
-                    }
-                } catch (e: CancellationException) {
-                    throw e
-                } catch (e: Throwable) {
-                    withContext(NonCancellable) {
-                        runCatching { client.recordError(state = state, message = e.message) }
+        val watcher = scope.launch {
+            try {
+                val responseUri = server.awaitResponseUri(options.redirectTimeout)
+                client.recordResponseUri(responseUri)
+            } catch (e: TimeoutCancellationException) {
+                // TimeoutCancellationException is a CancellationException — must precede the
+                // CancellationException catch below, otherwise the timeout is silently
+                // swallowed.
+                withContext(NonCancellable) {
+                    runCatching {
+                        client.recordError(
+                            state = state,
+                            message = e.message ?: "Redirect timed out",
+                        )
                     }
                 }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable) {
+                withContext(NonCancellable) {
+                    runCatching { client.recordError(state = state, message = e.message) }
+                }
             }
+        }
 
         val thisResources = Resources(server, watcher)
 

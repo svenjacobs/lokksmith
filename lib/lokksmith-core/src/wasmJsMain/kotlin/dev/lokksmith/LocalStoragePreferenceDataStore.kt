@@ -57,13 +57,12 @@ internal class LocalStoragePreferenceDataStore(
 
     override suspend fun updateData(
         transform: suspend (t: Preferences) -> Preferences
-    ): Preferences =
-        writeMutex.withLock {
-            val updated = transform(state.value)
-            writeToStorage(updated)
-            state.value = updated
-            updated
-        }
+    ): Preferences = writeMutex.withLock {
+        val updated = transform(state.value)
+        writeToStorage(updated)
+        state.value = updated
+        updated
+    }
 
     private fun readFromStorage(): Preferences {
         val raw = localStorage.getItem(name) ?: return mutablePreferencesOf()

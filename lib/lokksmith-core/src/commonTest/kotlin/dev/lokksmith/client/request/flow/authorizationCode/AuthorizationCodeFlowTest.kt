@@ -290,7 +290,8 @@ class AuthorizationCodeFlowTest {
                                             aud = listOf("clientId"),
                                             exp = TEST_INSTANT + 600,
                                             iat = TEST_INSTANT,
-                                            extra = mapOf("nonce" to JsonPrimitive(testState.nonce)),
+                                            extra =
+                                                mapOf("nonce" to JsonPrimitive(testState.nonce)),
                                         ),
                                 )
 
