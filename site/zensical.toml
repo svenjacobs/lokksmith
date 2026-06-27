@@ -82,8 +82,8 @@ toggle.name = "Switch to system preference"
 # Extra — custom variables (consumed by the macros extension) and social links
 # ----------------------------------------------------------------------------
 [project.extra]
-lokksmith_version = "1.1.3"
-lokksmith_version_date = "Jun 09, 2026"
+lokksmith_version = "1.1.4"
+lokksmith_version_date = "Jun 27, 2026"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
