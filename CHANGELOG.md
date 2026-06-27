@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.4](https://github.com/svenjacobs/lokksmith/compare/v1.1.3...v1.1.4) (2026-06-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency org.jetbrains.kotlinx:kotlinx-collections-immutable to v0.5.0 ([#441](https://github.com/svenjacobs/lokksmith/issues/441)) ([aace2ca](https://github.com/svenjacobs/lokksmith/commit/aace2ca5b06ebd4f99e1c9a422b5c0cb5038dee0))
+* **deps:** update ktor monorepo to v3.5.1 ([#451](https://github.com/svenjacobs/lokksmith/issues/451)) ([47a64af](https://github.com/svenjacobs/lokksmith/commit/47a64af0c9c0e116f227b93ed130ecf229663c26))
+* **deps:** update spotless to v8.7.0 ([#444](https://github.com/svenjacobs/lokksmith/issues/444)) ([2b9d759](https://github.com/svenjacobs/lokksmith/commit/2b9d759f2345515dfb3080c72ca9c98be4ffdb22))
+
 ## [1.1.3](https://github.com/svenjacobs/lokksmith/compare/v1.1.2...v1.1.3) (2026-06-09)
 
 
