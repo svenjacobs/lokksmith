@@ -21,7 +21,7 @@ All library commands run **inside the `lib` folder**:
 
 ```bash
 ./gradlew spotlessApply        # Format code — REQUIRED after any code change
-./gradlew updateLegacyAbi      # Update ABI dump files — REQUIRED after any public API change
+./gradlew updateKotlinAbi      # Update ABI dump files — REQUIRED after any public API change
 ./gradlew check                # Run all checks (tests + spotlessCheck + ABI validation)
 ./gradlew test                 # Run all unit tests across targets
 ./gradlew :lokksmith-core:jvmTest                       # Tests for one target
@@ -29,7 +29,7 @@ All library commands run **inside the `lib` folder**:
 ```
 
 CI verifies both code style (`spotlessCheck`) and the committed ABI dumps, so run `spotlessApply`
-and `updateLegacyAbi` before committing — otherwise the build will fail.
+and `updateKotlinAbi` before committing — otherwise the build will fail.
 
 Git commit hooks (commitlint + spotless via husky) are installed by running `npm install` in the
 repository root.
