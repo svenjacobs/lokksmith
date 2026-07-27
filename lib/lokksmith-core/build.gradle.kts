@@ -18,7 +18,7 @@ kotlin {
         compileSdk { version = release(libs.versions.android.compileSdk.get().toInt()) }
         withHostTest {
             targetSdk {
-                version = release(36)
+                version = release(Android.TARGET_SDK)
             }
         }
     }
