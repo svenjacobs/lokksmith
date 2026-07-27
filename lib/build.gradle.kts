@@ -13,6 +13,10 @@ plugins {
     alias(libs.plugins.ben.manes.versions)
 }
 
+tasks.named<UpdateDaemonJvm>("updateDaemonJvm") {
+    languageVersion = JavaLanguageVersion.of(25)
+}
+
 tasks.withType<DependencyUpdatesTask> {
     fun isNonStable(version: String) =
         listOf("alpha", "beta", "rc", "eap", "-m", ".m", "dev").any {
