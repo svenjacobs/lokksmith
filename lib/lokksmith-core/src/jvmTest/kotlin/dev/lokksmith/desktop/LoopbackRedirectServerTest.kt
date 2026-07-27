@@ -15,7 +15,7 @@
  */
 package dev.lokksmith.desktop
 
-import java.net.ConnectException
+import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.InetAddress
 import java.net.Socket
@@ -26,19 +26,34 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.TimeSource
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 
+/**
+ * These tests deliberately use `runBlocking` instead of `runTest`.
+ *
+ * They drive a real Ktor server over real sockets, and issue the requests with blocking
+ * `HttpURLConnection` calls on the test thread. `runTest`'s virtual clock can't see any of that:
+ * the timeouts inside [LoopbackRedirectServer.awaitResponseUri] would be measured in virtual time,
+ * and as soon as the test coroutine suspends — awaiting the response URI, say — the scheduler finds
+ * nothing runnable and fast-forwards the clock past the timeout, even though the server thread is
+ * microseconds away from completing the deferred. That made `second valid request after success
+ * returns 404` fail intermittently on CI with "Timed out after 5s of _virtual_ time". Real time is
+ * the only clock that means anything here, and the handful of sub-second waits it costs are worth
+ * the determinism.
+ */
 class LoopbackRedirectServerTest {
 
     @Test
-    fun `redirectUri exposes loopback host and assigned port`() = runTest {
+    fun `redirectUri exposes loopback host and assigned port`() = runBlocking {
         LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
             val uri = server.redirectUri
             assertTrue(uri.startsWith("http://127.0.0.1:"), "expected loopback host, got $uri")
@@ -51,21 +66,24 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `awaitResponseUri returns full response URI on valid GET with matching state`() = runTest {
-        LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
-            val deferred =
-                async(start = CoroutineStart.UNDISPATCHED) { server.awaitResponseUri(5.seconds) }
-            val (status, _) = httpGet("${server.redirectUri}?code=auth-xyz&state=state-abc")
-            assertEquals(200, status)
-            val responseUri = deferred.await()
-            assertTrue("code=auth-xyz" in responseUri, "missing code in $responseUri")
-            assertTrue("state=state-abc" in responseUri, "missing state in $responseUri")
-            assertTrue(responseUri.startsWith(server.redirectUri))
+    fun `awaitResponseUri returns full response URI on valid GET with matching state`() =
+        runBlocking {
+            LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
+                val deferred =
+                    async(start = CoroutineStart.UNDISPATCHED) {
+                        server.awaitResponseUri(5.seconds)
+                    }
+                val (status, _) = httpGet("${server.redirectUri}?code=auth-xyz&state=state-abc")
+                assertEquals(200, status)
+                val responseUri = deferred.await()
+                assertTrue("code=auth-xyz" in responseUri, "missing code in $responseUri")
+                assertTrue("state=state-abc" in responseUri, "missing state in $responseUri")
+                assertTrue(responseUri.startsWith(server.redirectUri))
+            }
         }
-    }
 
     @Test
-    fun `state mismatch returns 400 and does not resume`(): Unit = runTest {
+    fun `state mismatch returns 400 and does not resume`(): Unit = runBlocking {
         LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
             val deferred =
                 async(start = CoroutineStart.UNDISPATCHED) {
@@ -78,7 +96,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `wrong path returns 404`() = runTest {
+    fun `wrong path returns 404`() = runBlocking {
         LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
             val baseUrl = server.redirectUri.substringBefore("/callback")
             val (status, _) = httpGet("$baseUrl/foo")
@@ -87,7 +105,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `wrong method is rejected`() = runTest {
+    fun `wrong method is rejected`() = runBlocking {
         // Ktor's routing returns 404 for unhandled methods; spec-wise either 404 or 405 is fine for
         // our case since the only thing that matters is rejection.
         LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
@@ -98,7 +116,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `second valid request after success returns 404`() = runTest {
+    fun `second valid request after success returns 404`() = runBlocking {
         LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
             val deferred =
                 async(start = CoroutineStart.UNDISPATCHED) { server.awaitResponseUri(5.seconds) }
@@ -112,7 +130,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `awaitResponseUri throws TimeoutCancellationException on timeout`(): Unit = runTest {
+    fun `awaitResponseUri throws TimeoutCancellationException on timeout`(): Unit = runBlocking {
         LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
             assertFailsWith<TimeoutCancellationException> {
                 server.awaitResponseUri(50.milliseconds)
@@ -121,7 +139,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `custom ResponseHtml is rendered for the success response`(): Unit = runTest {
+    fun `custom ResponseHtml is rendered for the success response`(): Unit = runBlocking {
         val customHtml = "<!DOCTYPE html><html><body><p>Custom branding</p></body></html>"
         LoopbackRedirectServer.create(
                 expectedState = "state-abc",
@@ -140,7 +158,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `localhost Host header is rejected`() = runTest {
+    fun `localhost Host header is rejected`() = runBlocking {
         // `localhost` DNS-resolves to 127.0.0.1, but accepting it would defeat the rebinding
         // defence — the whole point is that a literal IP can't be DNS-rebound. Ktor's host()
         // routing filter falls through to default 404 on host mismatch.
@@ -148,7 +166,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `arbitrary hostname is rejected`() = runTest {
+    fun `arbitrary hostname is rejected`() = runBlocking {
         // Simulates a DNS-rebinding attacker who DNS-resolves their hostname to 127.0.0.1.
         assertHostHeaderRejected("evil.example.com")
     }
@@ -176,7 +194,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `success response includes no-store and no-referrer headers`(): Unit = runTest {
+    fun `success response includes no-store and no-referrer headers`(): Unit = runBlocking {
         LoopbackRedirectServer.create(expectedState = "state-abc").use { server ->
             val deferred =
                 async(start = CoroutineStart.UNDISPATCHED) { server.awaitResponseUri(5.seconds) }
@@ -190,7 +208,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `malformed percent-encoded state is rejected without resuming`(): Unit = runTest {
+    fun `malformed percent-encoded state is rejected without resuming`(): Unit = runBlocking {
         // %ZZ is invalid percent-encoding; URI's strict parser would reject it before sending,
         // so use a raw socket to push the malformed bytes through. Ktor returns 4xx or 5xx
         // depending on where the parse fails — either way the continuation must NOT resume.
@@ -219,7 +237,7 @@ class LoopbackRedirectServerTest {
     }
 
     @Test
-    fun `awaitResponseUri propagates coroutine cancellation and closes server`() = runTest {
+    fun `awaitResponseUri propagates coroutine cancellation and closes server`() = runBlocking {
         val server = LoopbackRedirectServer.create(expectedState = "state-abc")
         val redirectUri = server.redirectUri
 
@@ -229,12 +247,33 @@ class LoopbackRedirectServerTest {
         job.join()
 
         // Server should be stopped (await closed it on cancellation): subsequent connection
-        // attempts are refused.
-        try {
-            httpGet("$redirectUri?code=x&state=state-abc")
-            fail("expected ConnectException after server cancellation")
-        } catch (_: ConnectException) {
-            // Expected.
+        // attempts fail.
+        assertServesNothing("$redirectUri?code=x&state=state-abc")
+    }
+
+    /**
+     * Asserts that [url] can no longer be served, retrying until the port is released or [timeout]
+     * elapses.
+     *
+     * `stop()` returning doesn't mean the listening socket is closed at the OS level yet, so which
+     * failure surfaces depends on timing: once the socket is gone the connect is refused
+     * (`ConnectException`), but a connection already accepted into the backlog is reset instead
+     * (`SocketException: Connection reset by peer`) — which is what made this flaky on CI. Any
+     * connection-level [IOException] proves the point; what matters is that no response is served.
+     */
+    private suspend fun assertServesNothing(url: String, timeout: Duration = 5.seconds) {
+        val deadline = TimeSource.Monotonic.markNow() + timeout
+        while (true) {
+            val (status, _) =
+                try {
+                    httpGet(url)
+                } catch (_: IOException) {
+                    return
+                }
+            if (deadline.hasPassedNow()) {
+                fail("expected connection to $url to fail after cancellation, got status $status")
+            }
+            delay(50)
         }
     }
 
