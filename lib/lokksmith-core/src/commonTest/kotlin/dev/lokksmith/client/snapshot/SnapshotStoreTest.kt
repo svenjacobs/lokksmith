@@ -169,8 +169,10 @@ class PersistenceFake(initialData: Map<String, String> = emptyMap()) :
         memory.update { data -> data.toMutableMap().apply { set(key.value, snapshot) } }
     }
 
-    override suspend fun delete(key: Key) {
+    override suspend fun delete(key: Key): Boolean {
+        val existed = memory.value.contains(key.value)
         memory.update { data -> data.toMutableMap().apply { remove(key.value) } }
+        return existed
     }
 
     override suspend fun contains(key: Key): Boolean = memory.value.contains(key.value)

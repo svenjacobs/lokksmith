@@ -22,6 +22,7 @@ nav = [
   ] },
   { Migration = "migration.md" },
   { FAQ = "faq.md" },
+  { Encryption = "encryption.md" },
   { "Dependency Matrix" = "dependency-matrix.md" },
   { Comparison = "comparison.md" },
   { Contributing = "contributing.md" },

@@ -22,8 +22,15 @@ import dev.lokksmith.client.ClientImpl
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.discovery.MetadataDiscoveryRequest
 import dev.lokksmith.client.discovery.MetadataDiscoveryRequestImpl
+import dev.lokksmith.client.snapshot.AesGcmSnapshotCipher
+import dev.lokksmith.client.snapshot.DataStorePersistence
+import dev.lokksmith.client.snapshot.EncryptingPersistence
+import dev.lokksmith.client.snapshot.EnvelopeDekProvider
+import dev.lokksmith.client.snapshot.PlaintextSnapshotCipher
+import dev.lokksmith.client.snapshot.SnapshotCipher
 import dev.lokksmith.client.snapshot.SnapshotStore
 import dev.lokksmith.client.snapshot.SnapshotStoreImpl
+import dev.lokksmith.crypto.KeyEnvelope
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.UserAgent
@@ -67,15 +74,46 @@ internal class ContainerImpl(
     }
 
     // <editor-fold desc="SnapshotStore">
+    private val persistenceBaseName
+        get() = options.persistenceFileBaseName.trim()
+
     private val snapshotDataStore by lazy {
         createDataStore(
-            fileName = "${options.persistenceFileBaseName.trim()}.preferences_pb",
+            fileName = "$persistenceBaseName.preferences_pb",
             platformContext = platformContext,
         )
     }
 
+    /** Holds the wrapped data-encryption key, separate from the encrypted snapshot values. */
+    private val keyDataStore by lazy {
+        createDataStore(
+            fileName = "$persistenceBaseName.key.preferences_pb",
+            platformContext = platformContext,
+        )
+    }
+
+    private val snapshotCipher: SnapshotCipher by lazy {
+        if (!options.encryptionEnabled) {
+            PlaintextSnapshotCipher
+        } else {
+            val dekProvider =
+                EnvelopeDekProvider(
+                    envelope = KeyEnvelope(platformContext, alias = persistenceBaseName),
+                    wrappedStore = keyDataStore,
+                )
+            AesGcmSnapshotCipher { dekProvider.getOrCreateDek() }
+        }
+    }
+
     override val snapshotStore by lazy {
-        SnapshotStoreImpl(dataStore = snapshotDataStore, serializer = serializer)
+        SnapshotStoreImpl(
+            persistence =
+                EncryptingPersistence(
+                    delegate = DataStorePersistence(snapshotDataStore),
+                    cipher = snapshotCipher,
+                ),
+            serializer = serializer,
+        )
     }
     // </editor-fold>
 

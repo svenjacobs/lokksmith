@@ -78,6 +78,16 @@ internal constructor(
         val persistenceFileBaseName: String = "lokksmith_clients",
 
         /**
+         * Whether persisted client state (including tokens) is encrypted at rest.
+         *
+         * Enabled by default. When disabled, snapshots are stored as plaintext JSON and no platform
+         * key material is created. Changing this on an existing installation is not a supported
+         * migration: state written in the other mode is treated as absent, so the affected client
+         * is re-created and the user re-authenticates.
+         */
+        val encryptionEnabled: Boolean = true,
+
+        /**
          * Coroutine scope that is used to launch various coroutines in the context of this
          * [Lokksmith] instance.
          */

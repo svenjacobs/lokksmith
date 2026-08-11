@@ -59,7 +59,8 @@ internal interface InternalSnapshotStore : SnapshotStore {
 
         suspend fun set(key: Key, snapshot: String)
 
-        suspend fun delete(key: Key)
+        /** Removes the physical entry for [key], returning whether one existed. */
+        suspend fun delete(key: Key): Boolean
 
         suspend fun contains(key: Key): Boolean
     }
@@ -103,43 +104,47 @@ internal class SnapshotStoreImpl(
         internalSet(key, snapshot)
     }
 
-    override suspend fun delete(key: Key): Boolean {
-        if (!exists(key)) return false
-        persistence.delete(key)
-        return true
-    }
+    override suspend fun delete(key: Key): Boolean = persistence.delete(key)
 
     override suspend fun exists(key: Key): Boolean = persistence.contains(key)
+}
 
-    private class DataStorePersistence(private val dataStore: DataStore<Preferences>) :
-        Persistence {
+/**
+ * [Persistence] backed by AndroidX [DataStore], keeping each snapshot as a string under
+ * [Key.value].
+ */
+internal class DataStorePersistence(private val dataStore: DataStore<Preferences>) : Persistence {
 
-        override val data: Flow<Map<String, String>>
-            get() =
-                dataStore.data.map { prefs ->
-                    prefs.asMap().map { (key, value) -> key.name to value as String }.toMap()
-                }
+    override val data: Flow<Map<String, String>>
+        get() =
+            dataStore.data.map { prefs ->
+                prefs.asMap().map { (key, value) -> key.name to value as String }.toMap()
+            }
 
-        override fun observe(key: Key): Flow<String?> =
-            dataStore.data.map { prefs -> prefs[key.prefKey] }
+    override fun observe(key: Key): Flow<String?> =
+        dataStore.data.map { prefs -> prefs[key.prefKey] }
 
-        override suspend fun get(key: Key): String? = prefs()[key.prefKey]
+    override suspend fun get(key: Key): String? = prefs()[key.prefKey]
 
-        override suspend fun set(key: Key, snapshot: String) {
-            dataStore.edit { prefs -> prefs[key.prefKey] = snapshot }
-        }
-
-        override suspend fun delete(key: Key) {
-            dataStore.edit { prefs -> prefs.remove(key.prefKey) }
-        }
-
-        override suspend fun contains(key: Key): Boolean = prefs().contains(key.prefKey)
-
-        private suspend fun prefs() = dataStore.data.first()
-
-        private val Key.prefKey: Preferences.Key<String>
-            get() = stringPreferencesKey(value)
+    override suspend fun set(key: Key, snapshot: String) {
+        dataStore.edit { prefs -> prefs[key.prefKey] = snapshot }
     }
+
+    override suspend fun delete(key: Key): Boolean {
+        var existed = false
+        dataStore.edit { prefs ->
+            existed = prefs.contains(key.prefKey)
+            if (existed) prefs.remove(key.prefKey)
+        }
+        return existed
+    }
+
+    override suspend fun contains(key: Key): Boolean = prefs().contains(key.prefKey)
+
+    private suspend fun prefs() = dataStore.data.first()
+
+    private val Key.prefKey: Preferences.Key<String>
+        get() = stringPreferencesKey(value)
 }
 
 /**

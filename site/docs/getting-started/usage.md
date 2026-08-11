@@ -246,10 +246,11 @@ lokksmith.launchAuthFlow(initiation)
     `lokksmith.completeAuthFlowFromRedirect()` yourself, for example during application startup.
 
 !!! warning "Security"
-    On the Web, Lokksmith persists its state — including tokens — in the browser's `localStorage`,
-    which is **not encrypted** and is readable by any script on the same origin. A cross-site
-    scripting (XSS) vulnerability can therefore expose tokens. Apply a strong Content Security Policy
-    and the usual XSS defenses.
+    On the Web, Lokksmith persists its state — including tokens — in the browser's `localStorage`.
+    The state is [encrypted](../encryption.md), but the encryption key is stored in `localStorage`
+    too, so on this platform encryption is obfuscation rather than strong protection: any script on
+    the same origin can read both. A cross-site scripting (XSS) vulnerability can therefore expose
+    tokens. Apply a strong Content Security Policy and the usual XSS defenses.
 
 !!! note
     `rememberAuthFlowLauncher().result` is not restored after the full-page reload. Observe
