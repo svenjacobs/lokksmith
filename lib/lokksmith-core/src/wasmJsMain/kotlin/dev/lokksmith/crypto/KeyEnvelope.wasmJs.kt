@@ -22,6 +22,7 @@ import dev.whyoleg.cryptography.operations.IvAuthenticatedCipher
 import dev.whyoleg.cryptography.random.CryptographyRandom
 import kotlin.io.encoding.Base64
 import kotlinx.browser.localStorage
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -48,7 +49,19 @@ actual constructor(
         cipher(createIfMissing = true)!!.encrypt(dek)
 
     actual suspend fun decrypt(wrapped: ByteArray): ByteArray? =
-        cipher(createIfMissing = false)?.let { runCatching { it.decrypt(wrapped) }.getOrNull() }
+        cipher(createIfMissing = false)?.let {
+            try {
+                it.decrypt(wrapped)
+            } catch (e: CancellationException) {
+                // Not a decryption failure. Reporting it as one would make the caller
+                // regenerate the DEK and overwrite the wrapped copy, losing every snapshot.
+                throw e
+            } catch (e: Throwable) {
+                // Wrong key or tampered ciphertext. Unlike the Android envelope, this is pure
+                // software over bytes already in memory, so a failure here cannot be transient.
+                null
+            }
+        }
 
     private suspend fun cipher(createIfMissing: Boolean): IvAuthenticatedCipher? {
         cipher?.let {
@@ -72,7 +85,21 @@ actual constructor(
 
     private fun createKek(): ByteArray {
         val kek = random.nextBytes(KEK_SIZE_BYTES)
-        localStorage.setItem(storageKey, Base64.encode(kek))
+        try {
+            localStorage.setItem(storageKey, Base64.encode(kek))
+        } catch (e: Throwable) {
+            // `localStorage` is not always writable: the origin's quota can be exhausted, and
+            // Safari
+            // rejects writes in private browsing. Without a key nothing can be persisted, so fail
+            // with a message that names the cause rather than surfacing an opaque DOM error from
+            // whichever snapshot write happened to trigger this.
+            throw IllegalStateException(
+                "Cannot store the key-encryption key in localStorage. The storage quota may be " +
+                    "exhausted, or writes may be blocked (for example in Safari private browsing). " +
+                    "Snapshots cannot be persisted without it.",
+                e,
+            )
+        }
         return kek
     }
 

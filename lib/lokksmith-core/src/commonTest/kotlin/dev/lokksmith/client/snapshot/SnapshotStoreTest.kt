@@ -176,6 +176,11 @@ class PersistenceFake(initialData: Map<String, String> = emptyMap()) :
     }
 
     override suspend fun contains(key: Key): Boolean = memory.value.contains(key.value)
+
+    /** Writes [value] straight into storage, bypassing any decorator above this fake. */
+    fun seed(entryId: String, value: String) {
+        memory.update { data -> data.toMutableMap().apply { set(entryId, value) } }
+    }
 }
 
 private fun newSnapshot(key: Key, state: String? = null): Snapshot {

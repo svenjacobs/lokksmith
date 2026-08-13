@@ -31,6 +31,7 @@ import kotlinx.cinterop.ptr
 import kotlinx.cinterop.reinterpret
 import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import platform.CoreFoundation.CFDataCreate
@@ -84,7 +85,19 @@ actual constructor(
         cipher(createIfMissing = true)!!.encrypt(dek)
 
     actual suspend fun decrypt(wrapped: ByteArray): ByteArray? =
-        cipher(createIfMissing = false)?.let { runCatching { it.decrypt(wrapped) }.getOrNull() }
+        cipher(createIfMissing = false)?.let {
+            try {
+                it.decrypt(wrapped)
+            } catch (e: CancellationException) {
+                // Not a decryption failure. Reporting it as one would make the caller
+                // regenerate the DEK and overwrite the wrapped copy, losing every snapshot.
+                throw e
+            } catch (e: Throwable) {
+                // Wrong key or tampered ciphertext. Unlike the Android envelope, this is pure
+                // software over bytes already in memory, so a failure here cannot be transient.
+                null
+            }
+        }
 
     private suspend fun cipher(createIfMissing: Boolean): IvAuthenticatedCipher? {
         cipher?.let {
@@ -111,15 +124,19 @@ actual constructor(
         val result = alloc<CFTypeRefVar>()
         val status = SecItemCopyMatching(query, result.ptr)
         CFRelease(query)
-        // Only "not found" means a new key should be created. Anything else (e.g. Keychain locked
-        // before first unlock) must throw. Silently regenerating would orphan the wrapped DEK and
-        // make every stored snapshot unreadable.
-        if (status == errSecItemNotFound) return null
-        check(status == errSecSuccess) { "Keychain read failed with status $status" }
         @Suppress("UNCHECKED_CAST") val data = result.value as CFDataRef?
-        val bytes = data?.toByteArray()
-        data?.let { CFRelease(it) }
-        bytes
+        try {
+            // Only "not found" means a new key should be created. Anything else (e.g. Keychain
+            // locked before first unlock) must throw. Silently regenerating would orphan the
+            // wrapped DEK and make every stored snapshot unreadable.
+            if (status == errSecItemNotFound) return@memScoped null
+            check(status == errSecSuccess) { "Keychain read failed with status $status" }
+            data?.toByteArray()
+        } finally {
+            // Released on every path, including the throw above, which is the one expected to fire
+            // while the device is locked.
+            data?.let { CFRelease(it) }
+        }
     }
 
     private fun createKek(): ByteArray {

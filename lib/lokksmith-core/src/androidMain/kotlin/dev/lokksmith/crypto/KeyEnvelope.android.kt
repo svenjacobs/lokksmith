@@ -20,7 +20,9 @@ import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import dev.lokksmith.PlatformContext
 import java.security.KeyStore
+import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
+import javax.crypto.IllegalBlockSizeException
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
@@ -40,30 +42,55 @@ actual constructor(
     private val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE).apply { load(null) }
 
     actual suspend fun encrypt(dek: ByteArray): ByteArray {
-        val cipher = Cipher.getInstance(TRANSFORMATION)
-        try {
-            cipher.init(Cipher.ENCRYPT_MODE, getKek() ?: createKek())
-        } catch (e: KeyPermanentlyInvalidatedException) {
-            // The stored KEK exists but is no longer usable; replace it and retry.
-            keyStore.deleteEntry(keyAlias)
-            cipher.init(Cipher.ENCRYPT_MODE, createKek())
-        }
+        val cipher =
+            try {
+                Cipher.getInstance(TRANSFORMATION).apply {
+                    init(Cipher.ENCRYPT_MODE, getKek() ?: createKek())
+                }
+            } catch (e: KeyPermanentlyInvalidatedException) {
+                // The stored KEK exists but is no longer usable; replace it and retry. A Cipher
+                // that threw from init() is not reliably reusable across providers, so start
+                // over with a fresh instance rather than re-initializing this one.
+                keyStore.deleteEntry(keyAlias)
+                Cipher.getInstance(TRANSFORMATION).apply {
+                    init(Cipher.ENCRYPT_MODE, createKek())
+                }
+            }
         val ciphertext = cipher.doFinal(dek)
         return cipher.iv + ciphertext
     }
 
+    /**
+     * Unwraps [wrapped], returning null only when the result is definitively unrecoverable.
+     *
+     * Everything else propagates. A keystore operation can fail while the KEK is perfectly intact —
+     * the keystore daemon restarting, direct-boot, StrongBox under load — and reporting that as
+     * unrecoverable would make the caller generate a new DEK and overwrite the wrapped one, which
+     * destroys every existing snapshot irreversibly.
+     */
     actual suspend fun decrypt(wrapped: ByteArray): ByteArray? {
-        // A thrown keystore error while reading the KEK propagates (transient); only an absent key
-        // returns null so the caller regenerates.
         val kek = getKek() ?: return null
-        return runCatching {
-                val iv = wrapped.copyOfRange(0, GCM_IV_LENGTH)
-                val ciphertext = wrapped.copyOfRange(GCM_IV_LENGTH, wrapped.size)
-                val cipher = Cipher.getInstance(TRANSFORMATION)
-                cipher.init(Cipher.DECRYPT_MODE, kek, GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv))
-                cipher.doFinal(ciphertext)
-            }
-            .getOrNull()
+        // Too short to hold an IV plus a tag, so it cannot be a value this class produced.
+        if (wrapped.size <= GCM_IV_LENGTH) return null
+        return try {
+            val iv = wrapped.copyOfRange(0, GCM_IV_LENGTH)
+            val ciphertext = wrapped.copyOfRange(GCM_IV_LENGTH, wrapped.size)
+            val cipher = Cipher.getInstance(TRANSFORMATION)
+            cipher.init(Cipher.DECRYPT_MODE, kek, GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv))
+            cipher.doFinal(ciphertext)
+        } catch (e: KeyPermanentlyInvalidatedException) {
+            null // The key is gone: lock screen or biometric enrollment changed.
+        } catch (e: BadPaddingException) {
+            // Wrong key, or the wrapped DEK was tampered with. Catching the supertype of
+            // AEADBadTagException on purpose: a GCM tag mismatch does not surface as the more
+            // specific type on every provider, and mistaking that for a transient fault would leave
+            // the store permanently unreadable with no path to recovery.
+            null
+        } catch (e: IllegalBlockSizeException) {
+            // Ambiguous: on some API levels this is how an invalidated key surfaces, but it is also
+            // thrown for transient keystore faults. Only the former is unrecoverable.
+            if (e.cause is KeyPermanentlyInvalidatedException) null else throw e
+        }
     }
 
     /**

@@ -16,9 +16,13 @@
 package dev.lokksmith.crypto
 
 import dev.lokksmith.PlatformContext
+import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermission
+import java.util.EnumSet
 import kotlin.io.path.createTempDirectory
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
@@ -36,13 +40,13 @@ class KeyEnvelopeJvmTest {
         val envelope = envelope(dir)
         val dek = ByteArray(32) { it.toByte() }
 
-        val encryptped = envelope.encrypt(dek)
+        val encrypted = envelope.encrypt(dek)
 
         assertFalse(
-            encryptped.contentEquals(dek),
-            "encryptped output must not equal the plaintext DEK",
+            encrypted.contentEquals(dek),
+            "encrypted output must not equal the plaintext DEK",
         )
-        assertContentEquals(dek, envelope.decrypt(encryptped))
+        assertContentEquals(dek, envelope.decrypt(encrypted))
     }
 
     @Test
@@ -51,8 +55,8 @@ class KeyEnvelopeJvmTest {
         val dek = ByteArray(32) { (it * 7).toByte() }
 
         // encrypt with one instance, decrypt with a fresh instance backed by the same directory.
-        val encryptped = envelope(dir).encrypt(dek)
-        assertContentEquals(dek, envelope(dir).decrypt(encryptped))
+        val encrypted = envelope(dir).encrypt(dek)
+        assertContentEquals(dek, envelope(dir).decrypt(encrypted))
     }
 
     @Test
@@ -85,5 +89,82 @@ class KeyEnvelopeJvmTest {
         assertTrue(kekFile.mkdir())
 
         assertFailsWith<Exception> { envelope(dir).decrypt(wrapped) }
+    }
+
+    @Test
+    fun `a truncated KEK file is regenerated rather than bricking the envelope`() = runTest {
+        val dir = createTempDirectory().toFile()
+        val dek = ByteArray(32) { it.toByte() }
+        val wrapped = envelope(dir).encrypt(dek)
+
+        // What an interrupted write used to leave behind: the file exists but holds no whole key.
+        // Treating that as a readable key would fail every later operation with an error that never
+        // clears, leaving no remedy but deleting the application's data by hand.
+        dir.resolve("test.kek").writeBytes(ByteArray(0))
+
+        val fresh = envelope(dir)
+        assertNull(fresh.decrypt(wrapped), "the old wrapped DEK is unrecoverable")
+
+        // The envelope still works: a new KEK was generated and round-trips.
+        assertContentEquals(dek, fresh.decrypt(fresh.encrypt(dek)))
+        assertEquals(
+            32,
+            dir.resolve("test.kek").readBytes().size,
+            "a whole key should have replaced the truncated file",
+        )
+    }
+
+    @Test
+    fun `the KEK file is restricted to the owner`() = runTest {
+        val dir = createTempDirectory().toFile()
+        envelope(dir).encrypt(ByteArray(32))
+
+        val path = dir.resolve("test.kek").toPath()
+        if (!path.fileSystem.supportedFileAttributeViews().contains("posix")) return@runTest
+        assertEquals(
+            setOf(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE),
+            Files.getPosixFilePermissions(path),
+        )
+    }
+
+    @Test
+    fun `an existing KEK file with lax permissions is tightened`() = runTest {
+        val dir = createTempDirectory().toFile()
+        val kekFile = dir.resolve("test.kek")
+        // A key file left behind by an earlier version, world-readable. Creating the file with
+        // restrictive attributes cannot fix this case; the permissions must be applied to the file
+        // that ends up in place.
+        kekFile.writeBytes(ByteArray(0))
+        val path = kekFile.toPath()
+        if (!path.fileSystem.supportedFileAttributeViews().contains("posix")) return@runTest
+        Files.setPosixFilePermissions(
+            path,
+            EnumSet.of(
+                PosixFilePermission.OWNER_READ,
+                PosixFilePermission.OWNER_WRITE,
+                PosixFilePermission.GROUP_READ,
+                PosixFilePermission.OTHERS_READ,
+            ),
+        )
+
+        // The truncated file counts as absent, so this regenerates and replaces it.
+        envelope(dir).encrypt(ByteArray(32))
+
+        assertEquals(
+            setOf(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE),
+            Files.getPosixFilePermissions(path),
+        )
+    }
+
+    @Test
+    fun `no temporary files are left behind`() = runTest {
+        val dir = createTempDirectory().toFile()
+        envelope(dir).encrypt(ByteArray(32))
+
+        assertContentEquals(
+            listOf("test.kek"),
+            dir.list()!!.sorted(),
+            "the atomic write should leave only the key file",
+        )
     }
 }

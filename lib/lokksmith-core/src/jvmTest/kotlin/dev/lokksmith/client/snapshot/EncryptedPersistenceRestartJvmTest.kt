@@ -30,6 +30,7 @@ import java.io.File
 import kotlin.io.path.createTempDirectory
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
@@ -94,7 +95,7 @@ class EncryptedPersistenceRestartJvmTest {
     }
 
     @Test
-    fun `legacy plaintext migrates transparently across restart`() = storeTest { dir ->
+    fun `legacy plaintext is encrypted on first access, without any write`() = storeTest { dir ->
         val key = "key".asKey()
         val snapshot = newSnapshot(key)
 
@@ -102,19 +103,81 @@ class EncryptedPersistenceRestartJvmTest {
         seedRawSnapshot(dir, key, Json.encodeToString(snapshot))
 
         val first = generation(dir)
-        // Legacy plaintext is read via fallback, then re-encrypted on the next write.
+        try {
+            // A single read. Nothing calls set(), which is the point: an installation that only
+            // ever
+            // reads its snapshot must not keep its tokens in plaintext on disk.
+            assertEquals(snapshot, first.store.observe(key).first())
+
+            val stored = first.snapshotDs.data.first()[stringPreferencesKey(key.value)]
+            assertNotNull(stored)
+            assertFalse(
+                stored.trimStart().startsWith('{'),
+                "plaintext must not survive the first access",
+            )
+        } finally {
+            first.shutdown()
+        }
+    }
+
+    @Test
+    fun `an entry nobody reads is still encrypted on first access`() = storeTest { dir ->
+        val read = "read".asKey()
+        val untouched = "untouched".asKey()
+        seedRawSnapshot(dir, read, Json.encodeToString(newSnapshot(read)))
+        seedRawSnapshot(dir, untouched, Json.encodeToString(newSnapshot(untouched)))
+
+        val first = generation(dir)
+        try {
+            first.store.observe(read).first()
+
+            val stored = first.snapshotDs.data.first()[stringPreferencesKey(untouched.value)]
+            assertNotNull(stored)
+            assertFalse(
+                stored.trimStart().startsWith('{'),
+                "the sweep should cover every entry, not just the one being read",
+            )
+        } finally {
+            first.shutdown()
+        }
+    }
+
+    @Test
+    fun `migrated plaintext stays readable across a restart`() = storeTest { dir ->
+        val key = "key".asKey()
+        val snapshot = newSnapshot(key)
+        seedRawSnapshot(dir, key, Json.encodeToString(snapshot))
+
+        val first = generation(dir)
         assertEquals(snapshot, first.store.observe(key).first())
-        first.store.set(key, first.store.observe(key).first()!!)
         first.shutdown()
 
         val second = generation(dir)
         try {
             assertEquals(snapshot, second.store.observe(key).first())
-            val stored = second.snapshotDs.data.first()[stringPreferencesKey(key.value)]
-            assertNotNull(stored)
-            assertFalse(
-                stored.trimStart().startsWith('{'),
-                "value should have been re-encrypted, not left as plaintext JSON",
+        } finally {
+            second.shutdown()
+        }
+    }
+
+    @Test
+    fun `injected plaintext is rejected once the store has been migrated`() = storeTest { dir ->
+        val key = "key".asKey()
+
+        // Establish an encrypted store, which records the migration.
+        val first = generation(dir)
+        first.store.set(key, newSnapshot(key))
+        first.shutdown()
+
+        // Overwrite the row with crafted plaintext, as someone with write access to the storage
+        // file but no access to the KEK could — via a backup restore, for instance.
+        seedRawSnapshot(dir, key, Json.encodeToString(newSnapshot(key)))
+
+        val second = generation(dir)
+        try {
+            assertNull(
+                second.store.observe(key).first(),
+                "plaintext must not be accepted after the store has been migrated",
             )
         } finally {
             second.shutdown()
@@ -154,10 +217,60 @@ class EncryptedPersistenceRestartJvmTest {
         }
     }
 
+    @Test
+    fun `a transient KEK failure is an error, not an absent snapshot`() = storeTest { dir ->
+        val key = "key".asKey()
+        val snapshot = newSnapshot(key)
+
+        val first = generation(dir)
+        first.store.set(key, snapshot)
+        val wrappedDekBefore = first.keyDs.data.first()[WrappedDekKey]
+        assertNotNull(wrappedDekBefore)
+        first.shutdown()
+
+        // Make the KEK unreadable without destroying it — a read error, not key loss. The bytes are
+        // kept so the outage can be ended again, which is what distinguishes this from the lost-KEK
+        // test above.
+        val kekFile = dir.resolve("$BASE.kek")
+        val kekBytes = kekFile.readBytes()
+        assertTrue(kekFile.delete())
+        assertTrue(kekFile.mkdir())
+
+        val during = generation(dir)
+        try {
+            // Reporting "absent" here would let an application conclude the user is signed out and
+            // start a fresh flow, overwriting state that is perfectly valid.
+            assertFailsWith<Exception> { during.store.observe(key).first() }
+            assertFailsWith<Exception> { during.store.exists(key) }
+            assertEquals(
+                wrappedDekBefore,
+                during.keyDs.data.first()[WrappedDekKey],
+                "a transient failure must not rewrite the wrapped DEK",
+            )
+        } finally {
+            during.shutdown()
+        }
+
+        assertTrue(kekFile.delete())
+        kekFile.writeBytes(kekBytes)
+
+        val after = generation(dir)
+        try {
+            assertEquals(
+                snapshot,
+                after.store.observe(key).first(),
+                "the snapshot should have survived the outage intact",
+            )
+        } finally {
+            after.shutdown()
+        }
+    }
+
     /** One instantiation of the persistence stack over [dir], mirroring `ContainerImpl`. */
     private class Generation(
         val store: SnapshotStore,
         val snapshotDs: DataStore<Preferences>,
+        val keyDs: DataStore<Preferences>,
         private val job: Job,
     ) {
         suspend fun shutdown() = job.cancelAndJoin()
@@ -179,10 +292,11 @@ class EncryptedPersistenceRestartJvmTest {
                     EncryptingPersistence(
                         delegate = DataStorePersistence(snapshotDs),
                         cipher = AesGcmSnapshotCipher { provider.getOrCreateDek() },
+                        migrationState = DataStoreSnapshotMigrationState(keyDs),
                     ),
                 serializer = Json,
             )
-        return Generation(store, snapshotDs, job)
+        return Generation(store, snapshotDs, keyDs, job)
     }
 
     /** Writes [value] straight into the snapshot file, bypassing encryption (legacy state). */
@@ -235,5 +349,9 @@ class EncryptedPersistenceRestartJvmTest {
 
     private companion object {
         const val BASE = "lokksmith_clients"
+
+        // Mirrored from EnvelopeDekProvider (private there). Brittle on purpose: it pins the
+        // on-disk contract.
+        val WrappedDekKey = stringPreferencesKey("lokksmith.snapshot.wrappedDek")
     }
 }

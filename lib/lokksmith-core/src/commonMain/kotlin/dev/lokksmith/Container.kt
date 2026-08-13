@@ -24,6 +24,7 @@ import dev.lokksmith.client.discovery.MetadataDiscoveryRequest
 import dev.lokksmith.client.discovery.MetadataDiscoveryRequestImpl
 import dev.lokksmith.client.snapshot.AesGcmSnapshotCipher
 import dev.lokksmith.client.snapshot.DataStorePersistence
+import dev.lokksmith.client.snapshot.DataStoreSnapshotMigrationState
 import dev.lokksmith.client.snapshot.EncryptingPersistence
 import dev.lokksmith.client.snapshot.EnvelopeDekProvider
 import dev.lokksmith.client.snapshot.PlaintextSnapshotCipher
@@ -84,7 +85,10 @@ internal class ContainerImpl(
         )
     }
 
-    /** Holds the wrapped data-encryption key, separate from the encrypted snapshot values. */
+    /**
+     * Holds the wrapped data-encryption key and the migration marker, separate from the encrypted
+     * snapshot values.
+     */
     private val keyDataStore by lazy {
         createDataStore(
             fileName = "$persistenceBaseName.key.preferences_pb",
@@ -111,6 +115,7 @@ internal class ContainerImpl(
                 EncryptingPersistence(
                     delegate = DataStorePersistence(snapshotDataStore),
                     cipher = snapshotCipher,
+                    migrationState = DataStoreSnapshotMigrationState(keyDataStore),
                 ),
             serializer = serializer,
         )
