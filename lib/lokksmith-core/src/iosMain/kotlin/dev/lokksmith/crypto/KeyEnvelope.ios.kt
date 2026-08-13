@@ -22,6 +22,7 @@ import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.AES
 import dev.whyoleg.cryptography.operations.IvAuthenticatedCipher
 import dev.whyoleg.cryptography.random.CryptographyRandom
+import kotlin.concurrent.Volatile
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
@@ -79,7 +80,10 @@ actual constructor(
     private val random = CryptographyRandom.Default
 
     private val mutex = Mutex()
-    private var cipher: IvAuthenticatedCipher? = null
+
+    // Volatile: the fast path in cipher() reads this without holding the mutex, which would
+    // otherwise be allowed to observe a published reference whose contents are not yet visible.
+    @Volatile private var cipher: IvAuthenticatedCipher? = null
 
     actual suspend fun encrypt(dek: ByteArray): ByteArray =
         cipher(createIfMissing = true)!!.encrypt(dek)

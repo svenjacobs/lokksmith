@@ -331,6 +331,48 @@ class SnapshotEncryptionTest {
         assertEquals(snapshot, store.observe(key).firstOrNull())
         assertFalse(persistence.memory.value.getValue(key.value).trimStart().startsWith('{'))
     }
+
+    @Test
+    fun `disabled encryption clears a marker left by an earlier encrypted run`() = runTest {
+        val key = "key".asKey()
+        val persistence = PersistenceFake()
+        val migrationState = SnapshotMigrationStateFake()
+        encryptingStore(persistence, cipher(), migrationState).set(key, newSnapshot(key))
+        assertTrue(migrationState.isMigrated(), "precondition: the encrypted run records a marker")
+
+        // Merely accessing the store in plaintext mode is enough: from here on anything written is
+        // plaintext, so the store is no longer converted and the marker must not claim otherwise.
+        encryptingStore(persistence, PlaintextSnapshotCipher, migrationState)
+            .observe(key)
+            .firstOrNull()
+
+        assertFalse(migrationState.isMigrated())
+    }
+
+    @Test
+    fun `re-enabling encryption migrates plaintext written while it was off`() = runTest {
+        val key = "key".asKey()
+        val snapshot = newSnapshot(key)
+        val persistence = PersistenceFake()
+        val migrationState = SnapshotMigrationStateFake()
+
+        // A release with encryption on, which records the marker.
+        encryptingStore(persistence, cipher(), migrationState).set(key, snapshot)
+
+        // A release with it off. The ciphertext is unreadable in plaintext mode, so the client is
+        // re-created and the replacement snapshot is written as plaintext.
+        encryptingStore(persistence, PlaintextSnapshotCipher, migrationState).set(key, snapshot)
+        assertEquals(Json.encodeToString(snapshot), persistence.memory.value.getValue(key.value))
+
+        // On again. Without clearing the marker in plaintext mode this skips the sweep, and the
+        // plaintext is then neither readable nor ever encrypted: it stays in the clear on disk
+        // until something happens to write that client again, which may be never.
+        val reEnabled = encryptingStore(persistence, cipher(), migrationState)
+
+        assertEquals(snapshot, reEnabled.observe(key).firstOrNull())
+        assertFalse(persistence.memory.value.getValue(key.value).trimStart().startsWith('{'))
+        assertTrue(migrationState.isMigrated())
+    }
 }
 
 /**
@@ -449,6 +491,194 @@ class EncryptingPersistenceTransientFailureTest {
         }
 }
 
+/**
+ * Covers the one-shot conversion sweep itself, rather than the reads and writes around it.
+ *
+ * The sweep is the only thing that ever turns a plaintext entry into ciphertext, so every entry
+ * point that can be the *first* one to touch a legacy store has to trigger it, it has to run
+ * exactly once no matter how many callers arrive at the same time, and an attempt that fails part
+ * of the way through has to be resumable.
+ */
+class SnapshotMigrationSweepTest {
+
+    private val dek = ByteArray(32) { it.toByte() }
+
+    private fun store(
+        persistence: Persistence,
+        cipher: SnapshotCipher = AesGcmSnapshotCipher { dek },
+        migrationState: SnapshotMigrationState = SnapshotMigrationStateFake(),
+    ): SnapshotStore =
+        SnapshotStoreImpl(
+            persistence = EncryptingPersistence(persistence, cipher, migrationState),
+            serializer = Json,
+        )
+
+    @Test
+    fun `a write is a first access and sweeps entries it does not touch`() = runTest {
+        val legacy = "legacy".asKey()
+        val written = "written".asKey()
+        val plaintext = Json.encodeToString(newSnapshot(legacy))
+        val persistence = PersistenceFake(mapOf(legacy.value to plaintext))
+        val migrationState = SnapshotMigrationStateFake()
+        val store = store(persistence, migrationState = migrationState)
+
+        // The first thing this installation does is create a *different* client. Nothing reads the
+        // legacy entry, so only the sweep can be what converts it.
+        store.set(written, newSnapshot(written))
+
+        assertFalse(
+            persistence.memory.value.getValue(legacy.value).trimStart().startsWith('{'),
+            "a write must convert the rest of the store, not just the entry it writes",
+        )
+        assertTrue(migrationState.isMigrated())
+        assertEquals(newSnapshot(legacy), store.observe(legacy).firstOrNull())
+    }
+
+    @Test
+    fun `getForState is a first access and sweeps`() = runTest {
+        val key = "key".asKey()
+        val state = "Ly5GJLkj"
+        val snapshot = newSnapshot(key, state)
+        val persistence = PersistenceFake(mapOf(key.value to Json.encodeToString(snapshot)))
+        val store = store(persistence)
+
+        // Resuming an authorization flow reads through data rather than observe, and on a legacy
+        // store it is the very first access. The in-flight state it looks for is exactly what the
+        // sweep protects: state, nonce and code verifier are all in the snapshot.
+        assertEquals(snapshot, store.getForState(state))
+
+        assertFalse(
+            persistence.memory.value.getValue(key.value).trimStart().startsWith('{'),
+            "plaintext must not survive a lookup by state either",
+        )
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `concurrent first accesses sweep once`() = runTest {
+        val first = "first".asKey()
+        val second = "second".asKey()
+        val persistence =
+            PersistenceFake(
+                mapOf(
+                    first.value to Json.encodeToString(newSnapshot(first)),
+                    second.value to Json.encodeToString(newSnapshot(second)),
+                )
+            )
+        val migrationState = CountingMigrationState()
+        // Holds the first sweep open, so the second caller is guaranteed to arrive while it runs.
+        val keyMaterial = CompletableDeferred<Unit>()
+        var dekRequests = 0
+        val store =
+            store(
+                persistence,
+                AesGcmSnapshotCipher {
+                    dekRequests++
+                    keyMaterial.await()
+                    dek
+                },
+                migrationState,
+            )
+
+        val a = launch { store.observe(first).firstOrNull() }
+        runCurrent()
+        val b = launch { store.observe(second).firstOrNull() }
+        runCurrent()
+
+        keyMaterial.complete(Unit)
+        a.join()
+        b.join()
+
+        assertEquals(1, dekRequests, "the DEK should be resolved once, not once per caller")
+        assertEquals(1, migrationState.markCount, "the sweep must not run twice")
+        assertEquals(newSnapshot(first), store.observe(first).firstOrNull())
+        assertEquals(newSnapshot(second), store.observe(second).firstOrNull())
+    }
+
+    @Test
+    fun `a sweep that fails midway is resumed by the next access`() = runTest {
+        val converted = "aaa".asKey()
+        val failing = "zzz".asKey()
+        val persistence =
+            PersistenceFake(
+                mapOf(
+                    converted.value to Json.encodeToString(newSnapshot(converted)),
+                    failing.value to Json.encodeToString(newSnapshot(failing)),
+                )
+            )
+        val migrationState = SnapshotMigrationStateFake()
+        var failOn: String? = failing.value
+        val store =
+            store(
+                persistence,
+                // Fails while encrypting one specific entry, after another has already been
+                // written back: the sweep is not atomic, so the store is left half converted.
+                FailingForEntryCipher(AesGcmSnapshotCipher { dek }, failOn = { failOn }),
+                migrationState,
+            )
+
+        assertFailsWith<IllegalStateException> { store.observe(converted).firstOrNull() }
+
+        assertFalse(
+            persistence.memory.value.getValue(converted.value).trimStart().startsWith('{'),
+            "an entry converted before the failure stays converted",
+        )
+        assertTrue(
+            persistence.memory.value.getValue(failing.value).trimStart().startsWith('{'),
+            "the entry that failed is left as plaintext for a later attempt",
+        )
+        assertFalse(migrationState.isMigrated(), "a partial sweep must not be recorded")
+
+        failOn = null
+
+        // The retry has to cope with the half-converted store it inherited: skip what is already
+        // ciphertext, convert the remainder.
+        assertEquals(newSnapshot(converted), store.observe(converted).firstOrNull())
+        assertEquals(newSnapshot(failing), store.observe(failing).firstOrNull())
+        assertTrue(migrationState.isMigrated())
+        assertTrue(
+            persistence.memory.value.values.none { it.trimStart().startsWith('{') },
+            "no plaintext should be left after the retry",
+        )
+    }
+
+    private class CountingMigrationState : SnapshotMigrationState {
+
+        var markCount = 0
+            private set
+
+        private var migrated = false
+
+        override suspend fun isMigrated(): Boolean = migrated
+
+        override suspend fun markMigrated() {
+            markCount++
+            migrated = true
+        }
+
+        override suspend fun clearMigrated() {
+            migrated = false
+        }
+    }
+
+    /** Delegates to [delegate], but fails to encrypt the entry currently named by [failOn]. */
+    private class FailingForEntryCipher(
+        private val delegate: SnapshotCipher,
+        private val failOn: () -> String?,
+    ) : SnapshotCipher {
+
+        override val isEncrypting: Boolean = true
+
+        override suspend fun encrypt(entryId: String, plaintext: String): String {
+            check(entryId != failOn()) { "cannot encrypt $entryId" }
+            return delegate.encrypt(entryId, plaintext)
+        }
+
+        override suspend fun decrypt(entryId: String, value: String): String =
+            delegate.decrypt(entryId, value)
+    }
+}
+
 class SnapshotMigrationStateFake(migrated: Boolean = false) : SnapshotMigrationState {
 
     private var migrated = migrated
@@ -457,6 +687,10 @@ class SnapshotMigrationStateFake(migrated: Boolean = false) : SnapshotMigrationS
 
     override suspend fun markMigrated() {
         migrated = true
+    }
+
+    override suspend fun clearMigrated() {
+        migrated = false
     }
 }
 

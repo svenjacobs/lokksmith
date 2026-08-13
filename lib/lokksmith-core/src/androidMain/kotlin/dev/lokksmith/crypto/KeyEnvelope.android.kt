@@ -20,6 +20,7 @@ import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import dev.lokksmith.PlatformContext
 import java.security.KeyStore
+import java.security.UnrecoverableEntryException
 import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
 import javax.crypto.IllegalBlockSizeException
@@ -94,10 +95,20 @@ actual constructor(
     }
 
     /**
-     * Returns the stored KEK, or null if the alias holds no secret key. A keystore error throws.
+     * Returns the stored KEK, or null if the alias holds no usable secret key. A keystore error
+     * throws.
+     *
+     * [UnrecoverableEntryException] (and its subclass `UnrecoverableKeyException`) counts as absent
+     * rather than as an error: it is how some API levels report an entry whose key material is gone
+     * or corrupt, which no retry can fix. Propagating it as if it were transient would fail every
+     * read forever, with no remedy but clearing the application's data by hand.
      */
     private fun getKek(): SecretKey? =
-        (keyStore.getEntry(keyAlias, null) as? KeyStore.SecretKeyEntry)?.secretKey
+        try {
+            (keyStore.getEntry(keyAlias, null) as? KeyStore.SecretKeyEntry)?.secretKey
+        } catch (e: UnrecoverableEntryException) {
+            null
+        }
 
     private fun createKek(): SecretKey {
         val generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, ANDROID_KEY_STORE)

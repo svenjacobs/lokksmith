@@ -196,6 +196,12 @@ internal interface SnapshotMigrationState {
     suspend fun isMigrated(): Boolean
 
     suspend fun markMigrated()
+
+    /**
+     * Records that the store is no longer converted, which is the case once anything has been
+     * written to it as plaintext. Turning encryption back on then converts it again.
+     */
+    suspend fun clearMigrated()
 }
 
 /** [SnapshotMigrationState] kept alongside the wrapped DEK, separate from the snapshots. */
@@ -206,6 +212,10 @@ internal class DataStoreSnapshotMigrationState(private val dataStore: DataStore<
 
     override suspend fun markMigrated() {
         dataStore.edit { it[MigratedKey] = true }
+    }
+
+    override suspend fun clearMigrated() {
+        dataStore.edit { it.remove(MigratedKey) }
     }
 
     private companion object {
@@ -292,12 +302,21 @@ internal class EncryptingPersistence(
      * Nothing is recorded unless the sweep completes: if the platform secure store is transiently
      * unavailable the error propagates and plaintext stays acceptable, so a later attempt can still
      * read and convert it. A store that holds no plaintext is marked without creating key material.
+     *
+     * With encryption disabled the marker is cleared instead, because everything written from here
+     * on is plaintext and the store is therefore no longer converted. Leaving a marker from an
+     * earlier encrypted run in place would make a later run with encryption enabled skip the sweep
+     * and reject that plaintext, so it would neither be readable nor ever be encrypted. Clearing
+     * gives up nothing: while encryption is off there is no integrity guarantee to weaken, and the
+     * sweep restores the marker as soon as it is on again.
      */
     private suspend fun ensureMigrated() {
-        if (migrated || !cipher.isEncrypting) return
+        if (migrated) return
         migrationMutex.withLock {
             if (migrated) return
-            if (!migrationState.isMigrated()) {
+            if (!cipher.isEncrypting) {
+                if (migrationState.isMigrated()) migrationState.clearMigrated()
+            } else if (!migrationState.isMigrated()) {
                 for ((entryId, value) in delegate.data.first()) {
                     if (!looksLikePlaintextJson(value)) continue
                     delegate.set(entryId.asKey(), cipher.encrypt(entryId, value))

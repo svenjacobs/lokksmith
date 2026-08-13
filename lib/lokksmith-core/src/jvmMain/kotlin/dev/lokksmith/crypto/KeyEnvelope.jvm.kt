@@ -28,6 +28,7 @@ import java.nio.file.Path
 import java.nio.file.StandardCopyOption
 import java.nio.file.attribute.PosixFilePermission
 import java.util.EnumSet
+import kotlin.concurrent.Volatile
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -49,7 +50,10 @@ actual constructor(
     private val kekFile: File = dataDirectory.resolve("$alias.kek")
 
     private val mutex = Mutex()
-    private var cipher: IvAuthenticatedCipher? = null
+
+    // Volatile: the fast path in cipher() reads this without holding the mutex, which would
+    // otherwise be allowed to observe a published reference whose contents are not yet visible.
+    @Volatile private var cipher: IvAuthenticatedCipher? = null
 
     actual suspend fun encrypt(dek: ByteArray): ByteArray =
         cipher(createIfMissing = true)!!.encrypt(dek)
