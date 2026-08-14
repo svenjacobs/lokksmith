@@ -17,7 +17,6 @@ package dev.lokksmith.client.snapshot
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dev.lokksmith.client.Key
@@ -204,14 +203,22 @@ internal interface SnapshotMigrationState {
     suspend fun clearMigrated()
 }
 
-/** [SnapshotMigrationState] kept alongside the wrapped DEK, separate from the snapshots. */
+/**
+ * [SnapshotMigrationState] kept alongside the wrapped DEK, separate from the snapshots.
+ *
+ * The marker is a string rather than the boolean it reads as, because on Web the backing store is
+ * `LocalStoragePreferenceDataStore`, which holds the whole preference map as a JSON `Map<String,
+ * String>` and supports string values only. Everything else this library persists — snapshots and
+ * the wrapped DEK — is already a string, so keeping that the single value type lets the Web store
+ * stay as small as it is.
+ */
 internal class DataStoreSnapshotMigrationState(private val dataStore: DataStore<Preferences>) :
     SnapshotMigrationState {
 
-    override suspend fun isMigrated(): Boolean = dataStore.data.first()[MigratedKey] == true
+    override suspend fun isMigrated(): Boolean = dataStore.data.first()[MigratedKey] == MIGRATED
 
     override suspend fun markMigrated() {
-        dataStore.edit { it[MigratedKey] = true }
+        dataStore.edit { it[MigratedKey] = MIGRATED }
     }
 
     override suspend fun clearMigrated() {
@@ -219,7 +226,8 @@ internal class DataStoreSnapshotMigrationState(private val dataStore: DataStore<
     }
 
     private companion object {
-        val MigratedKey = booleanPreferencesKey("lokksmith.snapshot.encrypted")
+        val MigratedKey = stringPreferencesKey("lokksmith.snapshot.encrypted")
+        const val MIGRATED = "true"
     }
 }
 

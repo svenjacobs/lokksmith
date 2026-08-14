@@ -76,8 +76,15 @@ internal class LocalStoragePreferenceDataStore(
     private fun writeToStorage(preferences: Preferences) {
         val map =
             preferences.asMap().entries.associate { (key, value) ->
-                // Only String values are supported (see KDoc); cast fails fast otherwise.
-                key.name to (value as String)
+                // Only String values are supported (see KDoc). Naming the key and the value that
+                // broke the contract matters: a bare cast failure surfaces from inside edit() with
+                // nothing pointing at the preference that caused it.
+                require(value is String) {
+                    "$name: only String preference values are supported, but '${key.name}' is a " +
+                        "${value::class.simpleName}. Store it as a String, or replace this " +
+                        "DataStore with one that serializes typed values."
+                }
+                key.name to value
             }
         localStorage.setItem(name, json.encodeToString(map))
     }
