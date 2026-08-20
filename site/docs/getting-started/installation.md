@@ -3,6 +3,11 @@
 Lokksmith is distributed via Maven Central. We recommend using [Gradle Version Catalogs](https://docs.gradle.org/current/userguide/version_catalogs.html)
 for dependency management.
 
+!!! info
+    Building a **native iOS app** in Swift, without Kotlin? Skip to
+    [Native iOS (Swift Package Manager)](#native-ios-swift-package-manager). The rest of this page
+    covers the Gradle setup for Kotlin Multiplatform projects.
+
 ## Add Lokksmith to Version Catalog
 
 Add the current version of Lokksmith to your `gradle/libs.versions.toml`:
@@ -126,5 +131,57 @@ Lokksmith uses Kotlin Serialization internally and depends on the ProGuard confi
 Usually this configuration is applied automatically. However, if you manually configure ProGuard
 you must ensure to apply the Kotlin Serialization rules or else Lokksmith will fail at
 (de)serialization.
+
+## Native iOS (Swift Package Manager)
+
+Native iOS apps consume Lokksmith as a binary Swift package. The package ships an XCFramework built
+from the `lokksmith-swift` module, which exposes a Swift-facing API over `lokksmith-core`. No Kotlin
+toolchain or Gradle build is involved.
+
+In Xcode, choose **File → Add Package Dependencies…** and enter:
+
+```
+https://github.com/svenjacobs/lokksmith
+```
+
+Or add it to your own `Package.swift`:
+
+```swift title="Package.swift"
+dependencies: [
+    .package(url: "https://github.com/svenjacobs/lokksmith", from: "{{ lokksmith_version }}")
+],
+targets: [
+    .target(
+        name: "MyApp",
+        dependencies: [.product(name: "Lokksmith", package: "lokksmith")]
+    )
+]
+```
+
+Requires iOS 15 or later. The framework is static, so nothing needs to be embedded or signed.
+
+### Register the Redirect Scheme
+
+The redirect URI's scheme must be registered by your app, so that
+[`ASWebAuthenticationSession`](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession)
+can hand the response back. Add it to your `Info.plist`:
+
+```xml title="Info.plist"
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>my-app</string>
+        </array>
+    </dict>
+</array>
+```
+
+Lokksmith derives the callback scheme from the `redirectUri` you pass to the request, so no further
+configuration is needed. You do not need to handle the redirect in `onOpenURL` or
+`application(_:open:options:)` — `ASWebAuthenticationSession` delivers it directly.
+
+Continue with [Usage → iOS](usage.md#ios).
 
 *[OIDC]: OpenID Connect
