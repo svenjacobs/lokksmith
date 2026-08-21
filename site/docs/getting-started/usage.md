@@ -247,7 +247,7 @@ lokksmith.launchAuthFlow(initiation)
 
 !!! warning "Security"
     On the Web, Lokksmith persists its state — including tokens — in the browser's `localStorage`.
-    The state is [encrypted](../encryption.md), but the encryption key is stored in `localStorage`
+    The state is [encrypted](encryption.md), but the encryption key is stored in `localStorage`
     too, so on this platform encryption is obfuscation rather than strong protection: any script on
     the same origin can read both. A cross-site scripting (XSS) vulnerability can therefore expose
     tokens. Apply a strong Content Security Policy and the usual XSS defenses.

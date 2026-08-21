@@ -5,4 +5,5 @@ Web) or plain Android application.
 
 - [Installation](installation.md)
 - [Usage](usage.md)
+- [Encryption](encryption.md)
 - [Demo](demo.md)
