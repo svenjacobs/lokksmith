@@ -23,6 +23,7 @@ import dev.lokksmith.client.asKey
 import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.migrate
 import io.ktor.client.engine.HttpClientEngine
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -78,11 +79,37 @@ internal constructor(
         val persistenceFileBaseName: String = "lokksmith_clients",
 
         /**
+         * Whether persisted client state (including tokens) is encrypted at rest.
+         *
+         * Enabled by default. When disabled, snapshots are stored as plaintext JSON and no platform
+         * key material is created. Changing this on an existing installation is not a supported
+         * migration: state written in the other mode is treated as absent, so the affected client
+         * is re-created and the user re-authenticates.
+         */
+        val encryptionEnabled: Boolean = true,
+
+        /**
          * Coroutine scope that is used to launch various coroutines in the context of this
          * [Lokksmith] instance.
+         *
+         * The default installs a [CoroutineExceptionHandler]. Snapshot reads can fail when the
+         * platform secure store is temporarily unavailable (see
+         * [dev.lokksmith.client.snapshot.SnapshotStore]), and a failure that happens while a
+         * snapshot is being observed has no caller to return to. Without a handler it would reach
+         * the platform's default one, which on Android terminates the application. **If you pass
+         * your own scope, install a handler on it.**
          */
         val coroutineScope: CoroutineScope =
-            CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineName("Lokksmith")),
+            CoroutineScope(
+                Dispatchers.Default +
+                    SupervisorJob() +
+                    CoroutineName("Lokksmith") +
+                    CoroutineExceptionHandler { _, throwable ->
+                        // The library has no logging abstraction, so this is deliberately crude. It
+                        // exists to stop an unhandled failure from reaching the platform handler.
+                        println("Lokksmith: unhandled error in coroutine scope: $throwable")
+                    }
+            ),
 
         /**
          * The User-Agent string sent with HTTP requests.

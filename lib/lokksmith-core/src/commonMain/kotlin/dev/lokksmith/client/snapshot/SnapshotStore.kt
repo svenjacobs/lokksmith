@@ -33,17 +33,30 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.json.Json
 
-/** (De)serializes and persists [Snapshot] instances. */
+/**
+ * (De)serializes and persists [Snapshot] instances.
+ *
+ * When snapshots are encrypted at rest, reads distinguish two kinds of failure. A snapshot that
+ * cannot be decrypted, because the platform key was lost or the stored value was tampered with, is
+ * reported as absent: the client is re-created and the user re-authenticates. A failure to reach
+ * the platform secure store at all is potentially transient — the Android Keystore during
+ * direct-boot, the iOS Keychain before first unlock — and is thrown instead of being reported as
+ * absent, because concluding "not signed in" would lead to overwriting a snapshot that is still
+ * valid. Treat such an error as "unknown, try again".
+ */
 public interface SnapshotStore {
 
+    /** @throws Exception if the platform secure store could not be reached; see [SnapshotStore]. */
     public fun observe(key: Key): Flow<Snapshot?>
 
+    /** @throws Exception if the platform secure store could not be reached; see [SnapshotStore]. */
     public suspend fun getForState(state: String): Snapshot?
 
     public suspend fun set(key: Key, snapshot: Snapshot): Snapshot
 
     public suspend fun delete(key: Key): Boolean
 
+    /** @throws Exception if the platform secure store could not be reached; see [SnapshotStore]. */
     public suspend fun exists(key: Key): Boolean
 }
 
@@ -59,7 +72,8 @@ internal interface InternalSnapshotStore : SnapshotStore {
 
         suspend fun set(key: Key, snapshot: String)
 
-        suspend fun delete(key: Key)
+        /** Removes the physical entry for [key], returning whether one existed. */
+        suspend fun delete(key: Key): Boolean
 
         suspend fun contains(key: Key): Boolean
     }
@@ -82,11 +96,6 @@ internal class SnapshotStoreImpl(
     override val serializer: Json,
 ) : InternalSnapshotStore {
 
-    internal constructor(
-        dataStore: DataStore<Preferences>,
-        serializer: Json,
-    ) : this(persistence = DataStorePersistence(dataStore), serializer = serializer)
-
     override val writeMutex = Mutex()
 
     override fun observe(key: Key): Flow<Snapshot?> =
@@ -103,43 +112,47 @@ internal class SnapshotStoreImpl(
         internalSet(key, snapshot)
     }
 
-    override suspend fun delete(key: Key): Boolean {
-        if (!exists(key)) return false
-        persistence.delete(key)
-        return true
-    }
+    override suspend fun delete(key: Key): Boolean = persistence.delete(key)
 
     override suspend fun exists(key: Key): Boolean = persistence.contains(key)
+}
 
-    private class DataStorePersistence(private val dataStore: DataStore<Preferences>) :
-        Persistence {
+/**
+ * [Persistence] backed by AndroidX [DataStore], keeping each snapshot as a string under
+ * [Key.value].
+ */
+internal class DataStorePersistence(private val dataStore: DataStore<Preferences>) : Persistence {
 
-        override val data: Flow<Map<String, String>>
-            get() =
-                dataStore.data.map { prefs ->
-                    prefs.asMap().map { (key, value) -> key.name to value as String }.toMap()
-                }
+    override val data: Flow<Map<String, String>>
+        get() =
+            dataStore.data.map { prefs ->
+                prefs.asMap().map { (key, value) -> key.name to value as String }.toMap()
+            }
 
-        override fun observe(key: Key): Flow<String?> =
-            dataStore.data.map { prefs -> prefs[key.prefKey] }
+    override fun observe(key: Key): Flow<String?> =
+        dataStore.data.map { prefs -> prefs[key.prefKey] }
 
-        override suspend fun get(key: Key): String? = prefs()[key.prefKey]
+    override suspend fun get(key: Key): String? = prefs()[key.prefKey]
 
-        override suspend fun set(key: Key, snapshot: String) {
-            dataStore.edit { prefs -> prefs[key.prefKey] = snapshot }
-        }
-
-        override suspend fun delete(key: Key) {
-            dataStore.edit { prefs -> prefs.remove(key.prefKey) }
-        }
-
-        override suspend fun contains(key: Key): Boolean = prefs().contains(key.prefKey)
-
-        private suspend fun prefs() = dataStore.data.first()
-
-        private val Key.prefKey: Preferences.Key<String>
-            get() = stringPreferencesKey(value)
+    override suspend fun set(key: Key, snapshot: String) {
+        dataStore.edit { prefs -> prefs[key.prefKey] = snapshot }
     }
+
+    override suspend fun delete(key: Key): Boolean {
+        var existed = false
+        dataStore.edit { prefs ->
+            existed = prefs.contains(key.prefKey)
+            if (existed) prefs.remove(key.prefKey)
+        }
+        return existed
+    }
+
+    override suspend fun contains(key: Key): Boolean = prefs().contains(key.prefKey)
+
+    private suspend fun prefs() = dataStore.data.first()
+
+    private val Key.prefKey: Preferences.Key<String>
+        get() = stringPreferencesKey(value)
 }
 
 /**
@@ -147,11 +160,20 @@ internal class SnapshotStoreImpl(
  *
  * Creates a [StateFlow] internally and suspends until the first value was received. Therefor
  * [contract] must only be called after the initial snapshot has been stored!
+ *
+ * @throws Exception if the platform secure store could not be reached; see [SnapshotStore].
  */
 internal suspend fun InternalSnapshotStore.contract(
     key: Key,
     coroutineScope: CoroutineScope,
 ): InternalClient.SnapshotContract {
+    // Reads the snapshot once on the caller's coroutine, before the long-lived collector below is
+    // launched. A read can fail because the platform secure store is transiently unavailable, and
+    // that has to surface as a failure of this function. Left to the collector inside stateIn it
+    // would instead fail that coroutine, which reports to the CoroutineExceptionHandler of
+    // [coroutineScope] rather than to any caller.
+    persistence.get(key)
+
     val snapshots = observe(key).filterNotNull()
 
     // A StateFlow already behaves like distinctUntilChanged() is applied, so we don't need to

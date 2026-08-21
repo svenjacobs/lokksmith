@@ -18,6 +18,7 @@ nav = [
     "getting-started/index.md",
     { Installation = "getting-started/installation.md" },
     { Usage = "getting-started/usage.md" },
+    { Encryption = "getting-started/encryption.md" },
     { Demo = "getting-started/demo.md" },
   ] },
   { Migration = "migration.md" },
