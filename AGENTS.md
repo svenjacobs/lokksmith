@@ -52,6 +52,76 @@ test setup.
 - All new/changed code must have unit tests.
 - If an LLM generated code, state so in the PR.
 
+## Pull Request Description
+
+Keep the description **concise**. It tells a reviewer what changed and why — it does not restate
+the diff.
+
+- Start with a **TL;DR** section of at most three sentences. If the whole description is that short
+  anyway, drop the heading and just write those sentences.
+- Add further sections only when they carry information the TL;DR cannot, for example notable
+  implementation decisions, trade-offs, follow-ups or screenshots for UI changes.
+- If the pull request contains testable functionality, add a **Testing** section that explains what
+  needs to be tested and how: which demo screen to open, which Gradle task to run.
+- Omit the Testing section for changes that cannot be verified by hand, such as documentation-only
+  or build configuration changes.
+
+Example:
+
+````markdown
+## TL;DR
+
+Adds `preemptiveRefreshSeconds` handling to `runWithTokens` so access tokens are refreshed shortly
+before they expire instead of after the first failed request.
+
+## Testing
+
+1. Run the demo app (`./gradlew :composeApp:run` in `demo`) and sign in against the local OIDC setup.
+2. Wait until the access token is within the preemptive refresh window and trigger an API call —
+   the token must be refreshed before the request goes out.
+3. Run `./gradlew :lokksmith-core:jvmTest --tests "*ClientImplTest*"`.
+````
+
+### Closing Keywords
+
+If a pull request implements a feature request or fixes a bug that originates from a GitHub issue,
+include
+a [closing keyword](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests)
+in the PR description so the issue is automatically closed when the PR is merged.
+
+Supported keywords: `Closes`, `Fixes`, `Resolves` (case-insensitive).
+
+Example PR description:
+
+```
+Closes #42
+```
+
+or inline:
+
+```
+This PR adds support for refreshing tokens preemptively.
+
+Closes #42
+```
+
+## Code Review
+
+When reviewing a pull request, every **review comment**, **summary comment** and **reply** to a
+remark **must** end with a note stating that it was written by an AI agent, naming the harness and
+the model used.
+
+Put the note on its own last line, in italics:
+
+````markdown
+`refresh()` is called outside the mutex here, so two concurrent callers can each start a token
+refresh. Consider moving the call inside `updateSnapshot { }`.
+
+_Written by Claude Code (Claude Opus 5)_
+````
+
+Always name the harness and model actually in use — the line above is only an example.
+
 ## Architecture
 
 The core module (`lokksmith-core`) is structured around a few central abstractions in package
