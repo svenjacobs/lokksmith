@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.0.0](https://github.com/svenjacobs/lokksmith/compare/v1.1.4...v2.0.0) (2026-08-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* the minimum supported Android version is now API 23 (6.0).
+
+### Features
+
+* encrypt persisted snapshots at rest ([#488](https://github.com/svenjacobs/lokksmith/issues/488)) ([9fb46bd](https://github.com/svenjacobs/lokksmith/commit/9fb46bd9ee51150f37c563a5b459201618930c30))
+
+
+### Bug Fixes
+
+* **deps:** update agp to v9.3.1 ([#470](https://github.com/svenjacobs/lokksmith/issues/470)) ([b547557](https://github.com/svenjacobs/lokksmith/commit/b5475579b6cf16f5c4a6a37087fe94cef23ec67f))
+* **deps:** update androidx.lifecycle to v2.11.0 ([#466](https://github.com/svenjacobs/lokksmith/issues/466)) ([309707d](https://github.com/svenjacobs/lokksmith/commit/309707df82a0d2a01d44e41365571ea6e255f086))
+* **deps:** update dependency androidx.appcompat:appcompat to v1.8.0 ([#491](https://github.com/svenjacobs/lokksmith/issues/491)) ([c0a1d56](https://github.com/svenjacobs/lokksmith/commit/c0a1d5671aa022dbc3eaca096f6fbff9ad8016bf))
+* **deps:** update dependency androidx.constraintlayout:constraintlayout to v2.2.2 ([#481](https://github.com/svenjacobs/lokksmith/issues/481)) ([1c182fa](https://github.com/svenjacobs/lokksmith/commit/1c182fa132c4fcecd5bb02e80611ce19296269ec))
+* **deps:** update dependency org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose to v2.11.0 ([#467](https://github.com/svenjacobs/lokksmith/issues/467)) ([f33d26b](https://github.com/svenjacobs/lokksmith/commit/f33d26bf0120f447223d132205bc52b9d5fe9436))
+* **deps:** update dependency org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose to v2.11.0 ([#469](https://github.com/svenjacobs/lokksmith/issues/469)) ([aeaddc1](https://github.com/svenjacobs/lokksmith/commit/aeaddc19b9c1566095ac6841b1c23ec2c654f73c))
+* **deps:** update kotlin monorepo to v2.4.10 ([#468](https://github.com/svenjacobs/lokksmith/issues/468)) ([9eebf66](https://github.com/svenjacobs/lokksmith/commit/9eebf6669a36940d48b1246133b875baec7d92c5))
+* **deps:** update ktor monorepo to v3.5.2 ([#483](https://github.com/svenjacobs/lokksmith/issues/483)) ([638840a](https://github.com/svenjacobs/lokksmith/commit/638840ad78e147cc7cb5eb030301c11916c55ae9))
+* **deps:** update spotless to v8.10.0 ([#493](https://github.com/svenjacobs/lokksmith/issues/493)) ([2aaf014](https://github.com/svenjacobs/lokksmith/commit/2aaf0143ec77c7c1d2d6d5f0df596eedeae14bbd))
+* **deps:** update spotless to v8.8.0 ([#461](https://github.com/svenjacobs/lokksmith/issues/461)) ([b9f6c2d](https://github.com/svenjacobs/lokksmith/commit/b9f6c2dddd0fccd55ea4bc2cb328754ce56e4c2a))
+* **deps:** update spotless to v8.9.0 ([#479](https://github.com/svenjacobs/lokksmith/issues/479)) ([9eff018](https://github.com/svenjacobs/lokksmith/commit/9eff018fefb51ef76fcac82619394d171fb15e48))
+
 ## [1.1.4](https://github.com/svenjacobs/lokksmith/compare/v1.1.3...v1.1.4) (2026-06-27)
 
 
