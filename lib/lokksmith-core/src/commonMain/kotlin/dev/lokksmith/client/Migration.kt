@@ -58,7 +58,8 @@ internal constructor(
      * @param refreshToken The refresh token string to set, or `null` if not available.
      * @param refreshTokenExpiresAt The expiration timestamp (epoch seconds) for the refresh token,
      *   or `null` if not applicable.
-     * @param idToken The ID token string to set (JWT-encoded).
+     * @param idToken The ID token string to set (JWT-encoded). Its `nonce` claim, if present, is
+     *   remembered so that refresh responses echoing the nonce can be validated.
      * @param setMigratedFlag Sets the migrated flag on this client instance. Any further migration
      *   attempt will throw an exception.
      * @throws IllegalStateException if the client was already migrated
@@ -98,7 +99,8 @@ internal constructor(
                                 )
                             },
                         idToken = idToken,
-                    )
+                    ),
+                nonce = idToken.nonce,
             )
         }
 

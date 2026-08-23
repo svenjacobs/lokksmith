@@ -27,6 +27,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MigrationTest {
@@ -71,6 +72,38 @@ class MigrationTest {
         assertEquals(TEST_INSTANT + 600, tokens?.idToken?.expiration)
         assertEquals(TEST_INSTANT, tokens?.idToken?.issuedAt)
         assertContains(tokens?.idToken?.audiences.orEmpty(), "clientId")
+    }
+
+    @Test
+    fun `setTokens should set nonce from ID token on snapshot`() = runTest {
+        val client = createTestClient()
+        val idTokenWithNonce =
+            Jwt(
+                header = idToken.header,
+                payload =
+                    Jwt.Payload(
+                        iss = idToken.payload.iss,
+                        sub = idToken.payload.sub,
+                        aud = idToken.payload.aud,
+                        exp = idToken.payload.exp,
+                        iat = idToken.payload.iat,
+                        extra = mapOf("nonce" to JsonPrimitive("BHUnfLbJTz1")),
+                    ),
+            )
+
+        migration.setTokens(
+            client = client,
+            accessToken = "eosvcZMZq7e",
+            accessTokenExpiresAt = TEST_INSTANT + 600,
+            refreshToken = "m3h8Gu2r",
+            refreshTokenExpiresAt = TEST_INSTANT + 1_209_600,
+            idToken = jwtEncoder.encode(idTokenWithNonce),
+        )
+
+        runCurrent()
+
+        assertEquals("BHUnfLbJTz1", client.snapshots.value.nonce)
+        assertEquals("BHUnfLbJTz1", client.tokens.value?.idToken?.nonce)
     }
 
     @Test
