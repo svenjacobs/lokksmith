@@ -471,6 +471,41 @@ class ClientTest {
     fun `Options should default additional token request parameters to an empty map`() {
         assertEquals(emptyMap(), Client.Options().additionalTokenRequestParameters)
     }
+
+    @Test
+    fun `client should not observe mutation of the additional token request parameters map`() =
+        runTest {
+            val parameters = mutableMapOf("httpStatusCodes" to "true")
+
+            val client =
+                createTestClient(
+                    options = Client.Options(additionalTokenRequestParameters = parameters)
+                )
+
+            // Passed validation as a legitimate map, then mutated to smuggle in a protocol
+            // parameter and to add an entry that was never validated.
+            parameters[Parameter.GRANT_TYPE] = "password"
+            parameters["addedLater"] = "value"
+
+            assertEquals(
+                mapOf("httpStatusCodes" to "true"),
+                client.options.additionalTokenRequestParameters,
+            )
+        }
+
+    @Test
+    fun `client should not observe mutation of parameters assigned after creation`() = runTest {
+        val parameters = mutableMapOf("httpStatusCodes" to "true")
+        val client = createTestClient()
+
+        client.options = Client.Options(additionalTokenRequestParameters = parameters)
+        parameters[Parameter.GRANT_TYPE] = "password"
+
+        assertEquals(
+            mapOf("httpStatusCodes" to "true"),
+            client.options.additionalTokenRequestParameters,
+        )
+    }
 }
 
 internal data class TestProvider(

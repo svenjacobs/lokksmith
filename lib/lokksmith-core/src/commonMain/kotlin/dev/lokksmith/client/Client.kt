@@ -144,8 +144,9 @@ public interface Client {
          *
          * Known OAuth and OIDC parameters are rejected, so this cannot be used to tamper with
          * `grant_type`, `client_id`, `code`, `code_verifier`, `redirect_uri` or `refresh_token`.
-         * This mirrors the behaviour of `AuthFlow.Request.additionalParameters`, except that it is
-         * validated when the options are constructed rather than when a request is sent.
+         * This is checked twice, like `AuthFlow.Request.additionalParameters`: once here when the
+         * options are constructed, and again when a request is sent. A client takes a defensive
+         * copy of this map, so mutating it afterwards changes nothing.
          *
          * These parameters are constant for the lifetime of the client. Values that vary per
          * request are not covered by this option.
@@ -416,12 +417,23 @@ public interface InternalClient : Client {
 internal class ClientImpl
 private constructor(
     override val key: Key,
-    override var options: Client.Options,
+    options: Client.Options,
     override val tokens: StateFlow<Tokens?>,
     override val provider: Provider,
     private val snapshotContract: SnapshotContract,
     internal val coroutineScope: CoroutineScope,
 ) : InternalClient {
+
+    /**
+     * Assigned through [withDefensivelyCopiedParameters] so that [Client.Options] held by a client
+     * never shares [Client.Options.additionalTokenRequestParameters] with the caller. Validation in
+     * `Options.init` happens once, at construction; without the copy a caller could mutate the map
+     * afterwards and change what is sent to the token endpoint.
+     */
+    override var options: Client.Options = options.withDefensivelyCopiedParameters()
+        set(value) {
+            field = value.withDefensivelyCopiedParameters()
+        }
 
     internal class DefaultProvider(
         private val httpClient: HttpClient,
@@ -575,3 +587,13 @@ private constructor(
         }
     }
 }
+
+/**
+ * Returns options holding an immutable copy of [Client.Options.additionalTokenRequestParameters].
+ *
+ * `copy()` re-runs `init`, so the returned options are validated as well as isolated from the
+ * caller. The copy is unconditional: a map that is empty when a client is created may not be empty
+ * later.
+ */
+private fun Client.Options.withDefensivelyCopiedParameters(): Client.Options =
+    copy(additionalTokenRequestParameters = additionalTokenRequestParameters.toMap())

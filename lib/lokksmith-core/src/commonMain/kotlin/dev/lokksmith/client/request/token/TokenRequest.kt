@@ -83,14 +83,21 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
 }
 
 /**
- * Appends [additionalParameters] to the request.
+ * Appends [additionalParameters] to the request, rejecting any key the request already carries.
  *
- * No collision check is needed here: [Client.Options] rejects known OAuth/OIDC parameters when it
- * is constructed, and every parameter these requests send is one. Checking again at send time would
- * only hide a validation gap.
+ * [Client.Options] validates its parameters against the known OAuth/OIDC parameters when it is
+ * constructed, which covers everything these requests send today. This check is not redundant with
+ * that one: it covers a different moment in time, and it keeps the guarantee intact for a future
+ * call site that appends a parameter the constructor-time list does not know about.
+ *
+ * Rejecting rather than skipping matters because form parameters are a multimap — appending a
+ * duplicate `grant_type` would send both values and leave the choice between them to the server.
  */
 private fun ParametersBuilder.appendAdditionalParameters(
     additionalParameters: Map<String, String>
 ) {
-    additionalParameters.forEach { (name, value) -> append(name, value) }
+    additionalParameters.forEach { (name, value) ->
+        require(!contains(name)) { "Parameter \"$name\" is already present" }
+        append(name, value)
+    }
 }

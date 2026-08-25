@@ -112,9 +112,10 @@ is sent. Without it, Lokksmith cannot tell an OAuth error such as `invalid_grant
 malformed response — which is the difference between "the session is dead" and "retry later".
 
 !!! warning
-    Known OAuth and OIDC parameters are rejected with an `IllegalArgumentException` when the options
-    are constructed, so this cannot be used to override `grant_type`, `client_id`, `code`,
-    `code_verifier`, `redirect_uri` or `refresh_token`.
+    Known OAuth and OIDC parameters are rejected with an `IllegalArgumentException`, so this cannot
+    be used to override `grant_type`, `client_id`, `code`, `code_verifier`, `redirect_uri` or
+    `refresh_token`. This is checked when the options are constructed and again when a request is
+    sent, and the client keeps a defensive copy of the map, so mutating it afterwards has no effect.
 
 These parameters are constant for the lifetime of the client. Values that need to vary per request
 are not covered by this option.
