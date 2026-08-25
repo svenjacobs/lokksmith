@@ -43,6 +43,17 @@ test setup.
 - **Commit messages and PR titles must follow [Conventional Commits](https://www.conventionalcommits.org/)**
   (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`). PR titles double as the squash-merge
   commit message. Releases are automated via release-please from these commits.
+- **Commit messages must additionally satisfy the commitlint rules** configured in
+  `commitlint.config.js`, which extends `@commitlint/config-conventional`. A commit violating a rule
+  at error level is rejected by the commit hook and by CI. The rules that trip people up most:
+    - `footer-max-line-length` (error, 100): **every single line of the footer must be at most 100
+      characters.** This includes trailers such as `Co-authored-by:`, `Closes #42` or
+      `BREAKING CHANGE:` descriptions — wrap long footer text across multiple lines instead of
+      letting one line grow past 100 characters.
+    - `header-max-length` (warning, 100): keep the subject line (`type(scope): summary`) at 100
+      characters or less.
+    - `body-max-line-length` is disabled in this repository, so the body may contain long lines
+      (e.g. URLs) — the footer may not.
 - **Apply appropriate labels to pull requests**: `enhancement` (new features/improvements), `bug`
   (bug fixes), `documentation` (docs changes), `maintenance` (dependency updates, refactoring, chores).
 - Explicit API mode is enabled: every declaration is explicitly `public` or `internal`. Types meant
