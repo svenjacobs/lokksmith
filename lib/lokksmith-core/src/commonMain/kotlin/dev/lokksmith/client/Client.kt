@@ -26,6 +26,7 @@ import dev.lokksmith.client.request.flow.IdentityRedirectUriHandler
 import dev.lokksmith.client.request.flow.RedirectUriHandler
 import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlow
 import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
+import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.request.refresh.RefreshTokenRequest
 import dev.lokksmith.client.request.refresh.RefreshTokenRequestImpl
 import dev.lokksmith.client.snapshot.InternalSnapshotStore
@@ -131,11 +132,42 @@ public interface Client {
          * @see leewaySeconds
          */
         val preemptiveRefreshSeconds: Int = 60,
+
+        /**
+         * Additional parameters sent with every request to the token endpoint, both the
+         * authorization code exchange and the token refresh.
+         *
+         * Some providers require a vendor-specific parameter on token requests. For example, SAP
+         * Customer Data Cloud answers token endpoint errors with HTTP 200 and an error body unless
+         * `httpStatusCodes=true` is sent, which prevents an OAuth error from being distinguished
+         * from a malformed response.
+         *
+         * Known OAuth and OIDC parameters are rejected, so this cannot be used to tamper with
+         * `grant_type`, `client_id`, `code`, `code_verifier`, `redirect_uri` or `refresh_token`.
+         * This is checked twice, like `AuthFlow.Request.additionalParameters`: once here when the
+         * options are constructed, and again when a request is sent. A client takes a defensive
+         * copy of this map, so mutating it afterwards changes nothing.
+         *
+         * These parameters are constant for the lifetime of the client. Values that vary per
+         * request are not covered by this option.
+         *
+         * @throws IllegalArgumentException if a key is blank or is a known OAuth/OIDC parameter
+         */
+        val additionalTokenRequestParameters: Map<String, String> = emptyMap(),
     ) {
         init {
             require(leewaySeconds >= 0) { "leewaySeconds must be a positive value" }
             require(preemptiveRefreshSeconds >= 0) {
                 "preemptiveRefreshSeconds must be a positive value"
+            }
+
+            additionalTokenRequestParameters.keys.forEach { key ->
+                require(key.isNotBlank()) {
+                    "additionalTokenRequestParameters must not contain blank keys"
+                }
+                require(!Parameter.KNOWN_PARAMETERS.contains(key.lowercase())) {
+                    "Parameter \"$key\" is a known OAuth/OIDC parameter"
+                }
             }
         }
     }
@@ -385,12 +417,23 @@ public interface InternalClient : Client {
 internal class ClientImpl
 private constructor(
     override val key: Key,
-    override var options: Client.Options,
+    options: Client.Options,
     override val tokens: StateFlow<Tokens?>,
     override val provider: Provider,
     private val snapshotContract: SnapshotContract,
     internal val coroutineScope: CoroutineScope,
 ) : InternalClient {
+
+    /**
+     * Assigned through [withDefensivelyCopiedParameters] so that [Client.Options] held by a client
+     * never shares [Client.Options.additionalTokenRequestParameters] with the caller. Validation in
+     * `Options.init` happens once, at construction; without the copy a caller could mutate the map
+     * afterwards and change what is sent to the token endpoint.
+     */
+    override var options: Client.Options = options.withDefensivelyCopiedParameters()
+        set(value) {
+            field = value.withDefensivelyCopiedParameters()
+        }
 
     internal class DefaultProvider(
         private val httpClient: HttpClient,
@@ -544,3 +587,13 @@ private constructor(
         }
     }
 }
+
+/**
+ * Returns options holding an immutable copy of [Client.Options.additionalTokenRequestParameters].
+ *
+ * `copy()` re-runs `init`, so the returned options are validated as well as isolated from the
+ * caller. The copy is unconditional: a map that is empty when a client is created may not be empty
+ * later.
+ */
+private fun Client.Options.withDefensivelyCopiedParameters(): Client.Options =
+    copy(additionalTokenRequestParameters = additionalTokenRequestParameters.toMap())

@@ -15,6 +15,7 @@
  */
 package dev.lokksmith.client.request.flow.authorizationCode
 
+import dev.lokksmith.client.Client
 import dev.lokksmith.client.Id
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.Key
@@ -361,6 +362,90 @@ class AuthorizationCodeFlowTest {
     }
 
     @Test
+    fun `onResponse should send additional token request parameters`() = runTest {
+        val jwtEncoder = JwtEncoder(Json)
+
+        val (flow, client, testState) =
+            createFlow(
+                options =
+                    Client.Options(
+                        additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true")
+                    )
+            ) { testState ->
+                { request ->
+                    when (request.url.toString()) {
+                        "https://example.com/tokenEndpoint" -> {
+                            val body = assertIs<FormDataContent>(request.body)
+
+                            assertEquals("true", body.formData["httpStatusCodes"])
+
+                            // Protocol parameters are still sent, exactly once each.
+                            assertEquals(
+                                listOf(GrantType.AuthorizationCode.value),
+                                body.formData.getAll(Parameter.GRANT_TYPE),
+                            )
+                            assertEquals(
+                                listOf("s7FBqWPnG2"),
+                                body.formData.getAll(Parameter.CODE),
+                            )
+
+                            val idToken =
+                                Jwt(
+                                    header = Jwt.Header(alg = "none"),
+                                    payload =
+                                        Jwt.Payload(
+                                            iss = "issuer",
+                                            sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                            aud = listOf("clientId"),
+                                            exp = TEST_INSTANT + 600,
+                                            iat = TEST_INSTANT,
+                                            extra =
+                                                mapOf("nonce" to JsonPrimitive(testState.nonce)),
+                                        ),
+                                )
+
+                            val response =
+                                TokenResponse(
+                                    tokenType = "Bearer",
+                                    accessToken = "Lh0rP8vrtQH",
+                                    expiresIn = 600,
+                                    idToken = jwtEncoder.encode(idToken),
+                                )
+
+                            respond(
+                                content = httpJson.encodeToString(response),
+                                status = HttpStatusCode.OK,
+                                headers = headersOf("Content-Type", "application/json"),
+                            )
+                        }
+
+                        else -> respondBadRequest()
+                    }
+                }
+            }
+
+        flow.prepare()
+        runCurrent()
+
+        testState.codeVerifier = flow.codeVerifier
+        testState.nonce = flow.nonce
+
+        val responseUrl =
+            buildUrl {
+                    takeFrom("https://example.com/app/redirect")
+                    parameters[Parameter.STATE] = flow.state
+                    parameters[Parameter.CODE] = "s7FBqWPnG2"
+                }
+                .toString()
+
+        flow.onResponse(responseUrl)
+        runCurrent()
+
+        assertEquals("Lh0rP8vrtQH", assertNotNull(client.tokens.value).accessToken.token)
+        assertEquals(FlowResult.Success(state = flow.state), client.snapshots.value.flowResult)
+    }
+
+    @Test
     fun `onResponse should handle error in code response`() = runTest {
         val (flow, client) = createFlow()
 
@@ -548,6 +633,7 @@ private suspend fun TestScope.createFlow(
     request: AuthorizationCodeFlow.Request =
         AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect"),
     redirectUriHandler: RedirectUriHandler = IdentityRedirectUriHandler,
+    options: Client.Options = Client.Options(),
     requestHandler: (TestState) -> MockRequestHandleScope.(HttpRequestData) -> HttpResponseData = {
         { respondBadRequest() }
     },
@@ -562,6 +648,7 @@ private suspend fun TestScope.createFlow(
             id = id,
             provider =
                 TestProvider(httpClient = httpClient, redirectUriHandler = { redirectUriHandler }),
+            options = options,
         )
 
     return Triple(

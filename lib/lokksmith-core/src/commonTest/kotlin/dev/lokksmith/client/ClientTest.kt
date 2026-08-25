@@ -374,6 +374,138 @@ class ClientTest {
         client.dispose()
         assertFalse((client as ClientImpl).coroutineScope.isActive)
     }
+
+    @Test
+    fun `refresh should send additional token request parameters`() = runTest {
+        val jwtEncoder = JwtEncoder(Json)
+        val engine = MockEngine { request ->
+            when (request.url.toString()) {
+                "https://example.com/tokenEndpoint" -> {
+                    val body = assertIs<FormDataContent>(request.body)
+
+                    assertEquals("true", body.formData["httpStatusCodes"])
+                    assertEquals("value", body.formData["vendorParam"])
+
+                    // Protocol parameters are still sent, exactly once each.
+                    assertEquals(
+                        listOf(GrantType.RefreshToken.value),
+                        body.formData.getAll(Parameter.GRANT_TYPE),
+                    )
+                    assertEquals(listOf("clientId"), body.formData.getAll(Parameter.CLIENT_ID))
+                    assertEquals(listOf("bMGysPYch"), body.formData.getAll(Parameter.REFRESH_TOKEN))
+
+                    val idToken =
+                        Jwt(
+                            header = Jwt.Header(alg = "none"),
+                            payload =
+                                Jwt.Payload(
+                                    iss = "issuer",
+                                    sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                    aud = listOf("clientId"),
+                                    exp = 1748706999 + 600,
+                                    iat = 1748706999,
+                                    extra = mapOf("nonce" to JsonPrimitive("0D1ck61")),
+                                ),
+                        )
+
+                    val response =
+                        TokenResponse(
+                            tokenType = "Bearer",
+                            accessToken = "Lh0rP8vrtQH",
+                            expiresIn = 600,
+                            refreshToken = "cyaVZ3zPU",
+                            idToken = jwtEncoder.encode(idToken),
+                        )
+
+                    respond(
+                        content = httpJson.encodeToString(response),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf("Content-Type", "application/json"),
+                    )
+                }
+
+                else -> respondBadRequest()
+            }
+        }
+
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                    ),
+                options =
+                    Client.Options(
+                        additionalTokenRequestParameters =
+                            mapOf("httpStatusCodes" to "true", "vendorParam" to "value")
+                    ),
+                initialSnapshot = { copy(tokens = SAMPLE_TOKENS, nonce = "0D1ck61") },
+            )
+
+        client.refresh()
+        runCurrent()
+
+        assertEquals("Lh0rP8vrtQH", assertNotNull(client.tokens.value).accessToken.token)
+    }
+
+    @Test
+    fun `Options should reject a known OAuth parameter as an additional token request parameter`() {
+        // Upper case to confirm the check is case-insensitive, as it is for authorization requests.
+        val exception =
+            assertFailsWith<IllegalArgumentException> {
+                Client.Options(additionalTokenRequestParameters = mapOf("Grant_Type" to "evil"))
+            }
+
+        assertEquals("Parameter \"Grant_Type\" is a known OAuth/OIDC parameter", exception.message)
+    }
+
+    @Test
+    fun `Options should reject a blank additional token request parameter key`() {
+        assertFailsWith<IllegalArgumentException> {
+            Client.Options(additionalTokenRequestParameters = mapOf(" " to "value"))
+        }
+    }
+
+    @Test
+    fun `Options should default additional token request parameters to an empty map`() {
+        assertEquals(emptyMap(), Client.Options().additionalTokenRequestParameters)
+    }
+
+    @Test
+    fun `client should not observe mutation of the additional token request parameters map`() =
+        runTest {
+            val parameters = mutableMapOf("httpStatusCodes" to "true")
+
+            val client =
+                createTestClient(
+                    options = Client.Options(additionalTokenRequestParameters = parameters)
+                )
+
+            // Passed validation as a legitimate map, then mutated to smuggle in a protocol
+            // parameter and to add an entry that was never validated.
+            parameters[Parameter.GRANT_TYPE] = "password"
+            parameters["addedLater"] = "value"
+
+            assertEquals(
+                mapOf("httpStatusCodes" to "true"),
+                client.options.additionalTokenRequestParameters,
+            )
+        }
+
+    @Test
+    fun `client should not observe mutation of parameters assigned after creation`() = runTest {
+        val parameters = mutableMapOf("httpStatusCodes" to "true")
+        val client = createTestClient()
+
+        client.options = Client.Options(additionalTokenRequestParameters = parameters)
+        parameters[Parameter.GRANT_TYPE] = "password"
+
+        assertEquals(
+            mapOf("httpStatusCodes" to "true"),
+            client.options.additionalTokenRequestParameters,
+        )
+    }
 }
 
 internal data class TestProvider(
@@ -410,6 +542,7 @@ suspend fun TestScope.createTestClient(
     snapshotStore: SnapshotStore =
         SnapshotStoreImpl(persistence = PersistenceFake(), serializer = Json),
     provider: InternalClient.Provider = TestProvider(),
+    options: Client.Options = Client.Options(),
     initialSnapshot: Snapshot.() -> Snapshot = { this },
 ): InternalClient {
     // Create initial snapshot
@@ -432,7 +565,7 @@ suspend fun TestScope.createTestClient(
     val client =
         ClientImpl.create(
             key = key,
-            options = Client.Options(),
+            options = options,
             coroutineScope = backgroundScope,
             snapshotStore = snapshotStore,
             provider = provider,

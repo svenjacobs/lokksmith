@@ -32,12 +32,17 @@ import kotlinx.coroutines.withContext
 public class TokenRequest(private val client: Client, private val httpClient: HttpClient) {
 
     public suspend operator fun invoke(builder: ParametersBuilder.() -> Unit): TokenResponse {
+        val formParameters = Parameters.build {
+            builder()
+            appendAdditionalParameters(client.options.additionalTokenRequestParameters)
+        }
+
         val response =
             try {
                 withContext(ioDispatcher) {
                     httpClient.submitForm(
                         url = client.metadata.tokenEndpoint,
-                        formParameters = Parameters.build(builder),
+                        formParameters = formParameters,
                     )
                 }
             } catch (e: CancellationException) {
@@ -74,5 +79,25 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
         }
 
         return tokenResponse
+    }
+}
+
+/**
+ * Appends [additionalParameters] to the request, rejecting any key the request already carries.
+ *
+ * [Client.Options] validates its parameters against the known OAuth/OIDC parameters when it is
+ * constructed, which covers everything these requests send today. This check is not redundant with
+ * that one: it covers a different moment in time, and it keeps the guarantee intact for a future
+ * call site that appends a parameter the constructor-time list does not know about.
+ *
+ * Rejecting rather than skipping matters because form parameters are a multimap — appending a
+ * duplicate `grant_type` would send both values and leave the choice between them to the server.
+ */
+private fun ParametersBuilder.appendAdditionalParameters(
+    additionalParameters: Map<String, String>
+) {
+    additionalParameters.forEach { (name, value) ->
+        require(!contains(name)) { "Parameter \"$name\" is already present" }
+        append(name, value)
     }
 }
