@@ -32,12 +32,17 @@ import kotlinx.coroutines.withContext
 public class TokenRequest(private val client: Client, private val httpClient: HttpClient) {
 
     public suspend operator fun invoke(builder: ParametersBuilder.() -> Unit): TokenResponse {
+        val formParameters = Parameters.build {
+            builder()
+            appendAdditionalParameters(client.options.additionalTokenRequestParameters)
+        }
+
         val response =
             try {
                 withContext(ioDispatcher) {
                     httpClient.submitForm(
                         url = client.metadata.tokenEndpoint,
-                        formParameters = Parameters.build(builder),
+                        formParameters = formParameters,
                     )
                 }
             } catch (e: CancellationException) {
@@ -75,4 +80,17 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
 
         return tokenResponse
     }
+}
+
+/**
+ * Appends [additionalParameters] to the request.
+ *
+ * No collision check is needed here: [Client.Options] rejects known OAuth/OIDC parameters when it
+ * is constructed, and every parameter these requests send is one. Checking again at send time would
+ * only hide a validation gap.
+ */
+private fun ParametersBuilder.appendAdditionalParameters(
+    additionalParameters: Map<String, String>
+) {
+    additionalParameters.forEach { (name, value) -> append(name, value) }
 }

@@ -219,8 +219,10 @@ abstract interface dev.lokksmith.client/Client { // dev.lokksmith.client/Client|
     }
 
     final class Options { // dev.lokksmith.client/Client.Options|null[0]
-        constructor <init>(kotlin/Int = ..., kotlin/Int = ...) // dev.lokksmith.client/Client.Options.<init>|<init>(kotlin.Int;kotlin.Int){}[0]
+        constructor <init>(kotlin/Int = ..., kotlin/Int = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...) // dev.lokksmith.client/Client.Options.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
 
+        final val additionalTokenRequestParameters // dev.lokksmith.client/Client.Options.additionalTokenRequestParameters|{}additionalTokenRequestParameters[0]
+            final fun <get-additionalTokenRequestParameters>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.client/Client.Options.additionalTokenRequestParameters.<get-additionalTokenRequestParameters>|<get-additionalTokenRequestParameters>(){}[0]
         final val leewaySeconds // dev.lokksmith.client/Client.Options.leewaySeconds|{}leewaySeconds[0]
             final fun <get-leewaySeconds>(): kotlin/Int // dev.lokksmith.client/Client.Options.leewaySeconds.<get-leewaySeconds>|<get-leewaySeconds>(){}[0]
         final val preemptiveRefreshSeconds // dev.lokksmith.client/Client.Options.preemptiveRefreshSeconds|{}preemptiveRefreshSeconds[0]
@@ -228,7 +230,8 @@ abstract interface dev.lokksmith.client/Client { // dev.lokksmith.client/Client|
 
         final fun component1(): kotlin/Int // dev.lokksmith.client/Client.Options.component1|component1(){}[0]
         final fun component2(): kotlin/Int // dev.lokksmith.client/Client.Options.component2|component2(){}[0]
-        final fun copy(kotlin/Int = ..., kotlin/Int = ...): dev.lokksmith.client/Client.Options // dev.lokksmith.client/Client.Options.copy|copy(kotlin.Int;kotlin.Int){}[0]
+        final fun component3(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.client/Client.Options.component3|component3(){}[0]
+        final fun copy(kotlin/Int = ..., kotlin/Int = ..., kotlin.collections/Map<kotlin/String, kotlin/String> = ...): dev.lokksmith.client/Client.Options // dev.lokksmith.client/Client.Options.copy|copy(kotlin.Int;kotlin.Int;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Options.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Options.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // dev.lokksmith.client/Client.Options.toString|toString(){}[0]

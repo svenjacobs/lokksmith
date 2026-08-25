@@ -88,6 +88,37 @@ SingletonLokksmithProvider.set(
 )
 ```
 
+## Provider-specific token request parameters
+
+Some providers require a vendor-specific parameter on requests to the token endpoint. Set
+`additionalTokenRequestParameters` on the client options to have it sent with both the authorization
+code exchange and every token refresh:
+
+```kotlin
+val client = lokksmith.getOrCreate(
+    key = "my-key",
+    options = Client.Options(
+        additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true"),
+    ),
+) {
+    id = "my-client-id"
+    discoveryUrl = "https://example.com/.well-known/openid-configuration"
+}
+```
+
+The example above is [SAP Customer Data Cloud](https://help.sap.com/docs/SAP_CUSTOMER_DATA_CLOUD),
+which answers token endpoint errors with `HTTP 200` and an error body unless `httpStatusCodes=true`
+is sent. Without it, Lokksmith cannot tell an OAuth error such as `invalid_grant` apart from a
+malformed response — which is the difference between "the session is dead" and "retry later".
+
+!!! warning
+    Known OAuth and OIDC parameters are rejected with an `IllegalArgumentException` when the options
+    are constructed, so this cannot be used to override `grant_type`, `client_id`, `code`,
+    `code_verifier`, `redirect_uri` or `refresh_token`.
+
+These parameters are constant for the lifetime of the client. Values that need to vary per request
+are not covered by this option.
+
 ## Platform-specific configuration
 
 Some request values legitimately differ per platform. The most common is the **redirect URI**: a
