@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/svenjacobs/lokksmith/compare/v2.0.0...v2.1.0) (2026-08-25)
+
+
+### Features
+
+* allow additional parameters on token requests ([#506](https://github.com/svenjacobs/lokksmith/issues/506)) ([6289c15](https://github.com/svenjacobs/lokksmith/commit/6289c155688db7f978f3a993b1a4d3bc0e7cbb43))
+
+
+### Bug Fixes
+
+* seed snapshot nonce in Migration.setTokens ([#503](https://github.com/svenjacobs/lokksmith/issues/503)) ([5465787](https://github.com/svenjacobs/lokksmith/commit/5465787ff80f5e3621c5af3bf05a2de726228140)), closes [#497](https://github.com/svenjacobs/lokksmith/issues/497)
+
 ## [2.0.0](https://github.com/svenjacobs/lokksmith/compare/v1.1.4...v2.0.0) (2026-08-21)
 
 
