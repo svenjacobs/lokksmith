@@ -15,6 +15,13 @@ plugins {
 }
 
 kotlin {
+    // Compose's `checkComposeUiTestConfigurationForWasmJs` requires an executable binary so that
+    // webpack bundles the Skiko runtime for browser tests. See https://youtrack.jetbrains.com/issue/CMP-4906
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        binaries.executable()
+    }
+
     android {
         namespace = "dev.lokksmith.compose.android"
         compileSdk { version = release(libs.versions.android.compileSdk.get().toInt()) }
