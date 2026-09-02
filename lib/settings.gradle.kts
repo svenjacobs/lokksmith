@@ -25,4 +25,5 @@ includeBuild("build-logic")
 include(
     ":lokksmith-core",
     ":lokksmith-compose",
+    ":lokksmith-swift",
 )

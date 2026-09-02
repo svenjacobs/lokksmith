@@ -203,15 +203,101 @@ the user interface accordingly or use `Client.authFlowResult`(1) from your busin
 
 ### iOS
 
-The iOS integration is currently usable from a Kotlin Multiplatform or Compose Multiplatform
-application. A dedicated Swift package for use in a native iOS app is still pending.
-
 To launch an authentication flow from the iOS platform code of a Kotlin Multiplatform application,
 use `launchAuthFlow()`:
 
 ```kotlin
 lokksmith.launchAuthFlow(initiation)
 ```
+
+#### Native iOS apps
+
+Native iOS apps written in Swift use the `Lokksmith` Swift package described in
+[Installation](installation.md#native-ios-swift-package-manager). It exposes a Swift-facing API
+rather than the Kotlin one: suspending functions become `async`, and the browser flow, code exchange
+and token persistence happen in a single call.
+
+Create one `LokksmithManager` for the lifetime of the app and share it:
+
+```swift
+import Lokksmith
+
+let lokksmith = LokksmithManager()
+
+let client = try await lokksmith.getOrCreateClient(
+    key: "main",
+    configuration: .companion.discovery(
+        clientId: "my-client-id",
+        discoveryUrl: "https://example.com/.well-known/openid-configuration"
+    )
+)
+```
+
+`authorize` presents an `ASWebAuthenticationSession`, exchanges the authorization code, validates
+the tokens and persists them. It returns `nil` when the user dismisses the browser:
+
+```swift
+let request = LokksmithAuthorizationRequest(redirectUri: "my-app://openid-response")
+request.scopes = ["profile", "email"]
+request.prompts = [.login] // optional, forces re-authentication
+
+if let tokens = try await client.authorize(request: request) {
+    print(tokens.accessToken.token)
+}
+```
+
+!!! note
+    Objective-C interop does not carry Kotlin default arguments, so optional request values are set
+    as properties rather than passed to the initializer.
+
+Reading the current tokens does not suspend and never triggers a network request, which makes it
+suitable for answering "is the user signed in?" synchronously:
+
+```swift
+if client.isAuthenticated { … }
+let subject = client.tokens?.idToken.subject
+```
+
+On the request path, use `freshTokens()`. It refreshes only when the access token is expired or
+about to expire:
+
+```swift
+let accessToken = try await client.freshTokens().accessToken.token
+```
+
+To react to token changes — for example to mirror the access token somewhere — observe them, and
+cancel the returned handle when you are done:
+
+```swift
+let observation = client.observeTokens { tokens in
+    // Called on the main thread, starting with the current value.
+}
+// later
+observation.cancel()
+```
+
+!!! warning
+    Errors cross the Objective-C boundary as `NSError`. Unwrap `LokksmithFailure` to find out what
+    went wrong. The distinction that matters is `oAuthRejection`, which means the provider rejected
+    the grant and the session is dead, versus `transport`, which is transient and should **not**
+    sign the user out:
+
+    ```swift
+    do {
+        let tokens = try await client.freshTokens()
+    } catch let error as NSError {
+        let failure = error.userInfo["KotlinException"] as? LokksmithFailure
+        switch failure?.kind {
+        case .oAuthRejection: try await client.resetTokens()
+        case .transport:      break // keep the session, retry later
+        default:              break
+        }
+    }
+    ```
+
+Local sign-out is `resetTokens()`, which discards the persisted tokens but keeps the client and its
+provider configuration. `endSession(request:)` additionally runs the provider's RP-initiated logout
+flow, when one is advertised.
 
 ### Desktop
 

@@ -1,0 +1,219 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <lokksmith:lokksmith-swift>
+final enum class dev.lokksmith.swift/LokksmithFailureKind : kotlin/Enum<dev.lokksmith.swift/LokksmithFailureKind> { // dev.lokksmith.swift/LokksmithFailureKind|null[0]
+    enum entry Discovery // dev.lokksmith.swift/LokksmithFailureKind.Discovery|null[0]
+    enum entry Generic // dev.lokksmith.swift/LokksmithFailureKind.Generic|null[0]
+    enum entry OAuthRejection // dev.lokksmith.swift/LokksmithFailureKind.OAuthRejection|null[0]
+    enum entry Response // dev.lokksmith.swift/LokksmithFailureKind.Response|null[0]
+    enum entry TokenTemporalValidation // dev.lokksmith.swift/LokksmithFailureKind.TokenTemporalValidation|null[0]
+    enum entry TokenValidation // dev.lokksmith.swift/LokksmithFailureKind.TokenValidation|null[0]
+    enum entry Transport // dev.lokksmith.swift/LokksmithFailureKind.Transport|null[0]
+
+    final val entries // dev.lokksmith.swift/LokksmithFailureKind.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.swift/LokksmithFailureKind> // dev.lokksmith.swift/LokksmithFailureKind.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.lokksmith.swift/LokksmithFailureKind // dev.lokksmith.swift/LokksmithFailureKind.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.lokksmith.swift/LokksmithFailureKind> // dev.lokksmith.swift/LokksmithFailureKind.values|values#static(){}[0]
+}
+
+final enum class dev.lokksmith.swift/LokksmithPrompt : kotlin/Enum<dev.lokksmith.swift/LokksmithPrompt> { // dev.lokksmith.swift/LokksmithPrompt|null[0]
+    enum entry Consent // dev.lokksmith.swift/LokksmithPrompt.Consent|null[0]
+    enum entry Create // dev.lokksmith.swift/LokksmithPrompt.Create|null[0]
+    enum entry Login // dev.lokksmith.swift/LokksmithPrompt.Login|null[0]
+    enum entry None // dev.lokksmith.swift/LokksmithPrompt.None|null[0]
+    enum entry SelectAccount // dev.lokksmith.swift/LokksmithPrompt.SelectAccount|null[0]
+
+    final val entries // dev.lokksmith.swift/LokksmithPrompt.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<dev.lokksmith.swift/LokksmithPrompt> // dev.lokksmith.swift/LokksmithPrompt.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): dev.lokksmith.swift/LokksmithPrompt // dev.lokksmith.swift/LokksmithPrompt.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<dev.lokksmith.swift/LokksmithPrompt> // dev.lokksmith.swift/LokksmithPrompt.values|values#static(){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithAuthorizationRequest { // dev.lokksmith.swift/LokksmithAuthorizationRequest|null[0]
+    constructor <init>(kotlin/String) // dev.lokksmith.swift/LokksmithAuthorizationRequest.<init>|<init>(kotlin.String){}[0]
+
+    final val redirectUri // dev.lokksmith.swift/LokksmithAuthorizationRequest.redirectUri|{}redirectUri[0]
+        final fun <get-redirectUri>(): kotlin/String // dev.lokksmith.swift/LokksmithAuthorizationRequest.redirectUri.<get-redirectUri>|<get-redirectUri>(){}[0]
+
+    final var additionalHeaderFields // dev.lokksmith.swift/LokksmithAuthorizationRequest.additionalHeaderFields|{}additionalHeaderFields[0]
+        final fun <get-additionalHeaderFields>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.swift/LokksmithAuthorizationRequest.additionalHeaderFields.<get-additionalHeaderFields>|<get-additionalHeaderFields>(){}[0]
+        final fun <set-additionalHeaderFields>(kotlin.collections/Map<kotlin/String, kotlin/String>) // dev.lokksmith.swift/LokksmithAuthorizationRequest.additionalHeaderFields.<set-additionalHeaderFields>|<set-additionalHeaderFields>(kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final var additionalParameters // dev.lokksmith.swift/LokksmithAuthorizationRequest.additionalParameters|{}additionalParameters[0]
+        final fun <get-additionalParameters>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.swift/LokksmithAuthorizationRequest.additionalParameters.<get-additionalParameters>|<get-additionalParameters>(){}[0]
+        final fun <set-additionalParameters>(kotlin.collections/Map<kotlin/String, kotlin/String>) // dev.lokksmith.swift/LokksmithAuthorizationRequest.additionalParameters.<set-additionalParameters>|<set-additionalParameters>(kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final var loginHint // dev.lokksmith.swift/LokksmithAuthorizationRequest.loginHint|{}loginHint[0]
+        final fun <get-loginHint>(): kotlin/String? // dev.lokksmith.swift/LokksmithAuthorizationRequest.loginHint.<get-loginHint>|<get-loginHint>(){}[0]
+        final fun <set-loginHint>(kotlin/String?) // dev.lokksmith.swift/LokksmithAuthorizationRequest.loginHint.<set-loginHint>|<set-loginHint>(kotlin.String?){}[0]
+    final var maxAge // dev.lokksmith.swift/LokksmithAuthorizationRequest.maxAge|{}maxAge[0]
+        final fun <get-maxAge>(): kotlin/Int? // dev.lokksmith.swift/LokksmithAuthorizationRequest.maxAge.<get-maxAge>|<get-maxAge>(){}[0]
+        final fun <set-maxAge>(kotlin/Int?) // dev.lokksmith.swift/LokksmithAuthorizationRequest.maxAge.<set-maxAge>|<set-maxAge>(kotlin.Int?){}[0]
+    final var prefersEphemeralWebBrowserSession // dev.lokksmith.swift/LokksmithAuthorizationRequest.prefersEphemeralWebBrowserSession|{}prefersEphemeralWebBrowserSession[0]
+        final fun <get-prefersEphemeralWebBrowserSession>(): kotlin/Boolean // dev.lokksmith.swift/LokksmithAuthorizationRequest.prefersEphemeralWebBrowserSession.<get-prefersEphemeralWebBrowserSession>|<get-prefersEphemeralWebBrowserSession>(){}[0]
+        final fun <set-prefersEphemeralWebBrowserSession>(kotlin/Boolean) // dev.lokksmith.swift/LokksmithAuthorizationRequest.prefersEphemeralWebBrowserSession.<set-prefersEphemeralWebBrowserSession>|<set-prefersEphemeralWebBrowserSession>(kotlin.Boolean){}[0]
+    final var prompts // dev.lokksmith.swift/LokksmithAuthorizationRequest.prompts|{}prompts[0]
+        final fun <get-prompts>(): kotlin.collections/List<dev.lokksmith.swift/LokksmithPrompt> // dev.lokksmith.swift/LokksmithAuthorizationRequest.prompts.<get-prompts>|<get-prompts>(){}[0]
+        final fun <set-prompts>(kotlin.collections/List<dev.lokksmith.swift/LokksmithPrompt>) // dev.lokksmith.swift/LokksmithAuthorizationRequest.prompts.<set-prompts>|<set-prompts>(kotlin.collections.List<dev.lokksmith.swift.LokksmithPrompt>){}[0]
+    final var scopes // dev.lokksmith.swift/LokksmithAuthorizationRequest.scopes|{}scopes[0]
+        final fun <get-scopes>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.swift/LokksmithAuthorizationRequest.scopes.<get-scopes>|<get-scopes>(){}[0]
+        final fun <set-scopes>(kotlin.collections/List<kotlin/String>) // dev.lokksmith.swift/LokksmithAuthorizationRequest.scopes.<set-scopes>|<set-scopes>(kotlin.collections.List<kotlin.String>){}[0]
+    final var uiLocales // dev.lokksmith.swift/LokksmithAuthorizationRequest.uiLocales|{}uiLocales[0]
+        final fun <get-uiLocales>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.swift/LokksmithAuthorizationRequest.uiLocales.<get-uiLocales>|<get-uiLocales>(){}[0]
+        final fun <set-uiLocales>(kotlin.collections/List<kotlin/String>) // dev.lokksmith.swift/LokksmithAuthorizationRequest.uiLocales.<set-uiLocales>|<set-uiLocales>(kotlin.collections.List<kotlin.String>){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithCancellable { // dev.lokksmith.swift/LokksmithCancellable|null[0]
+    final val isCancelled // dev.lokksmith.swift/LokksmithCancellable.isCancelled|{}isCancelled[0]
+        final fun <get-isCancelled>(): kotlin/Boolean // dev.lokksmith.swift/LokksmithCancellable.isCancelled.<get-isCancelled>|<get-isCancelled>(){}[0]
+
+    final fun cancel() // dev.lokksmith.swift/LokksmithCancellable.cancel|cancel(){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithClient { // dev.lokksmith.swift/LokksmithClient|null[0]
+    final val clientId // dev.lokksmith.swift/LokksmithClient.clientId|{}clientId[0]
+        final fun <get-clientId>(): kotlin/String // dev.lokksmith.swift/LokksmithClient.clientId.<get-clientId>|<get-clientId>(){}[0]
+    final val isAuthenticated // dev.lokksmith.swift/LokksmithClient.isAuthenticated|{}isAuthenticated[0]
+        final fun <get-isAuthenticated>(): kotlin/Boolean // dev.lokksmith.swift/LokksmithClient.isAuthenticated.<get-isAuthenticated>|<get-isAuthenticated>(){}[0]
+    final val key // dev.lokksmith.swift/LokksmithClient.key|{}key[0]
+        final fun <get-key>(): kotlin/String // dev.lokksmith.swift/LokksmithClient.key.<get-key>|<get-key>(){}[0]
+    final val tokens // dev.lokksmith.swift/LokksmithClient.tokens|{}tokens[0]
+        final fun <get-tokens>(): dev.lokksmith.swift/LokksmithTokens? // dev.lokksmith.swift/LokksmithClient.tokens.<get-tokens>|<get-tokens>(){}[0]
+
+    final fun dispose() // dev.lokksmith.swift/LokksmithClient.dispose|dispose(){}[0]
+    final fun observeTokens(kotlin/Function1<dev.lokksmith.swift/LokksmithTokens?, kotlin/Unit>): dev.lokksmith.swift/LokksmithCancellable // dev.lokksmith.swift/LokksmithClient.observeTokens|observeTokens(kotlin.Function1<dev.lokksmith.swift.LokksmithTokens?,kotlin.Unit>){}[0]
+    final suspend fun authorize(dev.lokksmith.swift/LokksmithAuthorizationRequest): dev.lokksmith.swift/LokksmithTokens? // dev.lokksmith.swift/LokksmithClient.authorize|authorize(dev.lokksmith.swift.LokksmithAuthorizationRequest){}[0]
+    final suspend fun endSession(dev.lokksmith.swift/LokksmithEndSessionRequest): kotlin/Boolean // dev.lokksmith.swift/LokksmithClient.endSession|endSession(dev.lokksmith.swift.LokksmithEndSessionRequest){}[0]
+    final suspend fun freshTokens(): dev.lokksmith.swift/LokksmithTokens // dev.lokksmith.swift/LokksmithClient.freshTokens|freshTokens(){}[0]
+    final suspend fun isExpired(dev.lokksmith.swift/LokksmithToken): kotlin/Boolean // dev.lokksmith.swift/LokksmithClient.isExpired|isExpired(dev.lokksmith.swift.LokksmithToken){}[0]
+    final suspend fun refresh(): dev.lokksmith.swift/LokksmithTokens // dev.lokksmith.swift/LokksmithClient.refresh|refresh(){}[0]
+    final suspend fun resetTokens(): kotlin/Boolean // dev.lokksmith.swift/LokksmithClient.resetTokens|resetTokens(){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithClientConfiguration { // dev.lokksmith.swift/LokksmithClientConfiguration|null[0]
+    final object Companion { // dev.lokksmith.swift/LokksmithClientConfiguration.Companion|null[0]
+        final fun discovery(kotlin/String, kotlin/String): dev.lokksmith.swift/LokksmithClientConfiguration // dev.lokksmith.swift/LokksmithClientConfiguration.Companion.discovery|discovery(kotlin.String;kotlin.String){}[0]
+        final fun metadata(kotlin/String, dev.lokksmith.swift/LokksmithMetadata): dev.lokksmith.swift/LokksmithClientConfiguration // dev.lokksmith.swift/LokksmithClientConfiguration.Companion.metadata|metadata(kotlin.String;dev.lokksmith.swift.LokksmithMetadata){}[0]
+    }
+}
+
+final class dev.lokksmith.swift/LokksmithEndSessionRequest { // dev.lokksmith.swift/LokksmithEndSessionRequest|null[0]
+    constructor <init>(kotlin/String) // dev.lokksmith.swift/LokksmithEndSessionRequest.<init>|<init>(kotlin.String){}[0]
+
+    final val redirectUri // dev.lokksmith.swift/LokksmithEndSessionRequest.redirectUri|{}redirectUri[0]
+        final fun <get-redirectUri>(): kotlin/String // dev.lokksmith.swift/LokksmithEndSessionRequest.redirectUri.<get-redirectUri>|<get-redirectUri>(){}[0]
+
+    final var additionalParameters // dev.lokksmith.swift/LokksmithEndSessionRequest.additionalParameters|{}additionalParameters[0]
+        final fun <get-additionalParameters>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.swift/LokksmithEndSessionRequest.additionalParameters.<get-additionalParameters>|<get-additionalParameters>(){}[0]
+        final fun <set-additionalParameters>(kotlin.collections/Map<kotlin/String, kotlin/String>) // dev.lokksmith.swift/LokksmithEndSessionRequest.additionalParameters.<set-additionalParameters>|<set-additionalParameters>(kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final var logoutHint // dev.lokksmith.swift/LokksmithEndSessionRequest.logoutHint|{}logoutHint[0]
+        final fun <get-logoutHint>(): kotlin/String? // dev.lokksmith.swift/LokksmithEndSessionRequest.logoutHint.<get-logoutHint>|<get-logoutHint>(){}[0]
+        final fun <set-logoutHint>(kotlin/String?) // dev.lokksmith.swift/LokksmithEndSessionRequest.logoutHint.<set-logoutHint>|<set-logoutHint>(kotlin.String?){}[0]
+    final var prefersEphemeralWebBrowserSession // dev.lokksmith.swift/LokksmithEndSessionRequest.prefersEphemeralWebBrowserSession|{}prefersEphemeralWebBrowserSession[0]
+        final fun <get-prefersEphemeralWebBrowserSession>(): kotlin/Boolean // dev.lokksmith.swift/LokksmithEndSessionRequest.prefersEphemeralWebBrowserSession.<get-prefersEphemeralWebBrowserSession>|<get-prefersEphemeralWebBrowserSession>(){}[0]
+        final fun <set-prefersEphemeralWebBrowserSession>(kotlin/Boolean) // dev.lokksmith.swift/LokksmithEndSessionRequest.prefersEphemeralWebBrowserSession.<set-prefersEphemeralWebBrowserSession>|<set-prefersEphemeralWebBrowserSession>(kotlin.Boolean){}[0]
+    final var uiLocales // dev.lokksmith.swift/LokksmithEndSessionRequest.uiLocales|{}uiLocales[0]
+        final fun <get-uiLocales>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.swift/LokksmithEndSessionRequest.uiLocales.<get-uiLocales>|<get-uiLocales>(){}[0]
+        final fun <set-uiLocales>(kotlin.collections/List<kotlin/String>) // dev.lokksmith.swift/LokksmithEndSessionRequest.uiLocales.<set-uiLocales>|<set-uiLocales>(kotlin.collections.List<kotlin.String>){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithFailure : kotlin/Exception { // dev.lokksmith.swift/LokksmithFailure|null[0]
+    final val code // dev.lokksmith.swift/LokksmithFailure.code|{}code[0]
+        final fun <get-code>(): kotlin/String? // dev.lokksmith.swift/LokksmithFailure.code.<get-code>|<get-code>(){}[0]
+    final val kind // dev.lokksmith.swift/LokksmithFailure.kind|{}kind[0]
+        final fun <get-kind>(): dev.lokksmith.swift/LokksmithFailureKind // dev.lokksmith.swift/LokksmithFailure.kind.<get-kind>|<get-kind>(){}[0]
+    final val message // dev.lokksmith.swift/LokksmithFailure.message|{}message[0]
+        final fun <get-message>(): kotlin/String? // dev.lokksmith.swift/LokksmithFailure.message.<get-message>|<get-message>(){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithIdToken { // dev.lokksmith.swift/LokksmithIdToken|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin.collections/List<kotlin/String>, kotlin/Long, kotlin/Long, kotlin/Long?, kotlin/Long?, kotlin/String?, kotlin/String?, kotlin.collections/List<kotlin/String>, kotlin/String?) // dev.lokksmith.swift/LokksmithIdToken.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Long;kotlin.Long;kotlin.Long?;kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.String?){}[0]
+
+    final val audiences // dev.lokksmith.swift/LokksmithIdToken.audiences|{}audiences[0]
+        final fun <get-audiences>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.swift/LokksmithIdToken.audiences.<get-audiences>|<get-audiences>(){}[0]
+    final val authTime // dev.lokksmith.swift/LokksmithIdToken.authTime|{}authTime[0]
+        final fun <get-authTime>(): kotlin/Long? // dev.lokksmith.swift/LokksmithIdToken.authTime.<get-authTime>|<get-authTime>(){}[0]
+    final val authenticationContextClassReference // dev.lokksmith.swift/LokksmithIdToken.authenticationContextClassReference|{}authenticationContextClassReference[0]
+        final fun <get-authenticationContextClassReference>(): kotlin/String? // dev.lokksmith.swift/LokksmithIdToken.authenticationContextClassReference.<get-authenticationContextClassReference>|<get-authenticationContextClassReference>(){}[0]
+    final val authenticationMethodsReferences // dev.lokksmith.swift/LokksmithIdToken.authenticationMethodsReferences|{}authenticationMethodsReferences[0]
+        final fun <get-authenticationMethodsReferences>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.swift/LokksmithIdToken.authenticationMethodsReferences.<get-authenticationMethodsReferences>|<get-authenticationMethodsReferences>(){}[0]
+    final val authorizedParty // dev.lokksmith.swift/LokksmithIdToken.authorizedParty|{}authorizedParty[0]
+        final fun <get-authorizedParty>(): kotlin/String? // dev.lokksmith.swift/LokksmithIdToken.authorizedParty.<get-authorizedParty>|<get-authorizedParty>(){}[0]
+    final val expiration // dev.lokksmith.swift/LokksmithIdToken.expiration|{}expiration[0]
+        final fun <get-expiration>(): kotlin/Long // dev.lokksmith.swift/LokksmithIdToken.expiration.<get-expiration>|<get-expiration>(){}[0]
+    final val issuedAt // dev.lokksmith.swift/LokksmithIdToken.issuedAt|{}issuedAt[0]
+        final fun <get-issuedAt>(): kotlin/Long // dev.lokksmith.swift/LokksmithIdToken.issuedAt.<get-issuedAt>|<get-issuedAt>(){}[0]
+    final val issuer // dev.lokksmith.swift/LokksmithIdToken.issuer|{}issuer[0]
+        final fun <get-issuer>(): kotlin/String // dev.lokksmith.swift/LokksmithIdToken.issuer.<get-issuer>|<get-issuer>(){}[0]
+    final val nonce // dev.lokksmith.swift/LokksmithIdToken.nonce|{}nonce[0]
+        final fun <get-nonce>(): kotlin/String? // dev.lokksmith.swift/LokksmithIdToken.nonce.<get-nonce>|<get-nonce>(){}[0]
+    final val notBefore // dev.lokksmith.swift/LokksmithIdToken.notBefore|{}notBefore[0]
+        final fun <get-notBefore>(): kotlin/Long? // dev.lokksmith.swift/LokksmithIdToken.notBefore.<get-notBefore>|<get-notBefore>(){}[0]
+    final val raw // dev.lokksmith.swift/LokksmithIdToken.raw|{}raw[0]
+        final fun <get-raw>(): kotlin/String // dev.lokksmith.swift/LokksmithIdToken.raw.<get-raw>|<get-raw>(){}[0]
+    final val subject // dev.lokksmith.swift/LokksmithIdToken.subject|{}subject[0]
+        final fun <get-subject>(): kotlin/String // dev.lokksmith.swift/LokksmithIdToken.subject.<get-subject>|<get-subject>(){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithManager { // dev.lokksmith.swift/LokksmithManager|null[0]
+    constructor <init>() // dev.lokksmith.swift/LokksmithManager.<init>|<init>(){}[0]
+    constructor <init>(kotlin/String, kotlin/String?) // dev.lokksmith.swift/LokksmithManager.<init>|<init>(kotlin.String;kotlin.String?){}[0]
+
+    final val migration // dev.lokksmith.swift/LokksmithManager.migration|{}migration[0]
+        final fun <get-migration>(): dev.lokksmith.swift/LokksmithMigration // dev.lokksmith.swift/LokksmithManager.migration.<get-migration>|<get-migration>(){}[0]
+
+    final fun dispose() // dev.lokksmith.swift/LokksmithManager.dispose|dispose(){}[0]
+    final suspend fun client(kotlin/String): dev.lokksmith.swift/LokksmithClient? // dev.lokksmith.swift/LokksmithManager.client|client(kotlin.String){}[0]
+    final suspend fun clientExists(kotlin/String): kotlin/Boolean // dev.lokksmith.swift/LokksmithManager.clientExists|clientExists(kotlin.String){}[0]
+    final suspend fun createClient(kotlin/String, dev.lokksmith.swift/LokksmithClientConfiguration): dev.lokksmith.swift/LokksmithClient // dev.lokksmith.swift/LokksmithManager.createClient|createClient(kotlin.String;dev.lokksmith.swift.LokksmithClientConfiguration){}[0]
+    final suspend fun deleteClient(kotlin/String): kotlin/Boolean // dev.lokksmith.swift/LokksmithManager.deleteClient|deleteClient(kotlin.String){}[0]
+    final suspend fun getOrCreateClient(kotlin/String, dev.lokksmith.swift/LokksmithClientConfiguration): dev.lokksmith.swift/LokksmithClient // dev.lokksmith.swift/LokksmithManager.getOrCreateClient|getOrCreateClient(kotlin.String;dev.lokksmith.swift.LokksmithClientConfiguration){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithMetadata { // dev.lokksmith.swift/LokksmithMetadata|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String) // dev.lokksmith.swift/LokksmithMetadata.<init>|<init>(kotlin.String;kotlin.String;kotlin.String){}[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin/String?, kotlin/String?, kotlin/String?) // dev.lokksmith.swift/LokksmithMetadata.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.String?;kotlin.String?;kotlin.String?){}[0]
+
+    final val authorizationEndpoint // dev.lokksmith.swift/LokksmithMetadata.authorizationEndpoint|{}authorizationEndpoint[0]
+        final fun <get-authorizationEndpoint>(): kotlin/String // dev.lokksmith.swift/LokksmithMetadata.authorizationEndpoint.<get-authorizationEndpoint>|<get-authorizationEndpoint>(){}[0]
+    final val endSessionEndpoint // dev.lokksmith.swift/LokksmithMetadata.endSessionEndpoint|{}endSessionEndpoint[0]
+        final fun <get-endSessionEndpoint>(): kotlin/String? // dev.lokksmith.swift/LokksmithMetadata.endSessionEndpoint.<get-endSessionEndpoint>|<get-endSessionEndpoint>(){}[0]
+    final val issuer // dev.lokksmith.swift/LokksmithMetadata.issuer|{}issuer[0]
+        final fun <get-issuer>(): kotlin/String // dev.lokksmith.swift/LokksmithMetadata.issuer.<get-issuer>|<get-issuer>(){}[0]
+    final val jwksUri // dev.lokksmith.swift/LokksmithMetadata.jwksUri|{}jwksUri[0]
+        final fun <get-jwksUri>(): kotlin/String? // dev.lokksmith.swift/LokksmithMetadata.jwksUri.<get-jwksUri>|<get-jwksUri>(){}[0]
+    final val tokenEndpoint // dev.lokksmith.swift/LokksmithMetadata.tokenEndpoint|{}tokenEndpoint[0]
+        final fun <get-tokenEndpoint>(): kotlin/String // dev.lokksmith.swift/LokksmithMetadata.tokenEndpoint.<get-tokenEndpoint>|<get-tokenEndpoint>(){}[0]
+    final val userInfoEndpoint // dev.lokksmith.swift/LokksmithMetadata.userInfoEndpoint|{}userInfoEndpoint[0]
+        final fun <get-userInfoEndpoint>(): kotlin/String? // dev.lokksmith.swift/LokksmithMetadata.userInfoEndpoint.<get-userInfoEndpoint>|<get-userInfoEndpoint>(){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithMigration { // dev.lokksmith.swift/LokksmithMigration|null[0]
+    final fun isMigrated(dev.lokksmith.swift/LokksmithClient): kotlin/Boolean // dev.lokksmith.swift/LokksmithMigration.isMigrated|isMigrated(dev.lokksmith.swift.LokksmithClient){}[0]
+    final suspend fun setTokens(dev.lokksmith.swift/LokksmithClient, kotlin/String, kotlin/Long?, kotlin/String?, kotlin/Long?, kotlin/String) // dev.lokksmith.swift/LokksmithMigration.setTokens|setTokens(dev.lokksmith.swift.LokksmithClient;kotlin.String;kotlin.Long?;kotlin.String?;kotlin.Long?;kotlin.String){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithToken { // dev.lokksmith.swift/LokksmithToken|null[0]
+    constructor <init>(kotlin/String, kotlin/Long?) // dev.lokksmith.swift/LokksmithToken.<init>|<init>(kotlin.String;kotlin.Long?){}[0]
+
+    final val expiresAt // dev.lokksmith.swift/LokksmithToken.expiresAt|{}expiresAt[0]
+        final fun <get-expiresAt>(): kotlin/Long? // dev.lokksmith.swift/LokksmithToken.expiresAt.<get-expiresAt>|<get-expiresAt>(){}[0]
+    final val token // dev.lokksmith.swift/LokksmithToken.token|{}token[0]
+        final fun <get-token>(): kotlin/String // dev.lokksmith.swift/LokksmithToken.token.<get-token>|<get-token>(){}[0]
+}
+
+final class dev.lokksmith.swift/LokksmithTokens { // dev.lokksmith.swift/LokksmithTokens|null[0]
+    constructor <init>(dev.lokksmith.swift/LokksmithToken, dev.lokksmith.swift/LokksmithToken?, dev.lokksmith.swift/LokksmithIdToken) // dev.lokksmith.swift/LokksmithTokens.<init>|<init>(dev.lokksmith.swift.LokksmithToken;dev.lokksmith.swift.LokksmithToken?;dev.lokksmith.swift.LokksmithIdToken){}[0]
+
+    final val accessToken // dev.lokksmith.swift/LokksmithTokens.accessToken|{}accessToken[0]
+        final fun <get-accessToken>(): dev.lokksmith.swift/LokksmithToken // dev.lokksmith.swift/LokksmithTokens.accessToken.<get-accessToken>|<get-accessToken>(){}[0]
+    final val idToken // dev.lokksmith.swift/LokksmithTokens.idToken|{}idToken[0]
+        final fun <get-idToken>(): dev.lokksmith.swift/LokksmithIdToken // dev.lokksmith.swift/LokksmithTokens.idToken.<get-idToken>|<get-idToken>(){}[0]
+    final val refreshToken // dev.lokksmith.swift/LokksmithTokens.refreshToken|{}refreshToken[0]
+        final fun <get-refreshToken>(): dev.lokksmith.swift/LokksmithToken? // dev.lokksmith.swift/LokksmithTokens.refreshToken.<get-refreshToken>|<get-refreshToken>(){}[0]
+}
