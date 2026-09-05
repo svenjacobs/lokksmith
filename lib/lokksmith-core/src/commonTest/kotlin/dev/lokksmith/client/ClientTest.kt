@@ -56,7 +56,10 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.test.fail
 import kotlin.time.Instant
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runCurrent
@@ -68,6 +71,237 @@ import kotlinx.serialization.json.JsonPrimitive
 class ClientTest {
 
     private val httpJson = Json { prettyPrint = true }
+
+    /**
+     * A token endpoint that rotates refresh tokens: a grant carrying `token-N` is answered with
+     * `token-(N+1)`. Every submitted refresh token is appended to [sentRefreshTokens] in order.
+     * When [gateFirstRequest] is given, the very first request that reaches the engine suspends
+     * until it completes, so a caller can prove a second request started while the first was still
+     * in flight.
+     */
+    private fun rotatingRefreshTokenEngine(
+        sentRefreshTokens: MutableList<String>,
+        nonce: String,
+        epochSeconds: Long,
+        gateFirstRequest: CompletableDeferred<Unit>? = null,
+    ): MockEngine {
+        val jwtEncoder = JwtEncoder(Json)
+        var requestCount = 0
+
+        return MockEngine { request ->
+            when (request.url.toString()) {
+                "https://example.com/tokenEndpoint" -> {
+                    val body = assertIs<FormDataContent>(request.body)
+                    val refreshToken = assertNotNull(body.formData[Parameter.REFRESH_TOKEN])
+                    sentRefreshTokens += refreshToken
+
+                    val isFirstRequest = requestCount == 0
+                    requestCount++
+                    if (isFirstRequest) {
+                        gateFirstRequest?.await()
+                    }
+
+                    val nextRefreshToken =
+                        "token-${refreshToken.substringAfter("token-").toInt() + 1}"
+                    val idToken =
+                        Jwt(
+                            header = Jwt.Header(alg = "none"),
+                            payload =
+                                Jwt.Payload(
+                                    iss = "issuer",
+                                    sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                    aud = listOf("clientId"),
+                                    exp = epochSeconds + 600,
+                                    iat = epochSeconds,
+                                    extra = mapOf("nonce" to JsonPrimitive(nonce)),
+                                ),
+                        )
+                    val response =
+                        TokenResponse(
+                            tokenType = "Bearer",
+                            accessToken = "access-token",
+                            expiresIn = 600,
+                            refreshToken = nextRefreshToken,
+                            idToken = jwtEncoder.encode(idToken),
+                        )
+
+                    respond(
+                        content = httpJson.encodeToString(response),
+                        status = HttpStatusCode.OK,
+                        headers = headersOf("Content-Type", "application/json"),
+                    )
+                }
+
+                else -> respondBadRequest()
+            }
+        }
+    }
+
+    @Test
+    fun `refresh should not send an already-rotated refresh token when called concurrently`() =
+        runTest {
+            val sentRefreshTokens = mutableListOf<String>()
+            val gate = CompletableDeferred<Unit>()
+            val engine =
+                rotatingRefreshTokenEngine(
+                    sentRefreshTokens = sentRefreshTokens,
+                    nonce = "0D1ck61",
+                    epochSeconds = 1748706999,
+                    gateFirstRequest = gate,
+                )
+
+            val client =
+                createTestClient(
+                    provider =
+                        TestProvider(
+                            httpClient = createHttpClient(engine),
+                            timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                        ),
+                    initialSnapshot = {
+                        copy(
+                            tokens =
+                                SAMPLE_TOKENS.copy(
+                                    refreshToken =
+                                        Tokens.RefreshToken(token = "token-0", expiresAt = null)
+                                ),
+                            nonce = "0D1ck61",
+                        )
+                    },
+                )
+
+            val first = async { client.refresh() }
+            val second = async { client.refresh() }
+            runCurrent()
+
+            gate.complete(Unit)
+            runCurrent()
+            awaitAll(first, second)
+
+            assertEquals(
+                listOf("token-0", "token-1"),
+                sentRefreshTokens,
+                "the second refresh must send the rotated token, not replay the first grant",
+            )
+        }
+
+    @Test
+    fun `refresh must not be replayed by a stale sibling client sharing the same snapshot store`() =
+        runTest {
+            val key = "key".asKey()
+            val sentRefreshTokens = mutableListOf<String>()
+            val engine =
+                rotatingRefreshTokenEngine(
+                    sentRefreshTokens = sentRefreshTokens,
+                    nonce = "0D1ck61",
+                    epochSeconds = 1748706999,
+                )
+            val sharedStore = SnapshotStoreImpl(persistence = PersistenceFake(), serializer = Json)
+            val provider =
+                TestProvider(
+                    httpClient = createHttpClient(engine),
+                    timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                )
+
+            // Lokksmith.get() hands out a new Client instance per call over the same
+            // SnapshotStore, so clientA and clientB model two such instances for the same key.
+            val clientA =
+                createTestClient(
+                    key = key,
+                    snapshotStore = sharedStore,
+                    provider = provider,
+                    initialSnapshot = {
+                        copy(
+                            tokens =
+                                SAMPLE_TOKENS.copy(
+                                    refreshToken =
+                                        Tokens.RefreshToken(token = "token-0", expiresAt = null)
+                                ),
+                            nonce = "0D1ck61",
+                        )
+                    },
+                )
+            val clientB =
+                ClientImpl.create(
+                    key = key,
+                    options = Client.Options(),
+                    coroutineScope = backgroundScope,
+                    snapshotStore = sharedStore,
+                    provider = provider,
+                )
+
+            clientA.refresh()
+            // No runCurrent() here: clientB's cached snapshot must not have observed clientA's
+            // write yet, which is exactly the scenario that must not leak onto the wire.
+            clientB.refresh()
+            runCurrent()
+
+            assertEquals(
+                listOf("token-0", "token-1"),
+                sentRefreshTokens,
+                "clientB must send the rotated token, not replay clientA's already-used grant",
+            )
+        }
+
+    @Test
+    fun `concurrent refresh must be serialized across sibling clients of the same key`() = runTest {
+        val key = "key".asKey()
+        val sentRefreshTokens = mutableListOf<String>()
+        val gate = CompletableDeferred<Unit>()
+        val engine =
+            rotatingRefreshTokenEngine(
+                sentRefreshTokens = sentRefreshTokens,
+                nonce = "0D1ck61",
+                epochSeconds = 1748706999,
+                gateFirstRequest = gate,
+            )
+        val sharedStore = SnapshotStoreImpl(persistence = PersistenceFake(), serializer = Json)
+        val provider =
+            TestProvider(
+                httpClient = createHttpClient(engine),
+                timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+            )
+
+        val clientA =
+            createTestClient(
+                key = key,
+                snapshotStore = sharedStore,
+                provider = provider,
+                initialSnapshot = {
+                    copy(
+                        tokens =
+                            SAMPLE_TOKENS.copy(
+                                refreshToken =
+                                    Tokens.RefreshToken(token = "token-0", expiresAt = null)
+                            ),
+                        nonce = "0D1ck61",
+                    )
+                },
+            )
+        val clientB =
+            ClientImpl.create(
+                key = key,
+                options = Client.Options(),
+                coroutineScope = backgroundScope,
+                snapshotStore = sharedStore,
+                provider = provider,
+            )
+
+        // Pins that the refresh Mutex is resolved from the store's per-key registry rather than
+        // owned by a client: a Mutex per ClientImpl would let these two instances race.
+        val first = async { clientA.refresh() }
+        val second = async { clientB.refresh() }
+        runCurrent()
+
+        gate.complete(Unit)
+        runCurrent()
+        awaitAll(first, second)
+
+        assertEquals(
+            listOf("token-0", "token-1"),
+            sentRefreshTokens,
+            "clientB must wait for clientA's refresh and then send the rotated token",
+        )
+    }
 
     @Test
     fun `refresh should refresh tokens`() = runTest {

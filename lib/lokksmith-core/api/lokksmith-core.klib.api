@@ -405,6 +405,7 @@ abstract interface dev.lokksmith.client/InternalClient : dev.lokksmith.client/Cl
     abstract val snapshots // dev.lokksmith.client/InternalClient.snapshots|{}snapshots[0]
         abstract fun <get-snapshots>(): kotlinx.coroutines.flow/StateFlow<dev.lokksmith.client.snapshot/Snapshot> // dev.lokksmith.client/InternalClient.snapshots.<get-snapshots>|<get-snapshots>(){}[0]
 
+    abstract suspend fun currentSnapshot(): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client/InternalClient.currentSnapshot|currentSnapshot(){}[0]
     abstract suspend fun updateSnapshot(kotlin/Function1<dev.lokksmith.client.snapshot/Snapshot, dev.lokksmith.client.snapshot/Snapshot>): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client/InternalClient.updateSnapshot|updateSnapshot(kotlin.Function1<dev.lokksmith.client.snapshot.Snapshot,dev.lokksmith.client.snapshot.Snapshot>){}[0]
 
     abstract interface Provider { // dev.lokksmith.client/InternalClient.Provider|null[0]
@@ -421,9 +422,12 @@ abstract interface dev.lokksmith.client/InternalClient : dev.lokksmith.client/Cl
     }
 
     abstract interface SnapshotContract { // dev.lokksmith.client/InternalClient.SnapshotContract|null[0]
+        abstract val refreshMutex // dev.lokksmith.client/InternalClient.SnapshotContract.refreshMutex|{}refreshMutex[0]
+            abstract fun <get-refreshMutex>(): kotlinx.coroutines.sync/Mutex // dev.lokksmith.client/InternalClient.SnapshotContract.refreshMutex.<get-refreshMutex>|<get-refreshMutex>(){}[0]
         abstract val snapshots // dev.lokksmith.client/InternalClient.SnapshotContract.snapshots|{}snapshots[0]
             abstract fun <get-snapshots>(): kotlinx.coroutines.flow/StateFlow<dev.lokksmith.client.snapshot/Snapshot> // dev.lokksmith.client/InternalClient.SnapshotContract.snapshots.<get-snapshots>|<get-snapshots>(){}[0]
 
+        abstract suspend fun currentSnapshot(): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client/InternalClient.SnapshotContract.currentSnapshot|currentSnapshot(){}[0]
         abstract suspend fun updateSnapshot(kotlin/Function1<dev.lokksmith.client.snapshot/Snapshot, dev.lokksmith.client.snapshot/Snapshot>): dev.lokksmith.client.snapshot/Snapshot // dev.lokksmith.client/InternalClient.SnapshotContract.updateSnapshot|updateSnapshot(kotlin.Function1<dev.lokksmith.client.snapshot.Snapshot,dev.lokksmith.client.snapshot.Snapshot>){}[0]
     }
 }
@@ -639,7 +643,7 @@ abstract class <#A: dev.lokksmith.client/Client.Tokens.IdToken?> dev.lokksmith.c
         final fun <get-client>(): dev.lokksmith.client/InternalClient // dev.lokksmith.client.request.token/TokenResponseValidator.client.<get-client>|<get-client>(){}[0]
 
     abstract fun getIdToken(dev.lokksmith.client.request.token/TokenResponse): #A // dev.lokksmith.client.request.token/TokenResponseValidator.getIdToken|getIdToken(dev.lokksmith.client.request.token.TokenResponse){}[0]
-    abstract fun validateIdTokenNonce(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.request.token/TokenResponseValidator.validateIdTokenNonce|validateIdTokenNonce(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
+    abstract suspend fun validateIdTokenNonce(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.request.token/TokenResponseValidator.validateIdTokenNonce|validateIdTokenNonce(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
     final fun decodeIdToken(kotlin/String): dev.lokksmith.client/Client.Tokens.IdToken // dev.lokksmith.client.request.token/TokenResponseValidator.decodeIdToken|decodeIdToken(kotlin.String){}[0]
     final suspend fun validate(dev.lokksmith.client.request.token/TokenResponse, dev.lokksmith.client/Client.Tokens.IdToken? = ...): dev.lokksmith.client.request.token/TokenResponseValidator.Result<#A> // dev.lokksmith.client.request.token/TokenResponseValidator.validate|validate(dev.lokksmith.client.request.token.TokenResponse;dev.lokksmith.client.Client.Tokens.IdToken?){}[0]
     open suspend fun validateAuthTime(dev.lokksmith.client/Client.Tokens.IdToken) // dev.lokksmith.client.request.token/TokenResponseValidator.validateAuthTime|validateAuthTime(dev.lokksmith.client.Client.Tokens.IdToken){}[0]

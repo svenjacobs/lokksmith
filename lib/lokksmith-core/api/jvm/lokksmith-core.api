@@ -388,6 +388,7 @@ public final class dev/lokksmith/client/IdKt {
 }
 
 public abstract interface class dev/lokksmith/client/InternalClient : dev/lokksmith/client/Client {
+	public abstract fun currentSnapshot (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun getProvider ()Ldev/lokksmith/client/InternalClient$Provider;
 	public abstract fun getSnapshots ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun updateSnapshot (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -406,6 +407,8 @@ public final class dev/lokksmith/client/InternalClient$Provider$DefaultImpls {
 }
 
 public abstract interface class dev/lokksmith/client/InternalClient$SnapshotContract {
+	public abstract fun currentSnapshot (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getRefreshMutex ()Lkotlinx/coroutines/sync/Mutex;
 	public abstract fun getSnapshots ()Lkotlinx/coroutines/flow/StateFlow;
 	public abstract fun updateSnapshot (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -1218,7 +1221,7 @@ public abstract class dev/lokksmith/client/request/token/TokenResponseValidator 
 	public final fun validate (Ldev/lokksmith/client/request/token/TokenResponse;Ldev/lokksmith/client/Client$Tokens$IdToken;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun validate$default (Ldev/lokksmith/client/request/token/TokenResponseValidator;Ldev/lokksmith/client/request/token/TokenResponse;Ldev/lokksmith/client/Client$Tokens$IdToken;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	protected fun validateAuthTime (Ldev/lokksmith/client/Client$Tokens$IdToken;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	protected abstract fun validateIdTokenNonce (Ldev/lokksmith/client/Client$Tokens$IdToken;)V
+	protected abstract fun validateIdTokenNonce (Ldev/lokksmith/client/Client$Tokens$IdToken;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class dev/lokksmith/client/request/token/TokenResponseValidator$Result {

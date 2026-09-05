@@ -174,6 +174,7 @@ private constructor(
     override suspend fun onPrepare(redirectUri: String): String {
         val codeChallengeStrategy =
             CodeChallengeStrategy.create(request.codeChallengeMethod, codeVerifier)
+        val idTokenHint = client.currentSnapshot().tokens?.idToken?.raw
 
         return try {
             buildUrl {
@@ -192,10 +193,7 @@ private constructor(
                     addOptionalParameter(Parameter.PROMPT, request.prompt)
                     addOptionalParameter(Parameter.MAX_AGE, request.maxAge)
                     addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
-                    addOptionalParameter(
-                        Parameter.ID_TOKEN_HINT,
-                        client.snapshots.value.tokens?.idToken?.raw,
-                    )
+                    addOptionalParameter(Parameter.ID_TOKEN_HINT, idTokenHint)
                     addOptionalParameter(Parameter.LOGIN_HINT, request.loginHint)
                     addAdditionalParameters(request.additionalParameters)
                 }
