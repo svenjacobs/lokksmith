@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.1.1](https://github.com/svenjacobs/lokksmith/compare/v2.1.0...v2.1.1) (2026-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update agp to v9.3.2 ([#510](https://github.com/svenjacobs/lokksmith/issues/510)) ([8cb1c3f](https://github.com/svenjacobs/lokksmith/commit/8cb1c3f465508c5e40a7334c75aa51cde1acba8b))
+* **deps:** update agp to v9.4.0 ([#518](https://github.com/svenjacobs/lokksmith/issues/518)) ([2747908](https://github.com/svenjacobs/lokksmith/commit/2747908d7fdd274620679298f00e2f77389dd9e4))
+* **deps:** update compose.multiplatform to v1.12.0 ([#512](https://github.com/svenjacobs/lokksmith/issues/512)) ([3f96024](https://github.com/svenjacobs/lokksmith/commit/3f960249e75d847dce0492db0c6b096964a60a40))
+* **deps:** update spotless to v8.10.1 ([#515](https://github.com/svenjacobs/lokksmith/issues/515)) ([ec43a54](https://github.com/svenjacobs/lokksmith/commit/ec43a5430d4f33e84c7f6a74c17584e198af240b))
+* read refresh grant from the store instead of a lagging StateFlow ([#520](https://github.com/svenjacobs/lokksmith/issues/520)) ([0f462f0](https://github.com/svenjacobs/lokksmith/commit/0f462f07d81b80f79d5999929ffdbbe370270cc8)), closes [#517](https://github.com/svenjacobs/lokksmith/issues/517)
+
 ## [2.1.0](https://github.com/svenjacobs/lokksmith/compare/v2.0.0...v2.1.0) (2026-08-25)
 
 
