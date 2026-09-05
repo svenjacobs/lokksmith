@@ -86,8 +86,8 @@ public class AuthorizationCodeFlowResponseHandler(
         }
     }
 
-    private fun readRedirectUriFromSnapshot(): String {
-        val ephemeral = client.snapshots.value.ephemeralFlowState
+    private suspend fun readRedirectUriFromSnapshot(): String {
+        val ephemeral = client.currentSnapshot().ephemeralFlowState
         check(ephemeral is Snapshot.EphemeralAuthorizationCodeFlowState) {
             "Expected EphemeralAuthorizationCodeFlowState, got ${ephemeral?.let { it::class.simpleName }}"
         }

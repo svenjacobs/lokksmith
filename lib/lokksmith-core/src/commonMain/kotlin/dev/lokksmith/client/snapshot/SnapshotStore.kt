@@ -85,6 +85,17 @@ internal interface InternalSnapshotStore : SnapshotStore {
     /** This Mutex ensures that no concurrent write operations occur here and in [contract]. */
     val writeMutex: Mutex
 
+    /**
+     * Per-key [Mutex] registry backing [InternalClient.SnapshotContract.refreshMutex]. Lives here
+     * rather than on a [dev.lokksmith.client.Client] instance because [dev.lokksmith.Lokksmith.get]
+     * hands out a new [dev.lokksmith.client.ClientImpl] per call over the same store, so a
+     * client-owned Mutex would serialize nothing across those instances. Guarded by
+     * [refreshMutexRegistryLock] since the map itself is shared mutable state.
+     */
+    val refreshMutexes: MutableMap<Key, Mutex>
+
+    val refreshMutexRegistryLock: Mutex
+
     suspend fun internalSet(key: Key, snapshot: Snapshot): Snapshot {
         persistence.set(key, serializer.encodeToString(snapshot))
         return snapshot
@@ -97,6 +108,8 @@ internal class SnapshotStoreImpl(
 ) : InternalSnapshotStore {
 
     override val writeMutex = Mutex()
+    override val refreshMutexes: MutableMap<Key, Mutex> = mutableMapOf()
+    override val refreshMutexRegistryLock = Mutex()
 
     override fun observe(key: Key): Flow<Snapshot?> =
         persistence.observe(key).map { it?.let(serializer::decodeFromString) }
@@ -174,22 +187,32 @@ internal suspend fun InternalSnapshotStore.contract(
     // [coroutineScope] rather than to any caller.
     persistence.get(key)
 
-    val snapshots = observe(key).filterNotNull()
+    val snapshotsFlow = observe(key).filterNotNull()
 
     // A StateFlow already behaves like distinctUntilChanged() is applied, so we don't need to
     // explicitly use it here. We don't want this Flow to emit values if the underlying snapshot
     // changes but remains structurally equal.
-    val snapshotsStateFlow = snapshots.stateIn(coroutineScope)
+    val snapshotsStateFlow = snapshotsFlow.stateIn(coroutineScope)
+
+    // Resolved once per client creation so every Client instance created for this key (see
+    // refreshMutexes) shares the same Mutex object.
+    val keyRefreshMutex = refreshMutexRegistryLock.withLock {
+        refreshMutexes.getOrPut(key) { Mutex() }
+    }
 
     return object : InternalClient.SnapshotContract {
 
         override val snapshots: StateFlow<Snapshot> = snapshotsStateFlow
 
+        override val refreshMutex: Mutex = keyRefreshMutex
+
         override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) = writeMutex.withLock {
-            // We don't use `snapshotStateFlow.value` of the StateFlow at this point to fetch
+            // We don't use `snapshotsStateFlow.value` of the StateFlow at this point to fetch
             // the current value because since it collects in a different coroutine, swift
             // consecutive executions of `updateSnapshot` might see stale data.
-            internalSet(key, snapshots.first().body())
+            internalSet(key, snapshotsFlow.first().body())
         }
+
+        override suspend fun currentSnapshot(): Snapshot = snapshotsFlow.first()
     }
 }

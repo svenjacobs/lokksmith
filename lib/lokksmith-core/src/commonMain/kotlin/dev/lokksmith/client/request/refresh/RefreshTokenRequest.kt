@@ -52,8 +52,8 @@ internal class RefreshTokenRequestImpl(
 ) : RefreshTokenRequest {
 
     override suspend operator fun invoke(): Response {
-        val refreshToken =
-            checkNotNull(client.snapshots.value.tokens?.refreshToken) { "refresh token is null" }
+        val currentTokens = client.currentSnapshot().tokens
+        val refreshToken = checkNotNull(currentTokens?.refreshToken) { "refresh token is null" }
 
         val response = tokenRequest {
             append(Parameter.GRANT_TYPE, GrantType.RefreshToken.value)
@@ -65,7 +65,7 @@ internal class RefreshTokenRequestImpl(
             try {
                 tokenResponseValidator.validate(
                     response = response,
-                    previousIdToken = client.snapshots.value.tokens?.idToken,
+                    previousIdToken = currentTokens.idToken,
                 )
             } catch (e: CancellationException) {
                 throw e

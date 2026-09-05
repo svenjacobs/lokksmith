@@ -47,8 +47,8 @@ public class AuthorizationCodeFlowTokenResponseValidator(
         return decodeIdToken(rawIdToken)
     }
 
-    override fun validateIdTokenNonce(idToken: IdToken) {
-        require(idToken.nonce == client.snapshots.value.nonce) { "nonce mismatch" }
+    override suspend fun validateIdTokenNonce(idToken: IdToken) {
+        require(idToken.nonce == client.currentSnapshot().nonce) { "nonce mismatch" }
     }
 
     override suspend fun validateAuthTime(idToken: IdToken) {

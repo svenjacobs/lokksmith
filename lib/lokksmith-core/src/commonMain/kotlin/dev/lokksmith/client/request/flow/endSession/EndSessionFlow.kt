@@ -89,8 +89,10 @@ internal constructor(
     override fun createEphemeralFlowState(redirectUri: String): Snapshot.EphemeralFlowState =
         Snapshot.EphemeralEndSessionFlowState(state = state, responseUri = null)
 
-    override suspend fun onPrepare(redirectUri: String): String =
-        try {
+    override suspend fun onPrepare(redirectUri: String): String {
+        val idTokenHint = client.currentSnapshot().tokens?.idToken?.raw
+
+        return try {
             buildUrl {
                     takeFrom(endpoint)
 
@@ -99,10 +101,7 @@ internal constructor(
                     parameters[Parameter.CLIENT_ID] = client.id.value
 
                     addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
-                    addOptionalParameter(
-                        Parameter.ID_TOKEN_HINT,
-                        client.snapshots.value.tokens?.idToken?.raw,
-                    )
+                    addOptionalParameter(Parameter.ID_TOKEN_HINT, idTokenHint)
                     addOptionalParameter(Parameter.LOGOUT_HINT, request.logoutHint)
                     addAdditionalParameters(request.additionalParameters)
                 }
@@ -114,6 +113,7 @@ internal constructor(
         } catch (e: Exception) {
             throw RequestException(e)
         }
+    }
 
     internal companion object {
 

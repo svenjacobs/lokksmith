@@ -43,6 +43,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -379,7 +381,16 @@ public interface InternalClient : Client {
 
         public val snapshots: StateFlow<Snapshot>
 
+        /**
+         * Serializes [ClientImpl.refresh] across every [ClientImpl] instance created for this key,
+         * since [Lokksmith.get] hands out a new instance per call over the same store.
+         */
+        public val refreshMutex: Mutex
+
         public suspend fun updateSnapshot(body: Snapshot.() -> Snapshot): Snapshot
+
+        /** Reads the current snapshot directly from the store, bypassing [snapshots]' lag. */
+        public suspend fun currentSnapshot(): Snapshot
     }
 
     /**
@@ -412,6 +423,9 @@ public interface InternalClient : Client {
     public val snapshots: StateFlow<Snapshot>
 
     public suspend fun updateSnapshot(body: Snapshot.() -> Snapshot): Snapshot
+
+    /** Reads the current snapshot directly from the store, bypassing [snapshots]' lag. */
+    public suspend fun currentSnapshot(): Snapshot
 }
 
 internal class ClientImpl
@@ -474,31 +488,39 @@ private constructor(
             coroutineScope.launch { updateSnapshot { copy(metadata = value) } }
         }
 
-    override suspend fun refresh(): Tokens {
-        val tokens =
-            checkNotNull(snapshots.value.tokens) { "Client not authenticated (tokens are null)" }
-        check(tokens.accessToken.expiresAt == null || tokens.refreshToken != null) {
-            "access token has expiration but refresh token is missing"
+    // Held across the read, the network request and the write so that a second concurrent caller
+    // observes the rotated refresh token instead of replaying the one the first caller already
+    // spent. Deliberately not writeMutex: that one is taken inside updateSnapshot, so reusing it
+    // here would deadlock, and it would otherwise block unrelated clients' writes for the length
+    // of a network call.
+    override suspend fun refresh(): Tokens =
+        snapshotContract.refreshMutex.withLock {
+            val tokens =
+                checkNotNull(currentSnapshot().tokens) {
+                    "Client not authenticated (tokens are null)"
+                }
+            check(tokens.accessToken.expiresAt == null || tokens.refreshToken != null) {
+                "access token has expiration but refresh token is missing"
+            }
+
+            val refreshTokenRequest = provider.refreshTokenRequest(this)
+            val response = refreshTokenRequest()
+
+            val refreshedTokens =
+                Tokens(
+                    accessToken = response.accessToken,
+                    refreshToken = response.refreshToken ?: tokens.refreshToken,
+                    idToken = response.idToken ?: tokens.idToken,
+                )
+
+            updateSnapshot { copy(tokens = refreshedTokens) }
+
+            refreshedTokens
         }
-
-        val refreshTokenRequest = provider.refreshTokenRequest(this)
-        val response = refreshTokenRequest()
-
-        val refreshedTokens =
-            Tokens(
-                accessToken = response.accessToken,
-                refreshToken = response.refreshToken ?: tokens.refreshToken,
-                idToken = response.idToken ?: tokens.idToken,
-            )
-
-        updateSnapshot { copy(tokens = refreshedTokens) }
-
-        return refreshedTokens
-    }
 
     override suspend fun runWithTokens(body: suspend (Tokens) -> Unit) {
         val currentTokens =
-            checkNotNull(snapshots.value.tokens) { "Client not authenticated (tokens are null)" }
+            checkNotNull(currentSnapshot().tokens) { "Client not authenticated (tokens are null)" }
         val validTokens =
             when {
                 currentTokens.areExpired(
@@ -540,6 +562,8 @@ private constructor(
 
     override suspend fun updateSnapshot(body: Snapshot.() -> Snapshot) =
         snapshotContract.updateSnapshot(body)
+
+    override suspend fun currentSnapshot(): Snapshot = snapshotContract.currentSnapshot()
 
     override fun dispose() {
         coroutineScope.cancel()
