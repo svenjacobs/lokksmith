@@ -40,6 +40,13 @@ public enum class LokksmithFailureKind {
     /** The request did not complete: no connection, timeout, TLS failure. */
     @ObjCName("transport") Transport,
 
+    /**
+     * The request could not be built, for example because an endpoint in the provider configuration
+     * is not a valid URL. A bug or a misconfiguration, not a transient condition, so retrying will
+     * not help.
+     */
+    @ObjCName("configuration") Configuration,
+
     /** The provider responded, but not with something usable. */
     @ObjCName("response") Response,
 
@@ -94,7 +101,16 @@ internal fun Throwable.toFailure(): LokksmithFailure =
             )
         is RequestException ->
             LokksmithFailure(
-                kind = LokksmithFailureKind.Transport,
+                kind =
+                    when (reason) {
+                        // Reporting a malformed URL as transient would tell the caller to retry a
+                        // request that can never succeed.
+                        RequestException.Reason.UrlParsing -> LokksmithFailureKind.Configuration
+                        // An unclassified failure is treated as transient, which keeps the session
+                        // rather than signing the user out on a guess.
+                        RequestException.Reason.HttpError,
+                        null -> LokksmithFailureKind.Transport
+                    },
                 message = message,
                 code = null,
             )
@@ -116,7 +132,9 @@ internal fun Throwable.toFailure(): LokksmithFailure =
                 message = message,
                 code = null,
             )
-        // Checked after the more specific subtypes above, which it is a supertype of.
+        // The hierarchy is flat: these all extend LokksmithException directly. Only two orderings
+        // matter, and both are respected here: TokenTemporalValidationException before its
+        // supertype TokenValidationException, and LokksmithException last of all.
         is ResponseException ->
             LokksmithFailure(
                 kind = LokksmithFailureKind.Response,

@@ -22,6 +22,8 @@ import dev.lokksmith.client.request.parameter.Prompt
 import dev.lokksmith.client.request.parameter.Scope
 import kotlin.experimental.ExperimentalObjCName
 import kotlin.native.ObjCName
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Provider metadata, used when a client is configured statically instead of through discovery.
@@ -105,7 +107,13 @@ private constructor(
 /** An OAuth 2.0 token with an optional expiration, as seconds since the Unix epoch. */
 public class LokksmithToken(public val token: String, public val expiresAt: Long?)
 
-/** The claims of a validated ID token, plus its original encoded form. */
+/**
+ * The claims of a validated ID token, plus its original encoded form.
+ *
+ * @property extraClaims Claims outside the registered set, so that a consumer does not have to
+ *   decode [raw] to read a provider-specific claim. A string value is unquoted; anything else
+ *   (object, array, number, boolean) is its JSON text.
+ */
 public class LokksmithIdToken(
     public val raw: String,
     public val issuer: String,
@@ -119,6 +127,7 @@ public class LokksmithIdToken(
     public val authenticationContextClassReference: String?,
     public val authenticationMethodsReferences: List<String>,
     public val authorizedParty: String?,
+    public val extraClaims: Map<String, String>,
 )
 
 /** The current token set of a client. */
@@ -147,8 +156,19 @@ internal fun Client.Tokens.toSwift(): LokksmithTokens =
                 authenticationContextClassReference = idToken.authenticationContextClassReference,
                 authenticationMethodsReferences = idToken.authenticationMethodsReferences,
                 authorizedParty = idToken.authorizedParty,
+                extraClaims = idToken.extra.mapValues { (_, value) -> value.toSwiftClaim() },
             ),
     )
+
+/**
+ * Renders a claim as a string for [LokksmithIdToken.extraClaims].
+ *
+ * `JsonElement` cannot cross the Objective-C boundary. A string is unquoted so the common case
+ * needs no parsing on the Swift side; anything else keeps its JSON text, which a consumer can
+ * decode if it needs the structure.
+ */
+private fun JsonElement.toSwiftClaim(): String =
+    (this as? JsonPrimitive)?.takeIf { it.isString }?.content ?: toString()
 
 /**
  * Values that the `prompt` authorization request parameter may take.
@@ -216,13 +236,24 @@ public class LokksmithAuthorizationRequest(public val redirectUri: String) {
     internal fun toCore(): AuthorizationCodeFlow.Request =
         AuthorizationCodeFlow.Request(
             redirectUri = redirectUri,
-            scope = scopes.filter { it.isNotBlank() }.map { Scope.Custom(it) }.toSet(),
+            // "openid" is dropped rather than passed through: the flow appends Scope.OpenId
+            // unconditionally, so keeping it here would emit it twice. Scope.value is internal to
+            // lokksmith-core, hence the literal.
+            scope =
+                scopes
+                    .filter { it.isNotBlank() && it != OPENID_SCOPE }
+                    .map { Scope.Custom(it) }
+                    .toSet(),
             prompt = prompts.map { it.toCore() }.toSet(),
             maxAge = maxAge,
             uiLocales = uiLocales,
             loginHint = loginHint,
             additionalParameters = additionalParameters,
         )
+
+    private companion object {
+        const val OPENID_SCOPE = "openid"
+    }
 }
 
 /**

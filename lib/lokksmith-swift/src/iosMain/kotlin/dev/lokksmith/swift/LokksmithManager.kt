@@ -20,11 +20,13 @@ import dev.lokksmith.createLokksmith
 import dev.lokksmith.discoveryUrl
 import dev.lokksmith.id
 import dev.lokksmith.metadata
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import platform.Foundation.NSLog
 
 /**
  * Entry point for native Swift consumers. Manages persisted [LokksmithClient] instances.
@@ -34,7 +36,7 @@ import kotlinx.coroutines.cancel
  * let lokksmith = LokksmithManager()
  * let client = try await lokksmith.getOrCreateClient(
  *     key: "main",
- *     configuration: .discovery(
+ *     configuration: .companion.discovery(
  *         clientId: "my-client-id",
  *         discoveryUrl: "https://example.com/.well-known/openid-configuration"
  *     )
@@ -54,8 +56,22 @@ public constructor(persistenceFileBaseName: String, userAgent: String?) {
     /** Creates a manager with the default persistence file name and `User-Agent`. */
     public constructor() : this(DEFAULT_PERSISTENCE_FILE_BASE_NAME, "")
 
+    /**
+     * Carries a [CoroutineExceptionHandler] because this scope replaces the one [Lokksmith.Options]
+     * would install by default. A snapshot read that fails while being observed has no caller to
+     * return to, and on Kotlin/Native an unhandled coroutine exception terminates the process.
+     */
     private val coroutineScope =
-        CoroutineScope(Dispatchers.Default + SupervisorJob() + CoroutineName("LokksmithSwift"))
+        CoroutineScope(
+            Dispatchers.Default +
+                SupervisorJob() +
+                CoroutineName("LokksmithSwift") +
+                CoroutineExceptionHandler { _, throwable ->
+                    // "%@" placeholder rather than interpolating into the format string, so a '%'
+                    // in the message cannot be misread as a format specifier.
+                    NSLog("%@", "Lokksmith: unhandled error in coroutine scope: $throwable")
+                }
+        )
 
     private val lokksmith: Lokksmith =
         createLokksmith(

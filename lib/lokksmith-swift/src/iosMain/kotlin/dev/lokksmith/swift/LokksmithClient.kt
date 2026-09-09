@@ -17,16 +17,20 @@ package dev.lokksmith.swift
 
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.Client
+import dev.lokksmith.client.request.flow.AuthFlow
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider
 import dev.lokksmith.client.request.flow.AuthFlowResultProvider.Result
 import dev.lokksmith.ios.launchAuthFlow
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 
 /**
@@ -90,46 +94,17 @@ internal constructor(
     @Throws(LokksmithFailure::class, kotlinx.coroutines.CancellationException::class)
     public suspend fun authorize(request: LokksmithAuthorizationRequest): LokksmithTokens? =
         mapFailures {
-            val flow = client.authorizationCodeFlow(request.toCore())
-            val initiation = flow.prepare()
-
-            coroutineScope {
-                // Collection starts before the browser is presented, so a result that arrives while
-                // the session is still being torn down cannot be missed.
-                val result = async { awaitResult(initiation.state) }
-
-                @Suppress("UNCHECKED_CAST")
-                lokksmith.launchAuthFlow(
-                    initiation = initiation,
+            val outcome =
+                runAuthFlow(
+                    flow = client.authorizationCodeFlow(request.toCore()),
                     prefersEphemeralWebBrowserSession = request.prefersEphemeralWebBrowserSession,
-                    additionalHeaderFields =
-                        request.additionalHeaderFields.takeIf { it.isNotEmpty() } as Map<Any?, *>?,
+                    additionalHeaderFields = request.additionalHeaderFields,
                 )
 
-                when (val outcome = result.await()) {
-                    is Result.Success -> {
-                        AuthFlowResultProvider.confirmConsumed(client)
-                        awaitTokens()
-                    }
-                    is Result.Cancelled -> {
-                        AuthFlowResultProvider.confirmConsumed(client)
-                        null
-                    }
-                    is Result.Error -> {
-                        AuthFlowResultProvider.confirmConsumed(client)
-                        throw LokksmithFailure(
-                            kind = outcome.type.toFailureKind(),
-                            message = outcome.message,
-                            code = outcome.code,
-                        )
-                    }
-                    else ->
-                        throw LokksmithFailure(
-                            kind = LokksmithFailureKind.Generic,
-                            message = "Authorization flow produced no result",
-                            code = null,
-                        )
-                }
+            when (outcome) {
+                is Result.Success -> awaitTokens()
+                is Result.Cancelled -> null
+                else -> throw outcome.toFailure()
             }
         }
 
@@ -146,40 +121,31 @@ internal constructor(
     @Throws(LokksmithFailure::class, kotlinx.coroutines.CancellationException::class)
     public suspend fun endSession(request: LokksmithEndSessionRequest): Boolean = mapFailures {
         val flow = client.endSessionFlow(request.toCore()) ?: return@mapFailures false
-        val initiation = flow.prepare()
 
-        coroutineScope {
-            val result = async { awaitResult(initiation.state) }
-
-            lokksmith.launchAuthFlow(
-                initiation = initiation,
+        val outcome =
+            runAuthFlow(
+                flow = flow,
                 prefersEphemeralWebBrowserSession = request.prefersEphemeralWebBrowserSession,
-                additionalHeaderFields = null,
+                additionalHeaderFields = emptyMap(),
             )
 
-            val outcome = result.await()
-            AuthFlowResultProvider.confirmConsumed(client)
-
-            when (outcome) {
-                is Result.Success -> true
-                is Result.Cancelled -> false
-                is Result.Error ->
-                    throw LokksmithFailure(
-                        kind = outcome.type.toFailureKind(),
-                        message = outcome.message,
-                        code = outcome.code,
-                    )
-                else -> false
-            }
+        when (outcome) {
+            is Result.Success -> true
+            is Result.Cancelled -> false
+            else -> throw outcome.toFailure()
         }
     }
 
     /**
-     * Returns the current tokens, refreshing them first if the access token is expired or about to
-     * expire.
+     * Returns the current tokens, refreshing them first if the access token or the ID token is
+     * expired or about to expire.
      *
      * Prefer this over [refresh] on the request path: it performs a network round trip only when
      * one is needed.
+     *
+     * Both tokens are checked, matching `Client.runWithTokens`. Checking the access token alone
+     * would never refresh for a provider that omits `expires_in`, because an access token without
+     * an expiry is never considered expired, whereas an ID token always carries `exp`.
      *
      * @throws LokksmithFailure if no tokens are present, or the refresh failed.
      */
@@ -193,7 +159,7 @@ internal constructor(
                     code = null,
                 )
 
-        if (client.isExpired(current.accessToken)) {
+        if (client.isExpired(current.accessToken) || client.isExpired(current.idToken)) {
             client.refresh().toSwift()
         } else {
             current.toSwift()
@@ -238,6 +204,68 @@ internal constructor(
 
     internal fun coreClient(): Client = client
 
+    /**
+     * Prepares [flow], presents the system browser and returns the flow's terminal result, which is
+     * marked consumed before returning.
+     */
+    private suspend fun runAuthFlow(
+        flow: AuthFlow,
+        prefersEphemeralWebBrowserSession: Boolean,
+        additionalHeaderFields: Map<String, String>,
+    ): Result {
+        val initiation = flow.prepare()
+
+        val outcome =
+            try {
+                coroutineScope {
+                    // Collection starts before the browser is presented, so a result that arrives
+                    // while the session is still being torn down cannot be missed.
+                    val result = async { awaitResult(initiation.state) }
+
+                    // `launchAuthFlow` reads UIApplication.sharedApplication.windows and starts an
+                    // ASWebAuthenticationSession, both of which require the main thread. The
+                    // exported suspend function carries no dispatcher of its own, and `prepare()`
+                    // above resumes on the persistence layer's IO dispatcher.
+                    @Suppress("UNCHECKED_CAST")
+                    withContext(mainDispatcher()) {
+                        lokksmith.launchAuthFlow(
+                            initiation = initiation,
+                            prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession,
+                            additionalHeaderFields =
+                                additionalHeaderFields.takeIf { it.isNotEmpty() } as Map<Any?, *>?,
+                        )
+                    }
+
+                    // The timeout starts only here, after the browser has closed: the user paces
+                    // the flow itself, so timing out around `launchAuthFlow` would abort a login
+                    // that is still being typed. Past this point the response has been handled and
+                    // the result is either recorded or about to be.
+                    withTimeoutOrNull(FLOW_RESULT_TIMEOUT_MS) { result.await() }
+                        .also {
+                            // Releases `coroutineScope`, which would otherwise await the collector.
+                            if (it == null) result.cancel()
+                        }
+                }
+            } catch (e: CancellationException) {
+                // Without this the flow stays pending: `ephemeralFlowState` remains set and
+                // `authFlowResult` reports `Processing` until the next `prepare()`.
+                withContext(NonCancellable) { flow.cancel() }
+                throw e
+            }
+
+        if (outcome == null) {
+            withContext(NonCancellable) { flow.cancel() }
+            throw LokksmithFailure(
+                kind = LokksmithFailureKind.Generic,
+                message = "Authorization flow produced no result for its own state",
+                code = null,
+            )
+        }
+
+        AuthFlowResultProvider.confirmConsumed(client)
+        return outcome
+    }
+
     private suspend fun awaitResult(state: String): Result =
         AuthFlowResultProvider.forClient(client)
             .mapNotNull { result ->
@@ -271,8 +299,27 @@ internal constructor(
 
     private companion object {
         const val TOKEN_PROPAGATION_TIMEOUT_MS = 5_000L
+        const val FLOW_RESULT_TIMEOUT_MS = 5_000L
     }
 }
+
+/**
+ * Maps a non-terminal or failed [Result] to the failure reported to Swift.
+ *
+ * [Result.Success] and [Result.Cancelled] are outcomes rather than failures and are handled by the
+ * callers.
+ */
+private fun Result.toFailure(): LokksmithFailure =
+    when (this) {
+        is Result.Error ->
+            LokksmithFailure(kind = type.toFailureKind(), message = message, code = code)
+        else ->
+            LokksmithFailure(
+                kind = LokksmithFailureKind.Generic,
+                message = "Authorization flow produced no result",
+                code = null,
+            )
+    }
 
 private fun Result.Error.Type.toFailureKind(): LokksmithFailureKind =
     when (this) {

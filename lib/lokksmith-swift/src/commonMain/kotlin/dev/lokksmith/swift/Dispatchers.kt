@@ -15,17 +15,11 @@
  */
 package dev.lokksmith.swift
 
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
-/** A handle to an ongoing observation. Cancel it to stop receiving callbacks. */
-public class LokksmithCancellable internal constructor(private val job: Job) {
-
-    /** `true` once [cancel] has been called, or the observation ended on its own. */
-    public val isCancelled: Boolean
-        get() = !job.isActive
-
-    /** Stops the observation. Calling this more than once has no effect. */
-    public fun cancel() {
-        job.cancel()
-    }
-}
+/**
+ * The dispatcher for work that must run on the main thread, such as presenting the system browser
+ * or invoking a Swift callback.
+ */
+internal fun mainDispatcher(): CoroutineDispatcher = Dispatchers.Main

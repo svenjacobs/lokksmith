@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.konan.target.HostManager
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.dokka)
+    id("testlogger-conventions")
     id("spotless-conventions")
 }
 
@@ -40,54 +41,77 @@ kotlin {
             // which is why it declares its own models rather than re-exposing core's.
             implementation(project(":lokksmith-core"))
         }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+        }
     }
 }
 
 /**
- * Type-checks `src/swiftApiTest` against the assembled XCFramework.
+ * Compiles and **links** `src/swiftApiTest` against the release framework.
  *
  * The exported Objective-C surface is what Swift consumers actually see, and it is easy to regress
  * without noticing: Kotlin default arguments do not survive interop, `Flow` and `suspend` map in
  * specific ways, and enum entries are renamed. Compiling real Swift is the only way to catch that.
+ *
+ * Linking rather than only type-checking matters because the framework is static. A type-check
+ * resolves the interface alone and cannot see an unresolved symbol from a transitive dependency
+ * (CryptoKit, Ktor's Darwin engine, DataStore), which is exactly what would break a consumer.
+ *
+ * It links the framework produced by the target directly rather than a slice of the XCFramework:
+ * the slice directory is named after the architectures it contains, so adding a target would
+ * silently rename it, and `check` does not need a packaged XCFramework.
+ *
+ * Registered only on macOS. `kotlin.native.ignoreDisabledTargets` skips the compile tasks
+ * elsewhere, but a `dependsOn` on one of them would still have to resolve.
  */
-val swiftApiSmokeTest =
-    tasks.register<Exec>("swiftApiSmokeTest") {
-        group = "verification"
-        description = "Type-checks the Swift API sample against the assembled XCFramework."
+if (HostManager.hostIsMac) {
+    val swiftApiSmokeTest =
+        tasks.register<Exec>("swiftApiSmokeTest") {
+            group = "verification"
+            description = "Compiles and links the Swift API sample against the release framework."
 
-        onlyIf { HostManager.hostIsMac }
-        dependsOn("assemble${frameworkName}ReleaseXCFramework")
+            val linkTask = "linkReleaseFrameworkIosSimulatorArm64"
+            dependsOn(linkTask)
 
-        val simulatorFramework =
-            layout.buildDirectory.dir(
-                "XCFrameworks/release/$frameworkName.xcframework/ios-arm64-simulator"
+            val frameworkDir = layout.buildDirectory.dir("bin/iosSimulatorArm64/releaseFramework")
+            val source = layout.projectDirectory.file("src/swiftApiTest/SwiftApiSmokeTest.swift")
+            val binary = layout.buildDirectory.file("swiftApiTest/SwiftApiSmokeTest")
+
+            inputs.file(source)
+            inputs.dir(frameworkDir)
+            outputs.file(binary)
+
+            commandLine(
+                "xcrun",
+                "--sdk",
+                "iphonesimulator",
+                "swiftc",
+                "-target",
+                "arm64-apple-ios$iosDeploymentTarget-simulator",
+                "-F",
+                frameworkDir.get().asFile.absolutePath,
+                "-framework",
+                frameworkName,
+                "-o",
+                binary.get().asFile.absolutePath,
+                source.asFile.absolutePath,
             )
-        val source = layout.projectDirectory.file("src/swiftApiTest/SwiftApiSmokeTest.swift")
 
-        inputs.file(source)
-        inputs.dir(simulatorFramework)
+            doFirst { binary.get().asFile.parentFile.mkdirs() }
+        }
 
-        commandLine(
-            "xcrun",
-            "--sdk",
-            "iphonesimulator",
-            "swiftc",
-            "-target",
-            "arm64-apple-ios$iosDeploymentTarget-simulator",
-            "-F",
-            simulatorFramework.get().asFile.absolutePath,
-            "-typecheck",
-            source.asFile.absolutePath,
-        )
-    }
-
-tasks.named("check") { dependsOn(swiftApiSmokeTest) }
+    tasks.named("check") { dependsOn(swiftApiSmokeTest) }
+}
 
 /**
- * Produces the archive referenced by the root `Package.swift` and prints its checksum.
+ * Archives the XCFramework for Swift Package Manager and prints its checksum.
  *
- * Swift Package Manager expects the SHA-256 of the archive, which is what
- * `swift package compute-checksum` returns.
+ * SPM expects the SHA-256 of the archive, which is what `swift package compute-checksum` returns.
+ * Nothing consumes this yet: the `Package.swift` that references the archive, and the release
+ * automation that attaches it and stamps the checksum, follow separately.
  */
 tasks.register<Zip>("packageSwiftArtifact") {
     group = "publishing"

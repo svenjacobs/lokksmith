@@ -36,7 +36,8 @@ func signIn() async throws -> LokksmithTokens? {
     // Synchronous reads, no suspension and no network.
     let alreadySignedIn: Bool = client.isAuthenticated
     let subject: String? = client.tokens?.idToken.subject
-    _ = (alreadySignedIn, subject)
+    let email: String? = client.tokens?.idToken.extraClaims["email"]
+    _ = (alreadySignedIn, subject, email)
 
     let request = LokksmithAuthorizationRequest(redirectUri: "my-app://openid-response")
     request.scopes = ["profile", "email"]

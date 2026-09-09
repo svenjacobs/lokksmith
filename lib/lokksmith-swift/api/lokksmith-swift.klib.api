@@ -7,6 +7,7 @@
 
 // Library unique name: <lokksmith:lokksmith-swift>
 final enum class dev.lokksmith.swift/LokksmithFailureKind : kotlin/Enum<dev.lokksmith.swift/LokksmithFailureKind> { // dev.lokksmith.swift/LokksmithFailureKind|null[0]
+    enum entry Configuration // dev.lokksmith.swift/LokksmithFailureKind.Configuration|null[0]
     enum entry Discovery // dev.lokksmith.swift/LokksmithFailureKind.Discovery|null[0]
     enum entry Generic // dev.lokksmith.swift/LokksmithFailureKind.Generic|null[0]
     enum entry OAuthRejection // dev.lokksmith.swift/LokksmithFailureKind.OAuthRejection|null[0]
@@ -132,7 +133,7 @@ final class dev.lokksmith.swift/LokksmithFailure : kotlin/Exception { // dev.lok
 }
 
 final class dev.lokksmith.swift/LokksmithIdToken { // dev.lokksmith.swift/LokksmithIdToken|null[0]
-    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin.collections/List<kotlin/String>, kotlin/Long, kotlin/Long, kotlin/Long?, kotlin/Long?, kotlin/String?, kotlin/String?, kotlin.collections/List<kotlin/String>, kotlin/String?) // dev.lokksmith.swift/LokksmithIdToken.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Long;kotlin.Long;kotlin.Long?;kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.String?){}[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/String, kotlin.collections/List<kotlin/String>, kotlin/Long, kotlin/Long, kotlin/Long?, kotlin/Long?, kotlin/String?, kotlin/String?, kotlin.collections/List<kotlin/String>, kotlin/String?, kotlin.collections/Map<kotlin/String, kotlin/String>) // dev.lokksmith.swift/LokksmithIdToken.<init>|<init>(kotlin.String;kotlin.String;kotlin.String;kotlin.collections.List<kotlin.String>;kotlin.Long;kotlin.Long;kotlin.Long?;kotlin.Long?;kotlin.String?;kotlin.String?;kotlin.collections.List<kotlin.String>;kotlin.String?;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
 
     final val audiences // dev.lokksmith.swift/LokksmithIdToken.audiences|{}audiences[0]
         final fun <get-audiences>(): kotlin.collections/List<kotlin/String> // dev.lokksmith.swift/LokksmithIdToken.audiences.<get-audiences>|<get-audiences>(){}[0]
@@ -146,6 +147,8 @@ final class dev.lokksmith.swift/LokksmithIdToken { // dev.lokksmith.swift/Lokksm
         final fun <get-authorizedParty>(): kotlin/String? // dev.lokksmith.swift/LokksmithIdToken.authorizedParty.<get-authorizedParty>|<get-authorizedParty>(){}[0]
     final val expiration // dev.lokksmith.swift/LokksmithIdToken.expiration|{}expiration[0]
         final fun <get-expiration>(): kotlin/Long // dev.lokksmith.swift/LokksmithIdToken.expiration.<get-expiration>|<get-expiration>(){}[0]
+    final val extraClaims // dev.lokksmith.swift/LokksmithIdToken.extraClaims|{}extraClaims[0]
+        final fun <get-extraClaims>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.swift/LokksmithIdToken.extraClaims.<get-extraClaims>|<get-extraClaims>(){}[0]
     final val issuedAt // dev.lokksmith.swift/LokksmithIdToken.issuedAt|{}issuedAt[0]
         final fun <get-issuedAt>(): kotlin/Long // dev.lokksmith.swift/LokksmithIdToken.issuedAt.<get-issuedAt>|<get-issuedAt>(){}[0]
     final val issuer // dev.lokksmith.swift/LokksmithIdToken.issuer|{}issuer[0]
