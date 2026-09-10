@@ -28,56 +28,6 @@ public final class dev/lokksmith/CreateContextKt {
 	public static final fun setMetadata (Ldev/lokksmith/CreateContext;Ldev/lokksmith/client/Client$Metadata;)V
 }
 
-public abstract interface class dev/lokksmith/DataDirectory {
-}
-
-public final class dev/lokksmith/DataDirectory$Custom : dev/lokksmith/DataDirectory {
-	public fun <init> (Ljava/io/File;)V
-	public final fun component1 ()Ljava/io/File;
-	public final fun copy (Ljava/io/File;)Ldev/lokksmith/DataDirectory$Custom;
-	public static synthetic fun copy$default (Ldev/lokksmith/DataDirectory$Custom;Ljava/io/File;ILjava/lang/Object;)Ldev/lokksmith/DataDirectory$Custom;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getPath ()Ljava/io/File;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class dev/lokksmith/DataDirectory$Default : dev/lokksmith/DataDirectory {
-	public fun <init> (Ljava/lang/String;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Ldev/lokksmith/DataDirectory$Default;
-	public static synthetic fun copy$default (Ldev/lokksmith/DataDirectory$Default;Ljava/lang/String;ILjava/lang/Object;)Ldev/lokksmith/DataDirectory$Default;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAppName ()Ljava/lang/String;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class dev/lokksmith/DesktopOptions {
-	public fun <init> ()V
-	public synthetic fun <init> (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Ljava/lang/String;
-	public final fun component2 ()Ldev/lokksmith/desktop/ResponseHtml;
-	public final fun component3 ()Ldev/lokksmith/desktop/ResponseHtml;
-	public final fun component4 ()Ldev/lokksmith/desktop/BrowserLauncher;
-	public final fun component5-UwyO8pc ()J
-	public final fun copy-9VgGkz4 (Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;J)Ldev/lokksmith/DesktopOptions;
-	public static synthetic fun copy-9VgGkz4$default (Ldev/lokksmith/DesktopOptions;Ljava/lang/String;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/ResponseHtml;Ldev/lokksmith/desktop/BrowserLauncher;JILjava/lang/Object;)Ldev/lokksmith/DesktopOptions;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAuthorizationResponseHtml ()Ldev/lokksmith/desktop/ResponseHtml;
-	public final fun getBrowserLauncher ()Ldev/lokksmith/desktop/BrowserLauncher;
-	public final fun getEndSessionResponseHtml ()Ldev/lokksmith/desktop/ResponseHtml;
-	public final fun getRedirectPath ()Ljava/lang/String;
-	public final fun getRedirectTimeout-UwyO8pc ()J
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public abstract interface class dev/lokksmith/JvmContainer : dev/lokksmith/Container {
-	public abstract fun getDesktopOptions ()Ldev/lokksmith/DesktopOptions;
-}
-
 public final class dev/lokksmith/Lokksmith {
 	public final fun create (Ljava/lang/String;Ldev/lokksmith/client/Client$Options;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun create$default (Ldev/lokksmith/Lokksmith;Ljava/lang/String;Ldev/lokksmith/client/Client$Options;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
@@ -117,9 +67,9 @@ public final class dev/lokksmith/Lokksmith$Options {
 public class dev/lokksmith/LokksmithException : java/lang/Exception {
 }
 
-public final class dev/lokksmith/Lokksmith_jvmKt {
-	public static final fun createLokksmith (Ldev/lokksmith/DataDirectory;Ldev/lokksmith/Lokksmith$Options;Ldev/lokksmith/DesktopOptions;)Ldev/lokksmith/Lokksmith;
-	public static synthetic fun createLokksmith$default (Ldev/lokksmith/DataDirectory;Ldev/lokksmith/Lokksmith$Options;Ldev/lokksmith/DesktopOptions;ILjava/lang/Object;)Ldev/lokksmith/Lokksmith;
+public final class dev/lokksmith/Lokksmith_androidKt {
+	public static final fun createLokksmith (Landroid/content/Context;Ldev/lokksmith/Lokksmith$Options;)Ldev/lokksmith/Lokksmith;
+	public static synthetic fun createLokksmith$default (Landroid/content/Context;Ldev/lokksmith/Lokksmith$Options;ILjava/lang/Object;)Ldev/lokksmith/Lokksmith;
 }
 
 public final class dev/lokksmith/SingletonLokksmithProvider {
@@ -133,6 +83,21 @@ public final class dev/lokksmith/SingletonLokksmithProvider {
 public final class dev/lokksmith/TimeProviders {
 	public static final field INSTANCE Ldev/lokksmith/TimeProviders;
 	public final fun getDefault ()Lkotlin/jvm/functions/Function1;
+}
+
+public final class dev/lokksmith/android/LokksmithAuthFlowActivity : androidx/activity/ComponentActivity {
+	public static final field Companion Ldev/lokksmith/android/LokksmithAuthFlowActivity$Companion;
+	public fun <init> ()V
+}
+
+public final class dev/lokksmith/android/LokksmithAuthFlowActivity$Companion {
+	public final fun createCustomTabsIntent (Landroid/content/Context;Ldev/lokksmith/client/request/flow/AuthFlow$Initiation;Ljava/util/Map;Z)Landroid/content/Intent;
+	public static synthetic fun createCustomTabsIntent$default (Ldev/lokksmith/android/LokksmithAuthFlowActivity$Companion;Landroid/content/Context;Ldev/lokksmith/client/request/flow/AuthFlow$Initiation;Ljava/util/Map;ZILjava/lang/Object;)Landroid/content/Intent;
+	public final fun getErrorMessageFromIntent (Landroid/content/Intent;)Ljava/lang/String;
+}
+
+public final class dev/lokksmith/android/LokksmithRedirectActivity : androidx/activity/ComponentActivity {
+	public fun <init> ()V
 }
 
 public abstract interface class dev/lokksmith/client/Client {
@@ -1550,25 +1515,6 @@ public abstract interface class dev/lokksmith/client/usecase/RunWithTokensOrRese
 public final class dev/lokksmith/client/usecase/RunWithTokensOrResetUseCaseKt {
 	public static final fun runWithTokensOrReset (Ldev/lokksmith/client/Client;Ljava/util/List;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun runWithTokensOrReset$default (Ldev/lokksmith/client/Client;Ljava/util/List;Lkotlin/jvm/functions/Function3;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-}
-
-public abstract interface class dev/lokksmith/desktop/BrowserLauncher {
-	public static final field Companion Ldev/lokksmith/desktop/BrowserLauncher$Companion;
-	public abstract fun open (Ljava/lang/String;)V
-}
-
-public final class dev/lokksmith/desktop/BrowserLauncher$Companion {
-	public final fun getSystem ()Ldev/lokksmith/desktop/BrowserLauncher;
-}
-
-public abstract interface class dev/lokksmith/desktop/ResponseHtml {
-	public static final field Companion Ldev/lokksmith/desktop/ResponseHtml$Companion;
-	public abstract fun render (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
-public final class dev/lokksmith/desktop/ResponseHtml$Companion {
-	public final fun getDefaultAuthorization ()Ldev/lokksmith/desktop/ResponseHtml;
-	public final fun getDefaultEndSession ()Ldev/lokksmith/desktop/ResponseHtml;
 }
 
 public final class dev/lokksmith/internal/UtilitiesKt {
