@@ -1,0 +1,82 @@
+name: Swift Package
+
+# Swift Package Manager reads Package.swift at the git tag, so the binary target's checksum has to
+# be correct *before* the release is tagged. release-please tags when its release PR is merged, so
+# the checksum is stamped into that PR while it is still open.
+#
+# Between releases the committed checksum describes the previous release and does not match what
+# main builds. That is expected, so nothing is verified here outside the release PR.
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  checksum:
+    if: startsWith(github.head_ref, 'release-please--')
+    timeout-minutes: 30
+    runs-on: macos-latest
+    steps:
+      # A GitHub App token is required to push back to the release PR: a push made with the default
+      # GITHUB_TOKEN does not re-trigger that pull request's checks.
+      - uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          client-id: ${{ vars.RELEASE_PLEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ steps.app-token.outputs.token }}
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: "gradle"
+          cache-dependency-path: |
+            lib/**/*.gradle*
+            lib/**/gradle-wrapper.properties
+            lib/gradle/*.versions.toml
+
+      - name: Cache konan
+        uses: actions/cache@v6
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
+          restore-keys: ${{ runner.os }}-konan
+
+      - name: Build the XCFramework archive
+        run: ./gradlew :lokksmith-swift:packageSwiftArtifact
+        working-directory: ./lib
+
+      # release-please force-pushes this branch whenever it regenerates the release PR, which drops
+      # the stamped commit. This workflow runs again on that push, so the branch converges.
+      - name: Stamp the checksum into Package.swift
+        run: |
+          BUILT=$(shasum -a 256 lib/lokksmith-swift/build/swift/archive/Lokksmith.xcframework.zip | cut -d' ' -f1)
+          COMMITTED=$(grep -oE 'checksum: "[a-f0-9]{64}"' Package.swift | cut -d'"' -f2)
+          echo "Built:     $BUILT"
+          echo "Committed: $COMMITTED"
+
+          if [ "$BUILT" = "$COMMITTED" ]; then
+            echo "Package.swift is already up to date."
+            exit 0
+          fi
+
+          sed -i '' -E "s|checksum: \"[a-f0-9]{64}\"|checksum: \"$BUILT\"|" Package.swift
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Package.swift
+          git commit -m "chore: update Swift package checksum"
+          git push

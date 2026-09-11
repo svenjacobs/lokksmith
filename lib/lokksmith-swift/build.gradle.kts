@@ -107,30 +107,99 @@ if (HostManager.hostIsMac) {
 }
 
 /**
+ * Assembles the XCFramework that is published to Swift Package Manager.
+ *
+ * SPM pins the archive by checksum, so the same source must always produce the same bytes. The
+ * slice binaries already are identical between builds, but `xcodebuild -create-xcframework` writes
+ * `AvailableLibraries` in a non-deterministic order, which alone changes the checksum. It ignores
+ * argument order, so the entries are sorted afterwards. `sort_keys` also fixes the key order within
+ * each entry.
+ *
+ * The Kotlin plugin's `assembleXCFramework` is not used here because its output cannot be
+ * normalised without rewriting a file the plugin owns.
+ */
+val createSwiftXCFramework =
+    if (HostManager.hostIsMac) {
+        tasks.register<Exec>("createSwiftXCFramework") {
+            group = "publishing"
+            description = "Assembles a reproducible $frameworkName XCFramework."
+
+            val slices =
+                listOf("IosArm64" to "iosArm64", "IosSimulatorArm64" to "iosSimulatorArm64")
+            slices.forEach { (taskSuffix, _) -> dependsOn("linkReleaseFramework$taskSuffix") }
+
+            val frameworks =
+                slices.map { (_, targetDir) ->
+                    layout.buildDirectory.dir(
+                        "bin/$targetDir/releaseFramework/$frameworkName.framework"
+                    )
+                }
+            val output = layout.buildDirectory.dir("swift/$frameworkName.xcframework")
+
+            frameworks.forEach { inputs.dir(it) }
+            outputs.dir(output)
+
+            val outputPath = output.get().asFile.absolutePath
+            val frameworkArgs =
+                frameworks.joinToString(" ") { "-framework '${it.get().asFile.absolutePath}'" }
+
+            commandLine(
+                "bash",
+                "-euo",
+                "pipefail",
+                "-c",
+                """
+                rm -rf '$outputPath'
+                xcrun xcodebuild -create-xcframework $frameworkArgs -output '$outputPath'
+                python3 - '$outputPath/Info.plist' <<'PY'
+                import plistlib, sys
+                path = sys.argv[1]
+                with open(path, 'rb') as f:
+                    plist = plistlib.load(f)
+                plist['AvailableLibraries'].sort(key=lambda library: library['LibraryIdentifier'])
+                with open(path, 'wb') as f:
+                    plistlib.dump(plist, f, sort_keys=True)
+                PY
+                """
+                    .trimIndent(),
+            )
+        }
+    } else {
+        null
+    }
+
+/**
  * Archives the XCFramework for Swift Package Manager and prints its checksum.
  *
  * SPM expects the SHA-256 of the archive, which is what `swift package compute-checksum` returns.
- * Nothing consumes this yet: the `Package.swift` that references the archive, and the release
- * automation that attaches it and stamps the checksum, follow separately.
+ * The release workflow stamps this checksum into `Package.swift` before the tag is created, so the
+ * archive must be byte-identical every time it is built from the same source.
  */
-tasks.register<Zip>("packageSwiftArtifact") {
-    group = "publishing"
-    description = "Archives the $frameworkName XCFramework for Swift Package Manager."
+if (createSwiftXCFramework != null) {
+    tasks.register<Zip>("packageSwiftArtifact") {
+        group = "publishing"
+        description = "Archives the $frameworkName XCFramework for Swift Package Manager."
 
-    dependsOn("assemble${frameworkName}ReleaseXCFramework")
+        dependsOn(createSwiftXCFramework)
 
-    from(layout.buildDirectory.dir("XCFrameworks/release"))
-    archiveFileName = "$frameworkName.xcframework.zip"
-    destinationDirectory = layout.buildDirectory.dir("swift")
+        from(layout.buildDirectory.dir("swift")) { include("$frameworkName.xcframework/**") }
+        archiveFileName = "$frameworkName.xcframework.zip"
+        destinationDirectory = layout.buildDirectory.dir("swift/archive")
 
-    val archive = destinationDirectory.file("$frameworkName.xcframework.zip")
-    doLast {
-        val bytes = archive.get().asFile.readBytes()
-        val checksum =
-            MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { byte ->
-                "%02x".format(byte)
-            }
-        logger.lifecycle("Archive:  ${archive.get().asFile}")
-        logger.lifecycle("Checksum: $checksum")
+        // SPM pins the archive by checksum, so the same inputs must always produce the same bytes.
+        // Without these, entry order and file timestamps vary between builds.
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+
+        val archive = destinationDirectory.file("$frameworkName.xcframework.zip")
+        doLast {
+            val bytes = archive.get().asFile.readBytes()
+            val checksum =
+                MessageDigest.getInstance("SHA-256").digest(bytes).joinToString("") { byte ->
+                    "%02x".format(byte)
+                }
+            logger.lifecycle("Archive:  ${archive.get().asFile}")
+            logger.lifecycle("Checksum: $checksum")
+        }
     }
 }

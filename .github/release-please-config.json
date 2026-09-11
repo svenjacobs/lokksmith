@@ -12,7 +12,8 @@
         { "type": "deps", "section": "Dependencies" },
         { "type": "docs", "section": "Documentation", "hidden": true },
         { "type": "chore", "section": "Chores", "hidden": true }
-      ]
+      ],
+      "extra-files": [{ "type": "generic", "path": "Package.swift" }]
     }
   }
 }
