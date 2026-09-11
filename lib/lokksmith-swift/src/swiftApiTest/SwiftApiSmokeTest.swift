@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-// Type-checked against the assembled XCFramework by the `swiftApiSmokeTest` Gradle task, which
-// `check` depends on. It verifies that the exported surface stays usable from idiomatic Swift —
-// async/await, synchronous properties, closures, enums and error handling — and it mirrors the
-// snippets in site/docs/getting-started/usage.md, so those cannot silently rot.
+// Compiled and linked against the assembled framework by the `swiftApiSmokeTest` Gradle task,
+// which `check` depends on. It verifies that the exported surface stays usable from idiomatic
+// Swift — async/await, synchronous properties, closures, enums and error handling.
 
 import Foundation
 import Lokksmith
