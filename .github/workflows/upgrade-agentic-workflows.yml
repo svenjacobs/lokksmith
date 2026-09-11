@@ -1,0 +1,36 @@
+name: Upgrade Agentic Workflows
+permissions:
+  contents: read
+on:
+  schedule:
+    - cron: "0 3 1 * *"
+  workflow_dispatch:
+jobs:
+  upgrade:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # The default GITHUB_TOKEN may not push changes to files under .github/workflows,
+      # so the App token is used for the pull request too.
+      - uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          client-id: ${{ vars.RELEASE_PLEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
+      - name: Upgrade and recompile agentic workflows
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh extension install github/gh-aw
+          gh aw upgrade
+      - name: Create PR for agentic workflow upgrade
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: "chore(ci): upgrade agentic workflows"
+          title: "chore(ci): upgrade agentic workflows"
+          body: Automated `gh aw upgrade`, regenerating the lock files with the current gh-aw compiler and matching action pins.
+          branch: chore/upgrade-agentic-workflows
+          base: main
+          labels: maintenance
