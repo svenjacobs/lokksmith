@@ -11,21 +11,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: "gradle"
-          cache-dependency-path: |
-            lib/**/*.gradle*
-            lib/**/gradle-wrapper.properties
-            lib/gradle/*.versions.toml
-      - name: Cache konan
-        uses: actions/cache@v6
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
-          restore-keys: ${{ runner.os }}-konan
+      - uses: ./.github/actions/setup-gradle
       - name: Strip leading v from VERSION
         run: echo "VERSION=${VERSION#v}" >> $GITHUB_ENV
         env:
@@ -39,6 +25,49 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.GPG_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.GPG_KEY_PASSWORD }}
         working-directory: ./lib
+
+  swift-package:
+    timeout-minutes: 30
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-gradle
+      # Must match the version the release PR built with, since it is compiled into the binary and
+      # therefore into the checksum. Read from the same source as swift-package.yml rather than from
+      # the tag name, so the two cannot drift apart.
+      - name: Read the released version
+        run: echo "VERSION=$(jq -r '."."' .github/.release-please-manifest.json)" >> "$GITHUB_ENV"
+      - name: Build the XCFramework archive
+        run: ./gradlew :lokksmith-swift:packageSwiftArtifact -PVERSION_NAME="$VERSION"
+        working-directory: ./lib
+      # Package.swift is already tagged and cannot be corrected, so a mismatch means every consumer
+      # of this version would get a checksum error from SPM. Fail before the asset is attached, so
+      # the failure is one red release job rather than a broken package.
+      - name: Verify the tagged Package.swift describes this release
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          BUILT=$(shasum -a 256 lib/lokksmith-swift/build/swift/archive/Lokksmith.xcframework.zip | cut -d' ' -f1)
+          TAGGED=$(grep -oE 'checksum: "[a-f0-9]{64}"' Package.swift | cut -d'"' -f2)
+          if [ "$BUILT" != "$TAGGED" ]; then
+            echo "::error::Archive checksum $BUILT does not match $TAGGED in the tagged Package.swift."
+            exit 1
+          fi
+
+          # Catches the version in the download URL not having been updated, which would otherwise
+          # point consumers of this tag at the previous release's asset.
+          if ! grep -q "releases/download/$TAG/Lokksmith.xcframework.zip" Package.swift; then
+            echo "::error::Package.swift does not point at $TAG. Found:"
+            grep -oE 'url: "[^"]+"' Package.swift >&2
+            exit 1
+          fi
+      - name: Attach the archive to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            lib/lokksmith-swift/build/swift/archive/Lokksmith.xcframework.zip \
+            --repo "${{ github.repository }}" --clobber
 
   documentation:
     needs: publish
@@ -54,6 +83,10 @@ jobs:
         run: |
           sed -i "s|^lokksmith_version = .*|lokksmith_version = \"$VERSION\"|" ./site/zensical.toml
           sed -i "s|^lokksmith_version_date = .*|lokksmith_version_date = \"$(date -u "+%b %d, %Y")\"|" ./site/zensical.toml
+          # The Swift package is available from this release on, so the "not available yet" note
+          # comes out. The markers make this a precise range delete, and once they are gone this
+          # is a no-op on every later release.
+          sed -i '/<!-- swift-package-pending -->/,/<!-- \/swift-package-pending -->/d' ./site/docs/getting-started/installation.md
       - name: Create PR for documentation
         uses: peter-evans/create-pull-request@v8
         with:

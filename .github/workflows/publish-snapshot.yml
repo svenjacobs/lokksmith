@@ -19,21 +19,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: 'gradle'
-          cache-dependency-path: |
-            lib/**/*.gradle*
-            lib/**/gradle-wrapper.properties
-            lib/gradle/*.versions.toml
-      - name: Cache konan
-        uses: actions/cache@v6
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
-          restore-keys: ${{ runner.os }}-konan
+      - uses: ./.github/actions/setup-gradle
       - name: Create snapshot VERSION
         run: echo "VERSION=$(git describe --tags --abbrev=0 --match="v*" | sed 's/^v//')-SNAPSHOT" >> $GITHUB_ENV
       - name: Publish snapshot release

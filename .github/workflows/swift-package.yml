@@ -1,0 +1,83 @@
+name: Swift Package
+
+# Swift Package Manager reads Package.swift at the git tag, so the binary target's checksum has to
+# be correct *before* the release is tagged. release-please tags when its release PR is merged, so
+# the checksum is stamped into that PR while it is still open.
+#
+# Between releases the committed checksum describes the previous release and does not match what
+# main builds. That is expected, so nothing is verified here outside the release PR.
+
+# The default token only reads the repository. The checkout and the push back to the release PR
+# use the GitHub App token instead, so a push re-triggers this workflow's checks.
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  checksum:
+    if: startsWith(github.head_ref, 'release-please--')
+    timeout-minutes: 30
+    runs-on: macos-latest
+    steps:
+      # A GitHub App token is required to push back to the release PR: a push made with the default
+      # GITHUB_TOKEN does not re-trigger that pull request's checks.
+      - uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          client-id: ${{ vars.RELEASE_PLEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ steps.app-token.outputs.token }}
+
+      - uses: ./.github/actions/setup-gradle
+
+      # The version is compiled into the binary through the default user agent, so it changes the
+      # archive's checksum. It must be the same here and in the publish job, or the checksum stamped
+      # now would not match the one verified at the tag. The manifest is bumped inside this very
+      # release PR, so it already holds the version being released.
+      - name: Read the version being released
+        run: echo "VERSION=$(jq -r '."."' .github/.release-please-manifest.json)" >> "$GITHUB_ENV"
+
+      - name: Build the XCFramework archive
+        run: ./gradlew :lokksmith-swift:packageSwiftArtifact -PVERSION_NAME="$VERSION"
+        working-directory: ./lib
+
+      # release-please force-pushes this branch whenever it regenerates the release PR, which drops
+      # the stamped commit. This workflow runs again on that push, so the branch converges. The
+      # `cancel-in-progress` concurrency above matters here: a force-push mid-build cancels the run
+      # that would otherwise push a checksum for the previous content.
+      #
+      # The URL version is normally bumped by release-please's `extra-files`. It is stamped here as
+      # well so the manifest is correct even if that does not happen, because at this point it can
+      # still be fixed. Once the tag exists it cannot.
+      - name: Stamp the version and checksum into Package.swift
+        run: |
+          BUILT=$(shasum -a 256 lib/lokksmith-swift/build/swift/archive/Lokksmith.xcframework.zip | cut -d' ' -f1)
+
+          sed -i '' -E \
+            -e "s|releases/download/v[0-9][^/]*/|releases/download/v$VERSION/|" \
+            -e "s|checksum: \"[a-f0-9]{64}\"|checksum: \"$BUILT\"|" \
+            Package.swift
+
+          if git diff --quiet Package.swift; then
+            echo "Package.swift already describes v$VERSION with checksum $BUILT."
+            exit 0
+          fi
+
+          git diff Package.swift
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Package.swift
+          git commit -m "chore: update Swift package manifest for v$VERSION"
+          git push
