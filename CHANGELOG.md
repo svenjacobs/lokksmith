@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.2.0](https://github.com/svenjacobs/lokksmith/compare/v2.1.1...v2.2.0) (2026-09-11)
+
+
+### Features
+
+* **swift:** publish the Swift package via SPM ([#526](https://github.com/svenjacobs/lokksmith/issues/526)) ([4c67576](https://github.com/svenjacobs/lokksmith/commit/4c67576ae59b35a8bf0b6558a33ed77dbb838340))
+
+
+### Bug Fixes
+
+* **deps:** update kotlin monorepo to v2.4.20 ([#525](https://github.com/svenjacobs/lokksmith/issues/525)) ([cc70724](https://github.com/svenjacobs/lokksmith/commit/cc7072470d61c8ca4d1ed108300c8a58b339b071))
+* **deps:** update spotless to v8.10.2 ([#523](https://github.com/svenjacobs/lokksmith/issues/523)) ([1e140c7](https://github.com/svenjacobs/lokksmith/commit/1e140c7d9b54a1c055316f661df26d419173b28d))
+
 ## [2.1.1](https://github.com/svenjacobs/lokksmith/compare/v2.1.0...v2.1.1) (2026-09-05)
 
 
