@@ -25,7 +25,7 @@ let package = Package(
         .binaryTarget(
             name: "Lokksmith",
             url: "https://github.com/svenjacobs/lokksmith/releases/download/v2.2.1/Lokksmith.xcframework.zip", // x-release-please-version
-            checksum: "14d3426a9c8fd5d8f88da90f3b6ada7ba66b478e646f868295d6f8dec08c37b9"
+            checksum: "ed325b714055bf20dbf51d059ba253949d99f122bb18eb12275120129c40aed4"
         )
     ]
 )
