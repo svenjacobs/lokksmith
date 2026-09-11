@@ -7,9 +7,10 @@ name: Swift Package
 # Between releases the committed checksum describes the previous release and does not match what
 # main builds. That is expected, so nothing is verified here outside the release PR.
 
+# The default token only reads the repository. The checkout and the push back to the release PR
+# use the GitHub App token instead, so a push re-triggers this workflow's checks.
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 on:
   pull_request:

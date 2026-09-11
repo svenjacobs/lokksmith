@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'lib/**'
+      - '.github/actions/**'
   workflow_dispatch:
 jobs:
   check:

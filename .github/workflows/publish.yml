@@ -83,6 +83,10 @@ jobs:
         run: |
           sed -i "s|^lokksmith_version = .*|lokksmith_version = \"$VERSION\"|" ./site/zensical.toml
           sed -i "s|^lokksmith_version_date = .*|lokksmith_version_date = \"$(date -u "+%b %d, %Y")\"|" ./site/zensical.toml
+          # The Swift package is available from this release on, so the "not available yet" note
+          # comes out. The markers make this a precise range delete, and once they are gone this
+          # is a no-op on every later release.
+          sed -i '/<!-- swift-package-pending -->/,/<!-- \/swift-package-pending -->/d' ./site/docs/getting-started/installation.md
       - name: Create PR for documentation
         uses: peter-evans/create-pull-request@v8
         with:

@@ -138,11 +138,13 @@ Native iOS apps consume Lokksmith as a binary Swift package. The package ships a
 from the `lokksmith-swift` module, which exposes a Swift-facing API over `lokksmith-core`. No Kotlin
 toolchain or Gradle build is involved.
 
+<!-- swift-package-pending -->
 !!! warning "Not available yet"
     The Swift package ships from the **next** release onwards. Earlier tags carry no `Package.swift`
     and no release asset, so Swift Package Manager cannot resolve them, and the version shown below
     is the currently released one rather than the first that will work.
 
+<!-- /swift-package-pending -->
 In Xcode, choose **File → Add Package Dependencies…** and enter:
 
 ```

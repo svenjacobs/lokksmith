@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'demo/**'
+      - '.github/actions/**'
   workflow_dispatch:
 jobs:
   check:
