@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/svenjacobs/lokksmith/compare/v2.2.0...v2.2.1) (2026-09-11)
+
+
+### Bug Fixes
+
+* **ci:** recompile agentic workflow lock with gh-aw v0.88.7 ([#529](https://github.com/svenjacobs/lokksmith/issues/529)) ([acef1f5](https://github.com/svenjacobs/lokksmith/commit/acef1f567c594a0fa28b7cece4680b409f3e8a39))
+
 ## [2.2.0](https://github.com/svenjacobs/lokksmith/compare/v2.1.1...v2.2.0) (2026-09-11)
 
 
