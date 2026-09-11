@@ -11,21 +11,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: "gradle"
-          cache-dependency-path: |
-            lib/**/*.gradle*
-            lib/**/gradle-wrapper.properties
-            lib/gradle/*.versions.toml
-      - name: Cache konan
-        uses: actions/cache@v6
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
-          restore-keys: ${{ runner.os }}-konan
+      - uses: ./.github/actions/setup-gradle
       - name: Strip leading v from VERSION
         run: echo "VERSION=${VERSION#v}" >> $GITHUB_ENV
         env:
@@ -45,23 +31,14 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: "gradle"
-          cache-dependency-path: |
-            lib/**/*.gradle*
-            lib/**/gradle-wrapper.properties
-            lib/gradle/*.versions.toml
-      - name: Cache konan
-        uses: actions/cache@v6
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
-          restore-keys: ${{ runner.os }}-konan
+      - uses: ./.github/actions/setup-gradle
+      # Must match the version the release PR built with, since it is compiled into the binary and
+      # therefore into the checksum. Read from the same source as swift-package.yml rather than from
+      # the tag name, so the two cannot drift apart.
+      - name: Read the released version
+        run: echo "VERSION=$(jq -r '."."' .github/.release-please-manifest.json)" >> "$GITHUB_ENV"
       - name: Build the XCFramework archive
-        run: ./gradlew :lokksmith-swift:packageSwiftArtifact
+        run: ./gradlew :lokksmith-swift:packageSwiftArtifact -PVERSION_NAME="$VERSION"
         working-directory: ./lib
       # Package.swift is already tagged and cannot be corrected, so a mismatch means every consumer
       # of this version would get a checksum error from SPM. Fail before the asset is attached, so

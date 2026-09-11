@@ -39,44 +39,44 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ steps.app-token.outputs.token }}
 
-      - uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: 21
-          cache: "gradle"
-          cache-dependency-path: |
-            lib/**/*.gradle*
-            lib/**/gradle-wrapper.properties
-            lib/gradle/*.versions.toml
+      - uses: ./.github/actions/setup-gradle
 
-      - name: Cache konan
-        uses: actions/cache@v6
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('lib/**/*.gradle*', 'lib/gradle/*.versions.toml') }}
-          restore-keys: ${{ runner.os }}-konan
+      # The version is compiled into the binary through the default user agent, so it changes the
+      # archive's checksum. It must be the same here and in the publish job, or the checksum stamped
+      # now would not match the one verified at the tag. The manifest is bumped inside this very
+      # release PR, so it already holds the version being released.
+      - name: Read the version being released
+        run: echo "VERSION=$(jq -r '."."' .github/.release-please-manifest.json)" >> "$GITHUB_ENV"
 
       - name: Build the XCFramework archive
-        run: ./gradlew :lokksmith-swift:packageSwiftArtifact
+        run: ./gradlew :lokksmith-swift:packageSwiftArtifact -PVERSION_NAME="$VERSION"
         working-directory: ./lib
 
       # release-please force-pushes this branch whenever it regenerates the release PR, which drops
-      # the stamped commit. This workflow runs again on that push, so the branch converges.
-      - name: Stamp the checksum into Package.swift
+      # the stamped commit. This workflow runs again on that push, so the branch converges. The
+      # `cancel-in-progress` concurrency above matters here: a force-push mid-build cancels the run
+      # that would otherwise push a checksum for the previous content.
+      #
+      # The URL version is normally bumped by release-please's `extra-files`. It is stamped here as
+      # well so the manifest is correct even if that does not happen, because at this point it can
+      # still be fixed. Once the tag exists it cannot.
+      - name: Stamp the version and checksum into Package.swift
         run: |
           BUILT=$(shasum -a 256 lib/lokksmith-swift/build/swift/archive/Lokksmith.xcframework.zip | cut -d' ' -f1)
-          COMMITTED=$(grep -oE 'checksum: "[a-f0-9]{64}"' Package.swift | cut -d'"' -f2)
-          echo "Built:     $BUILT"
-          echo "Committed: $COMMITTED"
 
-          if [ "$BUILT" = "$COMMITTED" ]; then
-            echo "Package.swift is already up to date."
+          sed -i '' -E \
+            -e "s|releases/download/v[0-9][^/]*/|releases/download/v$VERSION/|" \
+            -e "s|checksum: \"[a-f0-9]{64}\"|checksum: \"$BUILT\"|" \
+            Package.swift
+
+          if git diff --quiet Package.swift; then
+            echo "Package.swift already describes v$VERSION with checksum $BUILT."
             exit 0
           fi
 
-          sed -i '' -E "s|checksum: \"[a-f0-9]{64}\"|checksum: \"$BUILT\"|" Package.swift
+          git diff Package.swift
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Package.swift
-          git commit -m "chore: update Swift package checksum"
+          git commit -m "chore: update Swift package manifest for v$VERSION"
           git push

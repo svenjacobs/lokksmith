@@ -1,0 +1,30 @@
+name: Setup Gradle
+description: Installs the JDK and restores the Gradle and Kotlin/Native caches for a Gradle build root.
+
+inputs:
+  project-directory:
+    description: Gradle build root the caches are keyed on, for example lib or demo.
+    required: false
+    default: lib
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: 21
+        cache: "gradle"
+        cache-dependency-path: |
+          ${{ inputs.project-directory }}/**/*.gradle*
+          ${{ inputs.project-directory }}/**/gradle-wrapper.properties
+          ${{ inputs.project-directory }}/gradle/*.versions.toml
+
+    # Kotlin/Native downloads a compiler distribution and builds klib caches per Kotlin version, so
+    # this is keyed on the same files as the Gradle cache.
+    - name: Cache konan
+      uses: actions/cache@v6
+      with:
+        path: ~/.konan
+        key: ${{ runner.os }}-konan-${{ hashFiles(format('{0}/**/*.gradle*', inputs.project-directory), format('{0}/gradle/*.versions.toml', inputs.project-directory)) }}
+        restore-keys: ${{ runner.os }}-konan

@@ -1,5 +1,4 @@
 import java.security.MessageDigest
-import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
@@ -21,13 +20,13 @@ kotlin {
     @OptIn(org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation::class)
     abiValidation()
 
-    val xcframework = XCFramework(frameworkName)
-
+    // No XCFramework is registered here on purpose. `createSwiftXCFramework` assembles the
+    // published one from these per-target frameworks, because the plugin's `assembleXCFramework`
+    // is not reproducible and SPM pins the archive by checksum.
     listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
         target.binaries.framework {
             baseName = frameworkName
             isStatic = true
-            xcframework.add(this)
         }
     }
 

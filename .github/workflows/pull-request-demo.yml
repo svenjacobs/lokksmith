@@ -12,21 +12,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-java@v6
+      - uses: ./.github/actions/setup-gradle
         with:
-          distribution: temurin
-          java-version: 21
-          cache: 'gradle'
-          cache-dependency-path: |
-            demo/**/*.gradle*
-            demo/**/gradle-wrapper.properties
-            demo/gradle/*.versions.toml
-      - name: Cache konan
-        uses: actions/cache@v6
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('demo/**/*.gradle*', 'demo/gradle/*.versions.toml') }}
-          restore-keys: ${{ runner.os }}-konan
+          project-directory: demo
       - run: ./gradlew check
         working-directory: ./demo
       - name: Store reports
