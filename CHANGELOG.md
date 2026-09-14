@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.3.0](https://github.com/svenjacobs/lokksmith/compare/v2.2.0...v2.3.0) (2026-09-14)
+
+
+### Features
+
+* **swift:** expose client options to Swift ([#532](https://github.com/svenjacobs/lokksmith/issues/532)) ([656425d](https://github.com/svenjacobs/lokksmith/commit/656425dee91d7ca401a0fbf199bfdbdffc5860ad))
+
+
+### Bug Fixes
+
+* **ci:** recompile agentic workflow lock with gh-aw v0.88.7 ([#529](https://github.com/svenjacobs/lokksmith/issues/529)) ([acef1f5](https://github.com/svenjacobs/lokksmith/commit/acef1f567c594a0fa28b7cece4680b409f3e8a39))
+* **deps:** update dependency co.touchlab:kermit to v2.2.0 ([#531](https://github.com/svenjacobs/lokksmith/issues/531)) ([fb70e3a](https://github.com/svenjacobs/lokksmith/commit/fb70e3ae43e4f39588195ee849c387a6ef218074))
+* exchange authorization code with the client's options ([#533](https://github.com/svenjacobs/lokksmith/issues/533)) ([3b4f599](https://github.com/svenjacobs/lokksmith/commit/3b4f59954841390e898d219f1b7d1bf22743d762))
+
 ## [2.2.0](https://github.com/svenjacobs/lokksmith/compare/v2.1.1...v2.2.0) (2026-09-11)
 
 
