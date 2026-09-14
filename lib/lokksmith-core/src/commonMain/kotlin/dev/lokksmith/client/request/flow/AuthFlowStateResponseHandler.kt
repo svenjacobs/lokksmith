@@ -16,6 +16,7 @@
 package dev.lokksmith.client.request.flow
 
 import dev.lokksmith.Lokksmith
+import dev.lokksmith.client.Client
 import dev.lokksmith.client.InternalClient
 import dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowResponseHandler
 import dev.lokksmith.client.request.flow.endSession.EndSessionFlowResponseHandler
@@ -45,8 +46,12 @@ public class AuthFlowStateResponseHandler(private val lokksmith: Lokksmith) {
                 "No client snapshot found for state"
             }
 
+        val options =
+            (snapshot.ephemeralFlowState as? Snapshot.EphemeralAuthorizationCodeFlowState)
+                ?.clientOptions ?: Client.Options()
+
         val client =
-            checkNotNull(lokksmith.get(snapshot.key.value)) { "No client found for state" }
+            checkNotNull(lokksmith.get(snapshot.key.value, options)) { "No client found for state" }
                 as InternalClient
 
         val handler =

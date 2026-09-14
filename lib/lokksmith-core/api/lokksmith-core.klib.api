@@ -235,6 +235,21 @@ abstract interface dev.lokksmith.client/Client { // dev.lokksmith.client/Client|
         final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client/Client.Options.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // dev.lokksmith.client/Client.Options.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // dev.lokksmith.client/Client.Options.toString|toString(){}[0]
+
+        final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<dev.lokksmith.client/Client.Options> { // dev.lokksmith.client/Client.Options.$serializer|null[0]
+            final val descriptor // dev.lokksmith.client/Client.Options.$serializer.descriptor|{}descriptor[0]
+                final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // dev.lokksmith.client/Client.Options.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+            final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // dev.lokksmith.client/Client.Options.$serializer.childSerializers|childSerializers(){}[0]
+            final fun deserialize(kotlinx.serialization.encoding/Decoder): dev.lokksmith.client/Client.Options // dev.lokksmith.client/Client.Options.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+            final fun serialize(kotlinx.serialization.encoding/Encoder, dev.lokksmith.client/Client.Options) // dev.lokksmith.client/Client.Options.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;dev.lokksmith.client.Client.Options){}[0]
+        }
+
+        final object Companion { // dev.lokksmith.client/Client.Options.Companion|null[0]
+            final val $childSerializers // dev.lokksmith.client/Client.Options.Companion.$childSerializers|{}$childSerializers[0]
+
+            final fun serializer(): kotlinx.serialization/KSerializer<dev.lokksmith.client/Client.Options> // dev.lokksmith.client/Client.Options.Companion.serializer|serializer(){}[0]
+        }
     }
 
     final class Tokens { // dev.lokksmith.client/Client.Tokens|null[0]
@@ -1107,8 +1122,10 @@ final class dev.lokksmith.client.snapshot/Snapshot { // dev.lokksmith.client.sna
     }
 
     final class EphemeralAuthorizationCodeFlowState : dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState { // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState|null[0]
-        constructor <init>(kotlin/String, kotlin/String?, kotlin/String, kotlin/String?, kotlin/Int? = ...) // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?){}[0]
+        constructor <init>(kotlin/String, kotlin/String?, kotlin/String, kotlin/String?, kotlin/Int? = ..., dev.lokksmith.client/Client.Options? = ...) // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?;dev.lokksmith.client.Client.Options?){}[0]
 
+        final val clientOptions // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.clientOptions|{}clientOptions[0]
+            final fun <get-clientOptions>(): dev.lokksmith.client/Client.Options? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.clientOptions.<get-clientOptions>|<get-clientOptions>(){}[0]
         final val codeVerifier // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.codeVerifier|{}codeVerifier[0]
             final fun <get-codeVerifier>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.codeVerifier.<get-codeVerifier>|<get-codeVerifier>(){}[0]
         final val maxAge // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.maxAge|{}maxAge[0]
@@ -1125,7 +1142,8 @@ final class dev.lokksmith.client.snapshot/Snapshot { // dev.lokksmith.client.sna
         final fun component3(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component3|component3(){}[0]
         final fun component4(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component4|component4(){}[0]
         final fun component5(): kotlin/Int? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component5|component5(){}[0]
-        final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/Int? = ...): dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.copy|copy(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?){}[0]
+        final fun component6(): dev.lokksmith.client/Client.Options? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component6|component6(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/Int? = ..., dev.lokksmith.client/Client.Options? = ...): dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.copy|copy(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?;dev.lokksmith.client.Client.Options?){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.toString|toString(){}[0]

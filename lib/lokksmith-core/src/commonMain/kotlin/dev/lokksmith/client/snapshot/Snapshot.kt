@@ -107,6 +107,14 @@ public data class Snapshot(
          * in the ID Token per OIDC Core 1.0, Section 3.1.3.7, item 12.
          */
         val maxAge: Int? = null,
+
+        /**
+         * The options of the client that prepared the flow. Options are not persisted with the
+         * client itself, so a response handled after a process restart or page reload would
+         * otherwise exchange the code with default options. `null` for flows prepared by older
+         * versions.
+         */
+        val clientOptions: Client.Options? = null,
     ) : EphemeralFlowState
 
     @Serializable

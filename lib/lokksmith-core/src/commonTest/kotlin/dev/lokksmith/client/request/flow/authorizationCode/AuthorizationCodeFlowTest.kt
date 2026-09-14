@@ -127,6 +127,23 @@ class AuthorizationCodeFlowTest {
     }
 
     @Test
+    fun `prepare should persist client options`() = runTest {
+        val options =
+            Client.Options(
+                leewaySeconds = 30,
+                additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true"),
+            )
+        val (flow, client) = createFlow(options = options)
+
+        flow.prepare()
+        runCurrent()
+
+        val flowState =
+            assertIs<EphemeralAuthorizationCodeFlowState>(client.snapshots.value.ephemeralFlowState)
+        assertEquals(options, flowState.clientOptions)
+    }
+
+    @Test
     fun `prepare should prepare Authorization Code Flow without PKCE`() = runTest {
         val (flow, client) =
             createFlow(
