@@ -104,6 +104,58 @@ private constructor(
     }
 }
 
+/**
+ * Behavioural options for a client.
+ *
+ * Options are supplied whenever a client is obtained and are not persisted, so pass the same
+ * options every time a client is read back.
+ *
+ * Everything is optional and set as a property, because Objective-C interop does not carry Kotlin
+ * default arguments. An unset property keeps the default of [Client.Options].
+ */
+public class LokksmithClientOptions {
+
+    /**
+     * Clock skew tolerated when validating token timestamps, in seconds.
+     *
+     * @see Client.Options.leewaySeconds
+     */
+    public var leewaySeconds: Int = DEFAULTS.leewaySeconds
+
+    /**
+     * How long before its expiration a token is refreshed proactively, in seconds.
+     *
+     * @see Client.Options.preemptiveRefreshSeconds
+     */
+    public var preemptiveRefreshSeconds: Int = DEFAULTS.preemptiveRefreshSeconds
+
+    /**
+     * Additional parameters sent with every request to the token endpoint, both the authorization
+     * code exchange and the token refresh.
+     *
+     * For example, SAP Customer Data Cloud answers token endpoint errors with HTTP 200 and an error
+     * body unless `httpStatusCodes=true` is sent, which prevents an OAuth error from being
+     * distinguished from a malformed response.
+     *
+     * Known OAuth and OIDC parameters are rejected.
+     *
+     * @see Client.Options.additionalTokenRequestParameters
+     */
+    public var additionalTokenRequestParameters: Map<String, String> = emptyMap()
+
+    internal fun toCore(): Client.Options =
+        Client.Options(
+            leewaySeconds = leewaySeconds,
+            preemptiveRefreshSeconds = preemptiveRefreshSeconds,
+            additionalTokenRequestParameters = additionalTokenRequestParameters,
+        )
+
+    private companion object {
+        /** Read from the core defaults rather than repeated, so the two cannot drift apart. */
+        val DEFAULTS = Client.Options()
+    }
+}
+
 /** An OAuth 2.0 token with an optional expiration, as seconds since the Unix epoch. */
 public class LokksmithToken(public val token: String, public val expiresAt: Long?)
 

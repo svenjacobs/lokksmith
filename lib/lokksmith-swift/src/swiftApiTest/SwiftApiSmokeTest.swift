@@ -99,3 +99,20 @@ func migrateOffline(legacyIdToken: String) async throws {
     )
     _ = try await client.refresh()
 }
+
+func clientWithVendorTokenParameter() async throws -> LokksmithClient {
+    // SAP Customer Data Cloud answers token endpoint errors with HTTP 200 unless this is sent,
+    // which makes an OAuth rejection indistinguishable from a malformed response.
+    let options = LokksmithClientOptions()
+    options.additionalTokenRequestParameters = ["httpStatusCodes": "true"]
+    options.preemptiveRefreshSeconds = 120
+
+    return try await lokksmith.getOrCreateClient(
+        key: "main",
+        configuration: .companion.discovery(
+            clientId: "my-client-id",
+            discoveryUrl: "https://example.com/.well-known/openid-configuration"
+        ),
+        options: options
+    )
+}

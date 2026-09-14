@@ -103,6 +103,20 @@ final class dev.lokksmith.swift/LokksmithClientConfiguration { // dev.lokksmith.
     }
 }
 
+final class dev.lokksmith.swift/LokksmithClientOptions { // dev.lokksmith.swift/LokksmithClientOptions|null[0]
+    constructor <init>() // dev.lokksmith.swift/LokksmithClientOptions.<init>|<init>(){}[0]
+
+    final var additionalTokenRequestParameters // dev.lokksmith.swift/LokksmithClientOptions.additionalTokenRequestParameters|{}additionalTokenRequestParameters[0]
+        final fun <get-additionalTokenRequestParameters>(): kotlin.collections/Map<kotlin/String, kotlin/String> // dev.lokksmith.swift/LokksmithClientOptions.additionalTokenRequestParameters.<get-additionalTokenRequestParameters>|<get-additionalTokenRequestParameters>(){}[0]
+        final fun <set-additionalTokenRequestParameters>(kotlin.collections/Map<kotlin/String, kotlin/String>) // dev.lokksmith.swift/LokksmithClientOptions.additionalTokenRequestParameters.<set-additionalTokenRequestParameters>|<set-additionalTokenRequestParameters>(kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+    final var leewaySeconds // dev.lokksmith.swift/LokksmithClientOptions.leewaySeconds|{}leewaySeconds[0]
+        final fun <get-leewaySeconds>(): kotlin/Int // dev.lokksmith.swift/LokksmithClientOptions.leewaySeconds.<get-leewaySeconds>|<get-leewaySeconds>(){}[0]
+        final fun <set-leewaySeconds>(kotlin/Int) // dev.lokksmith.swift/LokksmithClientOptions.leewaySeconds.<set-leewaySeconds>|<set-leewaySeconds>(kotlin.Int){}[0]
+    final var preemptiveRefreshSeconds // dev.lokksmith.swift/LokksmithClientOptions.preemptiveRefreshSeconds|{}preemptiveRefreshSeconds[0]
+        final fun <get-preemptiveRefreshSeconds>(): kotlin/Int // dev.lokksmith.swift/LokksmithClientOptions.preemptiveRefreshSeconds.<get-preemptiveRefreshSeconds>|<get-preemptiveRefreshSeconds>(){}[0]
+        final fun <set-preemptiveRefreshSeconds>(kotlin/Int) // dev.lokksmith.swift/LokksmithClientOptions.preemptiveRefreshSeconds.<set-preemptiveRefreshSeconds>|<set-preemptiveRefreshSeconds>(kotlin.Int){}[0]
+}
+
 final class dev.lokksmith.swift/LokksmithEndSessionRequest { // dev.lokksmith.swift/LokksmithEndSessionRequest|null[0]
     constructor <init>(kotlin/String) // dev.lokksmith.swift/LokksmithEndSessionRequest.<init>|<init>(kotlin.String){}[0]
 
@@ -172,10 +186,13 @@ final class dev.lokksmith.swift/LokksmithManager { // dev.lokksmith.swift/Lokksm
 
     final fun dispose() // dev.lokksmith.swift/LokksmithManager.dispose|dispose(){}[0]
     final suspend fun client(kotlin/String): dev.lokksmith.swift/LokksmithClient? // dev.lokksmith.swift/LokksmithManager.client|client(kotlin.String){}[0]
+    final suspend fun client(kotlin/String, dev.lokksmith.swift/LokksmithClientOptions): dev.lokksmith.swift/LokksmithClient? // dev.lokksmith.swift/LokksmithManager.client|client(kotlin.String;dev.lokksmith.swift.LokksmithClientOptions){}[0]
     final suspend fun clientExists(kotlin/String): kotlin/Boolean // dev.lokksmith.swift/LokksmithManager.clientExists|clientExists(kotlin.String){}[0]
     final suspend fun createClient(kotlin/String, dev.lokksmith.swift/LokksmithClientConfiguration): dev.lokksmith.swift/LokksmithClient // dev.lokksmith.swift/LokksmithManager.createClient|createClient(kotlin.String;dev.lokksmith.swift.LokksmithClientConfiguration){}[0]
+    final suspend fun createClient(kotlin/String, dev.lokksmith.swift/LokksmithClientConfiguration, dev.lokksmith.swift/LokksmithClientOptions): dev.lokksmith.swift/LokksmithClient // dev.lokksmith.swift/LokksmithManager.createClient|createClient(kotlin.String;dev.lokksmith.swift.LokksmithClientConfiguration;dev.lokksmith.swift.LokksmithClientOptions){}[0]
     final suspend fun deleteClient(kotlin/String): kotlin/Boolean // dev.lokksmith.swift/LokksmithManager.deleteClient|deleteClient(kotlin.String){}[0]
     final suspend fun getOrCreateClient(kotlin/String, dev.lokksmith.swift/LokksmithClientConfiguration): dev.lokksmith.swift/LokksmithClient // dev.lokksmith.swift/LokksmithManager.getOrCreateClient|getOrCreateClient(kotlin.String;dev.lokksmith.swift.LokksmithClientConfiguration){}[0]
+    final suspend fun getOrCreateClient(kotlin/String, dev.lokksmith.swift/LokksmithClientConfiguration, dev.lokksmith.swift/LokksmithClientOptions): dev.lokksmith.swift/LokksmithClient // dev.lokksmith.swift/LokksmithManager.getOrCreateClient|getOrCreateClient(kotlin.String;dev.lokksmith.swift.LokksmithClientConfiguration;dev.lokksmith.swift.LokksmithClientOptions){}[0]
 }
 
 final class dev.lokksmith.swift/LokksmithMetadata { // dev.lokksmith.swift/LokksmithMetadata|null[0]
