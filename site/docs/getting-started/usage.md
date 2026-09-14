@@ -106,6 +106,26 @@ val client = lokksmith.getOrCreate(
 }
 ```
 
+From Swift, the same options are set on `LokksmithClientOptions` and passed where the client is
+obtained:
+
+```swift
+let options = LokksmithClientOptions()
+options.additionalTokenRequestParameters = ["httpStatusCodes": "true"]
+
+let client = try await lokksmith.getOrCreateClient(
+    key: "main",
+    configuration: .companion.discovery(
+        clientId: "my-client-id",
+        discoveryUrl: "https://example.com/.well-known/openid-configuration"
+    ),
+    options: options
+)
+```
+
+Options are not persisted with the client, so pass the same options every time it is read back with
+`client(key:options:)`.
+
 The example above is [SAP Customer Data Cloud](https://help.sap.com/docs/SAP_CUSTOMER_DATA_CLOUD),
 which answers token endpoint errors with `HTTP 200` and an error body unless `httpStatusCodes=true`
 is sent. Without it, Lokksmith cannot tell an OAuth error such as `invalid_grant` apart from a

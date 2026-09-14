@@ -91,9 +91,19 @@ public constructor(persistenceFileBaseName: String, userAgent: String?) {
      * @throws LokksmithFailure if the stored client could not be read.
      */
     @Throws(LokksmithFailure::class, kotlinx.coroutines.CancellationException::class)
-    public suspend fun client(key: String): LokksmithClient? = mapFailures {
-        lokksmith.get(key)?.let { wrap(it) }
-    }
+    public suspend fun client(key: String): LokksmithClient? = client(key, LokksmithClientOptions())
+
+    /**
+     * Returns the client stored under [key] behaving as [options] describes, or `null` if there is
+     * none.
+     *
+     * @throws LokksmithFailure if the stored client could not be read.
+     */
+    @Throws(LokksmithFailure::class, kotlinx.coroutines.CancellationException::class)
+    public suspend fun client(key: String, options: LokksmithClientOptions): LokksmithClient? =
+        mapFailures {
+            lokksmith.get(key, options.toCore())?.let { wrap(it) }
+        }
 
     /**
      * Creates a client under [key].
@@ -107,8 +117,20 @@ public constructor(persistenceFileBaseName: String, userAgent: String?) {
     public suspend fun createClient(
         key: String,
         configuration: LokksmithClientConfiguration,
+    ): LokksmithClient = createClient(key, configuration, LokksmithClientOptions())
+
+    /**
+     * Creates a client under [key] behaving as [options] describes.
+     *
+     * @throws LokksmithFailure if a client already exists under [key], or creation failed.
+     */
+    @Throws(LokksmithFailure::class, kotlinx.coroutines.CancellationException::class)
+    public suspend fun createClient(
+        key: String,
+        configuration: LokksmithClientConfiguration,
+        options: LokksmithClientOptions,
     ): LokksmithClient = mapFailures {
-        wrap(lokksmith.create(key, builder = configuration.builder()))
+        wrap(lokksmith.create(key, options = options.toCore(), builder = configuration.builder()))
     }
 
     /**
@@ -120,8 +142,27 @@ public constructor(persistenceFileBaseName: String, userAgent: String?) {
     public suspend fun getOrCreateClient(
         key: String,
         configuration: LokksmithClientConfiguration,
+    ): LokksmithClient = getOrCreateClient(key, configuration, LokksmithClientOptions())
+
+    /**
+     * Returns the client stored under [key], creating it from [configuration] if there is none.
+     * Either way the client behaves as [options] describes.
+     *
+     * @throws LokksmithFailure if the client could not be read or created.
+     */
+    @Throws(LokksmithFailure::class, kotlinx.coroutines.CancellationException::class)
+    public suspend fun getOrCreateClient(
+        key: String,
+        configuration: LokksmithClientConfiguration,
+        options: LokksmithClientOptions,
     ): LokksmithClient = mapFailures {
-        wrap(lokksmith.getOrCreate(key, builder = configuration.builder()))
+        wrap(
+            lokksmith.getOrCreate(
+                key,
+                options = options.toCore(),
+                builder = configuration.builder(),
+            )
+        )
     }
 
     /** `true` if a client is stored under [key]. */

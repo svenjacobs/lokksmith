@@ -20,6 +20,7 @@ import dev.lokksmith.client.request.parameter.Prompt
 import dev.lokksmith.client.request.parameter.Scope
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlinx.serialization.json.JsonPrimitive
@@ -273,5 +274,41 @@ class ModelsTest {
             ),
             LokksmithPrompt.entries.map { it.toCore() },
         )
+    }
+
+    @Test
+    fun `LokksmithClientOptions should default to the core defaults`() {
+        val options = LokksmithClientOptions().toCore()
+        val coreDefaults = Client.Options()
+
+        assertEquals(coreDefaults.leewaySeconds, options.leewaySeconds)
+        assertEquals(coreDefaults.preemptiveRefreshSeconds, options.preemptiveRefreshSeconds)
+        assertEquals(emptyMap(), options.additionalTokenRequestParameters)
+    }
+
+    @Test
+    fun `LokksmithClientOptions should carry every property to the core options`() {
+        val options =
+            LokksmithClientOptions().apply {
+                leewaySeconds = 30
+                preemptiveRefreshSeconds = 120
+                additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true")
+            }
+
+        val core = options.toCore()
+
+        assertEquals(30, core.leewaySeconds)
+        assertEquals(120, core.preemptiveRefreshSeconds)
+        assertEquals(mapOf("httpStatusCodes" to "true"), core.additionalTokenRequestParameters)
+    }
+
+    @Test
+    fun `LokksmithClientOptions should reject a known OAuth parameter`() {
+        val options =
+            LokksmithClientOptions().apply {
+                additionalTokenRequestParameters = mapOf("grant_type" to "password")
+            }
+
+        assertFailsWith<IllegalArgumentException> { options.toCore() }
     }
 }
