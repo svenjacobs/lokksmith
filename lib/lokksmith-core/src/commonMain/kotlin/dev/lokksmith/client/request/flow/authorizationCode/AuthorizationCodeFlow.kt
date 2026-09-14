@@ -167,6 +167,7 @@ private constructor(
             codeVerifier = codeVerifier,
             responseUri = null,
             maxAge = request.maxAge,
+            clientOptions = client.options,
         )
 
     override fun onPrepareUpdateSnapshot(snapshot: Snapshot) = snapshot.copy(nonce = nonce)

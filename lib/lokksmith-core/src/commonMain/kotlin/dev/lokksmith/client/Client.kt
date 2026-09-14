@@ -90,6 +90,7 @@ public interface Client {
     )
 
     /** Options to configure the behaviour of this client. */
+    @Serializable
     public data class Options(
         /**
          * The number of seconds of clock skew to allow when validating time-based claims in tokens,
