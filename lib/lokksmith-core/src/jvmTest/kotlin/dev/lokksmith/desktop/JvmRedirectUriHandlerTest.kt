@@ -32,10 +32,15 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class JvmRedirectUriHandlerTest {
@@ -72,7 +77,9 @@ class JvmRedirectUriHandlerTest {
         val handler =
             JvmRedirectUriHandler(
                 client = client,
-                scope = backgroundScope,
+                // Real dispatcher: the watcher's redirectTimeout would otherwise run on virtual
+                // time and fire immediately while the test waits below.
+                scope = backgroundScope + Dispatchers.Default,
                 options = DesktopOptions(redirectTimeout = 5.seconds),
             )
 
@@ -86,12 +93,17 @@ class JvmRedirectUriHandlerTest {
         val (status, _) = httpGet("$resolved?code=auth-xyz&state=$STATE")
         assertEquals(200, status)
 
-        runCurrent()
+        // The server sends the response before it hands the redirect URI to the watcher, so the
+        // snapshot may not be updated yet.
+        val snapshot =
+            withContext(Dispatchers.Default) {
+                withTimeout(5.seconds) {
+                    client.snapshots.first { it.ephemeralFlowState?.responseUri != null }
+                }
+            }
 
         val ephemeral =
-            assertIs<Snapshot.EphemeralAuthorizationCodeFlowState>(
-                client.snapshots.value.ephemeralFlowState
-            )
+            assertIs<Snapshot.EphemeralAuthorizationCodeFlowState>(snapshot.ephemeralFlowState)
         val responseUri = assertNotNull(ephemeral.responseUri)
         assertTrue("code=auth-xyz" in responseUri, "missing code in $responseUri")
         assertTrue("state=$STATE" in responseUri, "missing state in $responseUri")
