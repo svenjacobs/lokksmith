@@ -97,7 +97,7 @@ class ExtensionGrantRequestTest {
     }
 
     @Test
-    fun `invoke should submit grant_type, client_id and caller parameters`() = runTest {
+    fun `invoke should submit grant_type and client_id and caller parameters`() = runTest {
         val engine = MockEngine { request ->
             when (request.url.toString()) {
                 "https://example.com/tokenEndpoint" -> {
