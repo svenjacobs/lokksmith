@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Sven Jacobs
+ * Copyright 2026 Sven Jacobs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ import dev.lokksmith.client.request.flow.endSession.EndSessionFlow
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.request.refresh.RefreshTokenRequest
 import dev.lokksmith.client.request.refresh.RefreshTokenRequestImpl
+import dev.lokksmith.client.request.token.ExtensionGrantRequest
+import dev.lokksmith.client.request.token.ExtensionGrantRequestImpl
 import dev.lokksmith.client.snapshot.InternalSnapshotStore
 import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.SnapshotStore
@@ -63,6 +65,7 @@ import kotlinx.serialization.json.JsonElement
  * - Use [tokens] to observe the current tokens.
  * - Use [runWithTokens] to execute code with fresh, valid tokens.
  * - Use [refresh] to manually refresh tokens.
+ * - Use [requestTokens] to obtain tokens via an OAuth extension grant.
  * - Use [resetTokens] to clear all tokens and log out locally.
  *
  * ## Flows
@@ -283,6 +286,34 @@ public interface Client {
     public suspend fun refresh(): Tokens
 
     /**
+     * Requests tokens from the token endpoint using an OAuth 2.0 extension grant, i.e. any
+     * [grantType] other than the ones this library issues itself. On success, the returned [Tokens]
+     * replace any tokens this client currently holds.
+     *
+     * The token response must contain an ID Token; extension grants that never return one are not
+     * supported by this method. Unlike [Options.additionalTokenRequestParameters], [parameters] is
+     * not screened against known OAuth/OIDC parameter names, since an extension grant may
+     * legitimately need to send one, such as `scope`. A parameter that collides with `grant_type`,
+     * `client_id`, or a name already present via [Options.additionalTokenRequestParameters] still
+     * throws.
+     *
+     * @return The requested [Tokens] instance.
+     * @throws IllegalArgumentException if [grantType] is blank, or if [parameters] contains a name
+     *   that is already present on the request
+     * @throws dev.lokksmith.client.request.RequestException if for example a network error occurred
+     * @throws dev.lokksmith.client.request.ResponseException if the response is invalid
+     * @throws dev.lokksmith.client.request.OAuthResponseException if the OAuth provider returned an
+     *   error
+     * @throws dev.lokksmith.client.request.token.TokenValidationException if the tokens could not
+     *   be validated
+     * @see <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.5">Extension Grants</a>
+     */
+    public suspend fun requestTokens(
+        grantType: String,
+        parameters: Map<String, String> = emptyMap(),
+    ): Tokens
+
+    /**
      * Permanently removes all tokens (access, refresh, and ID tokens) from this client instance,
      * effectively logging out the user locally. After calling this method, the client becomes
      * unauthenticated, and a new [Authorization Code Flow][authorizationCodeFlow] must be started
@@ -404,6 +435,12 @@ public interface InternalClient : Client {
 
         public val refreshTokenRequest: (client: InternalClient) -> RefreshTokenRequest
 
+        /**
+         * No default getter is possible: unlike [redirectUriHandler], building one needs the shared
+         * `httpClient` and `serializer`, which this interface does not otherwise hold.
+         */
+        public val extensionGrantRequest: (client: InternalClient) -> ExtensionGrantRequest
+
         public val authorizationCodeFlow:
             (client: InternalClient, request: AuthorizationCodeFlow.Request) -> AuthFlow
 
@@ -456,6 +493,13 @@ private constructor(
         override val timeProvider: TimeProvider,
         override val refreshTokenRequest: (InternalClient) -> RefreshTokenRequest = { client ->
             RefreshTokenRequestImpl(
+                client = client,
+                httpClient = httpClient,
+                serializer = serializer,
+            )
+        },
+        override val extensionGrantRequest: (InternalClient) -> ExtensionGrantRequest = { client ->
+            ExtensionGrantRequestImpl(
                 client = client,
                 httpClient = httpClient,
                 serializer = serializer,
@@ -517,6 +561,21 @@ private constructor(
             updateSnapshot { copy(tokens = refreshedTokens) }
 
             refreshedTokens
+        }
+
+    // Takes refreshMutex, not writeMutex, for the same reason refresh() does: a refresh already in
+    // flight must not clobber the tokens of a login that completes meanwhile, and vice versa.
+    // updateSnapshot takes writeMutex internally, so there is no deadlock.
+    override suspend fun requestTokens(grantType: String, parameters: Map<String, String>): Tokens =
+        snapshotContract.refreshMutex.withLock {
+            val tokens = provider.extensionGrantRequest(this)(grantType, parameters)
+
+            // The nonce is lifted onto the snapshot so that a later refresh response echoing it
+            // validates, mirroring what Migration.setTokens does for the same reason. This is not
+            // an AuthFlow, so ephemeralFlowState and flowResult are left untouched.
+            updateSnapshot { copy(tokens = tokens, nonce = tokens.idToken.nonce) }
+
+            tokens
         }
 
     override suspend fun runWithTokens(body: suspend (Tokens) -> Unit) {

@@ -7,6 +7,10 @@ enabling seamless user migration without requiring re-authentication.
     The migration process should only be performed **once** for every client. It should not be used 
     for regular token management or refresh operations.
 
+!!! note
+    Migration is for tokens you already obtained from another library. If instead you need to log in
+    against your own provider's custom grant type, see [Extension Grants](extension-grants.md).
+
 ```kotlin
 val lokksmith = createLokksmith()
 val client = lokksmith.get("client-key")
