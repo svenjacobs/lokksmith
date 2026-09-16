@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Sven Jacobs
+ * Copyright 2026 Sven Jacobs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ import dev.lokksmith.client.request.parameter.GrantType
 import dev.lokksmith.client.request.parameter.Parameter
 import dev.lokksmith.client.request.refresh.RefreshTokenRequest
 import dev.lokksmith.client.request.refresh.RefreshTokenRequestImpl
+import dev.lokksmith.client.request.token.ExtensionGrantRequest
+import dev.lokksmith.client.request.token.ExtensionGrantRequestImpl
 import dev.lokksmith.client.request.token.TokenErrorResponse
 import dev.lokksmith.client.request.token.TokenResponse
 import dev.lokksmith.client.snapshot.PersistenceFake
@@ -40,6 +42,7 @@ import dev.lokksmith.client.snapshot.SnapshotStoreImpl
 import dev.lokksmith.createHttpClient
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondBadRequest
 import io.ktor.client.request.forms.FormDataContent
@@ -683,6 +686,180 @@ class ClientTest {
         assertEquals("Lh0rP8vrtQH", assertNotNull(client.tokens.value).accessToken.token)
     }
 
+    /**
+     * A token endpoint answering an extension grant (`grant_type` [extensionGrantType]) with tokens
+     * carrying [nonce], and a refresh grant with tokens that echo the same [nonce], so that a
+     * refresh following `requestTokens` can be shown to validate.
+     */
+    private fun extensionGrantEngine(
+        extensionGrantType: String,
+        nonce: String,
+        epochSeconds: Long,
+    ): MockEngine {
+        val jwtEncoder = JwtEncoder(Json)
+
+        fun MockRequestHandleScope.respondWithTokens(accessToken: String, refreshToken: String) =
+            respond(
+                content =
+                    httpJson.encodeToString(
+                        TokenResponse(
+                            tokenType = "Bearer",
+                            accessToken = accessToken,
+                            expiresIn = 600,
+                            refreshToken = refreshToken,
+                            idToken =
+                                jwtEncoder.encode(
+                                    Jwt(
+                                        header = Jwt.Header(alg = "none"),
+                                        payload =
+                                            Jwt.Payload(
+                                                iss = "issuer",
+                                                sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                                aud = listOf("clientId"),
+                                                exp = epochSeconds + 600,
+                                                iat = epochSeconds,
+                                                extra = mapOf("nonce" to JsonPrimitive(nonce)),
+                                            ),
+                                    )
+                                ),
+                        )
+                    ),
+                status = HttpStatusCode.OK,
+                headers = headersOf("Content-Type", "application/json"),
+            )
+
+        return MockEngine { request ->
+            when (request.url.toString()) {
+                "https://example.com/tokenEndpoint" -> {
+                    val body = assertIs<FormDataContent>(request.body)
+                    when (body.formData[Parameter.GRANT_TYPE]) {
+                        extensionGrantType ->
+                            respondWithTokens(
+                                accessToken = "ext-access-token",
+                                refreshToken = "ext-refresh-token",
+                            )
+
+                        GrantType.RefreshToken.value ->
+                            respondWithTokens(
+                                accessToken = "refreshed-access-token",
+                                refreshToken = "refreshed-refresh-token",
+                            )
+
+                        else -> respondBadRequest()
+                    }
+                }
+
+                else -> respondBadRequest()
+            }
+        }
+    }
+
+    @Test
+    fun `requestTokens should update client tokens`() = runTest {
+        val engine =
+            extensionGrantEngine(
+                extensionGrantType = "custom_grant",
+                nonce = "n0nc3",
+                epochSeconds = 1748706999,
+            )
+
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                    )
+            )
+
+        val tokens = client.requestTokens("custom_grant")
+        runCurrent()
+
+        assertEquals("ext-access-token", tokens.accessToken.token)
+        assertEquals(tokens, client.tokens.value)
+    }
+
+    @Test
+    fun `requestTokens should write the returned ID Token's nonce onto the snapshot`() = runTest {
+        val engine =
+            extensionGrantEngine(
+                extensionGrantType = "custom_grant",
+                nonce = "n0nc3",
+                epochSeconds = 1748706999,
+            )
+
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                    )
+            )
+
+        client.requestTokens("custom_grant")
+        runCurrent()
+
+        assertEquals("n0nc3", client.snapshots.value.nonce)
+    }
+
+    @Test
+    fun `refresh should succeed after requestTokens`() = runTest {
+        val engine =
+            extensionGrantEngine(
+                extensionGrantType = "custom_grant",
+                nonce = "n0nc3",
+                epochSeconds = 1748706999,
+            )
+
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                    )
+            )
+
+        client.requestTokens("custom_grant")
+        runCurrent()
+
+        // The refresh response echoes the nonce requestTokens wrote onto the snapshot. If that
+        // write were missing or wrong, RefreshTokenResponseValidator would reject it as a nonce
+        // mismatch.
+        val refreshed = client.refresh()
+        runCurrent()
+
+        assertEquals("refreshed-access-token", refreshed.accessToken.token)
+    }
+
+    @Test
+    fun `runWithTokens should work after requestTokens`() = runTest {
+        val engine =
+            extensionGrantEngine(
+                extensionGrantType = "custom_grant",
+                nonce = "n0nc3",
+                epochSeconds = 1748706999,
+            )
+
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                        refreshTokenRequest = {
+                            RefreshTokenRequest { fail("RefreshTokenRequest was called") }
+                        },
+                    )
+            )
+
+        val tokens = client.requestTokens("custom_grant")
+        runCurrent()
+
+        client.runWithTokens { current -> assertEquals(tokens, current) }
+    }
+
     @Test
     fun `Options should reject a known OAuth parameter as an additional token request parameter`() {
         // Upper case to confirm the check is case-insensitive, as it is for authorization requests.
@@ -749,6 +926,9 @@ internal data class TestProvider(
     override val timeProvider: TimeProvider = { Instant.fromEpochSeconds(TEST_INSTANT, 0) },
     override val refreshTokenRequest: (InternalClient) -> RefreshTokenRequest = { client ->
         RefreshTokenRequestImpl(client = client, httpClient = httpClient, serializer = serializer)
+    },
+    override val extensionGrantRequest: (InternalClient) -> ExtensionGrantRequest = { client ->
+        ExtensionGrantRequestImpl(client = client, httpClient = httpClient, serializer = serializer)
     },
     override val authorizationCodeFlow:
         (InternalClient, AuthorizationCodeFlow.Request) -> AuthFlow =

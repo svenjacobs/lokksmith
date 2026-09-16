@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Sven Jacobs
+ * Copyright 2026 Sven Jacobs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -95,8 +95,9 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
         )
     }
 
+    /** Subclasses whose validator deliberately skips the nonce check override this. */
     @Test
-    fun `validate should fail on nonce mismatch`() = runTest {
+    open fun `validate should apply the nonce rule`() = runTest {
         val e =
             assertFailsWith<IllegalArgumentException> {
                 `test validate`(client = createTestClient { copy(nonce = "7lOdSRX") })

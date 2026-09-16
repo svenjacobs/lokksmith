@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Sven Jacobs
+ * Copyright 2026 Sven Jacobs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,8 +92,11 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
  *
  * Rejecting rather than skipping matters because form parameters are a multimap — appending a
  * duplicate `grant_type` would send both values and leave the choice between them to the server.
+ *
+ * Per-request callers, such as [ExtensionGrantRequest], also use this to append caller-supplied
+ * parameters.
  */
-private fun ParametersBuilder.appendAdditionalParameters(
+internal fun ParametersBuilder.appendAdditionalParameters(
     additionalParameters: Map<String, String>
 ) {
     additionalParameters.forEach { (name, value) ->

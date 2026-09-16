@@ -93,6 +93,10 @@ abstract fun interface dev.lokksmith.client.request.refresh/RefreshTokenRequest 
     }
 }
 
+abstract fun interface dev.lokksmith.client.request.token/ExtensionGrantRequest { // dev.lokksmith.client.request.token/ExtensionGrantRequest|null[0]
+    abstract suspend fun invoke(kotlin/String, kotlin.collections/Map<kotlin/String, kotlin/String>): dev.lokksmith.client/Client.Tokens // dev.lokksmith.client.request.token/ExtensionGrantRequest.invoke|invoke(kotlin.String;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
+}
+
 abstract interface dev.lokksmith.client.discovery/MetadataDiscoveryRequest { // dev.lokksmith.client.discovery/MetadataDiscoveryRequest|null[0]
     abstract suspend fun invoke(kotlin/String): dev.lokksmith.client/Client.Metadata // dev.lokksmith.client.discovery/MetadataDiscoveryRequest.invoke|invoke(kotlin.String){}[0]
 }
@@ -174,6 +178,7 @@ abstract interface dev.lokksmith.client/Client { // dev.lokksmith.client/Client|
     abstract suspend fun isExpired(dev.lokksmith.client/Client.Tokens.IdToken): kotlin/Boolean // dev.lokksmith.client/Client.isExpired|isExpired(dev.lokksmith.client.Client.Tokens.IdToken){}[0]
     abstract suspend fun isExpired(dev.lokksmith.client/Client.Tokens.Token): kotlin/Boolean // dev.lokksmith.client/Client.isExpired|isExpired(dev.lokksmith.client.Client.Tokens.Token){}[0]
     abstract suspend fun refresh(): dev.lokksmith.client/Client.Tokens // dev.lokksmith.client/Client.refresh|refresh(){}[0]
+    abstract suspend fun requestTokens(kotlin/String, kotlin.collections/Map<kotlin/String, kotlin/String> = ...): dev.lokksmith.client/Client.Tokens // dev.lokksmith.client/Client.requestTokens|requestTokens(kotlin.String;kotlin.collections.Map<kotlin.String,kotlin.String>){}[0]
     abstract suspend fun resetTokens(): kotlin/Boolean // dev.lokksmith.client/Client.resetTokens|resetTokens(){}[0]
     abstract suspend fun runWithTokens(kotlin.coroutines/SuspendFunction1<dev.lokksmith.client/Client.Tokens, kotlin/Unit>) // dev.lokksmith.client/Client.runWithTokens|runWithTokens(kotlin.coroutines.SuspendFunction1<dev.lokksmith.client.Client.Tokens,kotlin.Unit>){}[0]
 
@@ -428,6 +433,8 @@ abstract interface dev.lokksmith.client/InternalClient : dev.lokksmith.client/Cl
             abstract fun <get-authorizationCodeFlow>(): kotlin/Function2<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlow.Request, dev.lokksmith.client.request.flow/AuthFlow> // dev.lokksmith.client/InternalClient.Provider.authorizationCodeFlow.<get-authorizationCodeFlow>|<get-authorizationCodeFlow>(){}[0]
         abstract val endSessionFlow // dev.lokksmith.client/InternalClient.Provider.endSessionFlow|{}endSessionFlow[0]
             abstract fun <get-endSessionFlow>(): kotlin/Function2<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.flow.endSession/EndSessionFlow.Request, dev.lokksmith.client.request.flow/AuthFlow?> // dev.lokksmith.client/InternalClient.Provider.endSessionFlow.<get-endSessionFlow>|<get-endSessionFlow>(){}[0]
+        abstract val extensionGrantRequest // dev.lokksmith.client/InternalClient.Provider.extensionGrantRequest|{}extensionGrantRequest[0]
+            abstract fun <get-extensionGrantRequest>(): kotlin/Function1<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.token/ExtensionGrantRequest> // dev.lokksmith.client/InternalClient.Provider.extensionGrantRequest.<get-extensionGrantRequest>|<get-extensionGrantRequest>(){}[0]
         abstract val refreshTokenRequest // dev.lokksmith.client/InternalClient.Provider.refreshTokenRequest|{}refreshTokenRequest[0]
             abstract fun <get-refreshTokenRequest>(): kotlin/Function1<dev.lokksmith.client/InternalClient, dev.lokksmith.client.request.refresh/RefreshTokenRequest> // dev.lokksmith.client/InternalClient.Provider.refreshTokenRequest.<get-refreshTokenRequest>|<get-refreshTokenRequest>(){}[0]
         abstract val timeProvider // dev.lokksmith.client/InternalClient.Provider.timeProvider|{}timeProvider[0]

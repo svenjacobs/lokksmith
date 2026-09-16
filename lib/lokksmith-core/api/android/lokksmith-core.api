@@ -112,10 +112,16 @@ public abstract interface class dev/lokksmith/client/Client {
 	public abstract fun isExpired (Ldev/lokksmith/client/Client$Tokens$IdToken;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun isExpired (Ldev/lokksmith/client/Client$Tokens$Token;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun refresh (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun requestTokens (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun requestTokens$default (Ldev/lokksmith/client/Client;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 	public abstract fun resetTokens (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun runWithTokens (Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public abstract fun setMetadata (Ldev/lokksmith/client/Client$Metadata;)V
 	public abstract fun setOptions (Ldev/lokksmith/client/Client$Options;)V
+}
+
+public final class dev/lokksmith/client/Client$DefaultImpls {
+	public static synthetic fun requestTokens$default (Ldev/lokksmith/client/Client;Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class dev/lokksmith/client/Client$Metadata {
@@ -379,6 +385,7 @@ public abstract interface class dev/lokksmith/client/InternalClient : dev/lokksm
 public abstract interface class dev/lokksmith/client/InternalClient$Provider {
 	public abstract fun getAuthorizationCodeFlow ()Lkotlin/jvm/functions/Function2;
 	public abstract fun getEndSessionFlow ()Lkotlin/jvm/functions/Function2;
+	public abstract fun getExtensionGrantRequest ()Lkotlin/jvm/functions/Function1;
 	public fun getRedirectUriHandler ()Lkotlin/jvm/functions/Function1;
 	public abstract fun getRefreshTokenRequest ()Lkotlin/jvm/functions/Function1;
 	public abstract fun getTimeProvider ()Lkotlin/jvm/functions/Function1;
@@ -1156,6 +1163,10 @@ public final class dev/lokksmith/client/request/refresh/RefreshTokenRequest$Resp
 	public final fun getRefreshToken ()Ldev/lokksmith/client/Client$Tokens$RefreshToken;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class dev/lokksmith/client/request/token/ExtensionGrantRequest {
+	public abstract fun invoke (Ljava/lang/String;Ljava/util/Map;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public final class dev/lokksmith/client/request/token/TokenRequest {
