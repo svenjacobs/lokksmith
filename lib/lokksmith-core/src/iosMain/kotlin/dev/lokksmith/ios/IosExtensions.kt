@@ -17,6 +17,7 @@ package dev.lokksmith.ios
 
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
+import dev.lokksmith.client.request.flow.AuthFlowStateResponseHandler
 import dev.lokksmith.client.request.flow.AuthFlowUserAgentResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
 import io.ktor.http.Url
@@ -49,10 +50,20 @@ public suspend fun Lokksmith.launchAuthFlow(
                 additionalHeaderFields = additionalHeaderFields,
             )
 
-        with(responseHandler) {
-            when (responseUri) {
-                null -> onCancel(key = initiation.clientKey, state = initiation.state)
-                else -> onResponse(key = initiation.clientKey, responseUri = responseUri)
+        when (responseUri) {
+            null -> responseHandler.onCancel(key = initiation.clientKey, state = initiation.state)
+            else -> {
+                // Recorded first so the response survives a failure while it is being processed,
+                // which is what the Android and Compose launchers rely on for recovery.
+                responseHandler.onResponse(
+                    key = initiation.clientKey,
+                    responseUri = responseUri,
+                )
+                // Recording alone never completes the flow: nothing in the library reads
+                // `ephemeralFlowState.responseUri` back. On iOS the browser result arrives in the
+                // same process that started the flow, so the exchange is driven straight from here,
+                // the way `WebExtensions` does it.
+                AuthFlowStateResponseHandler(this@launchAuthFlow).onResponse(responseUri)
             }
         }
     } catch (e: CancellationException) {
