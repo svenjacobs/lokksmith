@@ -233,9 +233,6 @@ internal constructor(
                             prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession,
                             additionalHeaderFields =
                                 additionalHeaderFields.takeIf { it.isNotEmpty() } as Map<Any?, *>?,
-                            // This facade has no watcher of its own, unlike the Compose launcher,
-                            // so the response has to be completed by `launchAuthFlow` itself.
-                            completeFlow = true,
                         )
                     }
 

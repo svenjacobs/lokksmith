@@ -1710,7 +1710,7 @@ final suspend fun (dev.lokksmith.client/Client).dev.lokksmith.client.usecase/run
 final fun dev.lokksmith/createLokksmith(dev.lokksmith/Lokksmith.Options = ...): dev.lokksmith/Lokksmith // dev.lokksmith/createLokksmith|createLokksmith(dev.lokksmith.Lokksmith.Options){}[0]
 
 // Targets: [ios]
-final suspend fun (dev.lokksmith/Lokksmith).dev.lokksmith.ios/launchAuthFlow(dev.lokksmith.client.request.flow/AuthFlow.Initiation, kotlin/Boolean = ..., kotlin.collections/Map<kotlin/Any?, *>? = ...) // dev.lokksmith.ios/launchAuthFlow|launchAuthFlow@dev.lokksmith.Lokksmith(dev.lokksmith.client.request.flow.AuthFlow.Initiation;kotlin.Boolean;kotlin.collections.Map<kotlin.Any?,*>?){}[0]
+final suspend fun (dev.lokksmith/Lokksmith).dev.lokksmith.ios/launchAuthFlow(dev.lokksmith.client.request.flow/AuthFlow.Initiation, kotlin/Boolean = ..., kotlin.collections/Map<kotlin/Any?, *>? = ..., kotlin/Boolean = ...) // dev.lokksmith.ios/launchAuthFlow|launchAuthFlow@dev.lokksmith.Lokksmith(dev.lokksmith.client.request.flow.AuthFlow.Initiation;kotlin.Boolean;kotlin.collections.Map<kotlin.Any?,*>?;kotlin.Boolean){}[0]
 
 // Targets: [wasmJs]
 final fun (dev.lokksmith/Lokksmith).dev.lokksmith.web/launchAuthFlow(dev.lokksmith.client.request.flow/AuthFlow.Initiation) // dev.lokksmith.web/launchAuthFlow|launchAuthFlow@dev.lokksmith.Lokksmith(dev.lokksmith.client.request.flow.AuthFlow.Initiation){}[0]

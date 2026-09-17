@@ -39,7 +39,7 @@ public suspend fun Lokksmith.launchAuthFlow(
     initiation: Initiation,
     prefersEphemeralWebBrowserSession: Boolean = false,
     additionalHeaderFields: Map<Any?, *>? = null,
-    completeFlow: Boolean = false,
+    completeFlow: Boolean = true,
 ) {
     val responseHandler = AuthFlowUserAgentResponseHandler(this)
 
@@ -75,9 +75,10 @@ public suspend fun Lokksmith.launchAuthFlow(
         }
 
     // Recording the response does not complete the flow: nothing in the library reads
-    // `ephemeralFlowState.responseUri` back. A caller that has its own watcher for it - the Compose
-    // launcher does, and drives `AuthFlowStateResponseHandler` from there - leaves this off, or the
-    // same response is handled twice and the code is redeemed twice.
+    // `ephemeralFlowState.responseUri` back, so this has to drive the exchange for it to finish.
+    // Only a caller that has its own watcher for that field, as the Compose launcher does, passes
+    // `completeFlow = false`; otherwise the same response is handled twice and the code is redeemed
+    // twice.
     if (!completeFlow || responseUri == null) return
 
     try {
