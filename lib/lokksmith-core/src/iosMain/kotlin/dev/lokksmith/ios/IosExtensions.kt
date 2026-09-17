@@ -39,41 +39,55 @@ public suspend fun Lokksmith.launchAuthFlow(
     initiation: Initiation,
     prefersEphemeralWebBrowserSession: Boolean = false,
     additionalHeaderFields: Map<Any?, *>? = null,
+    completeFlow: Boolean = false,
 ) {
     val responseHandler = AuthFlowUserAgentResponseHandler(this)
 
-    try {
-        val responseUri =
-            startAuthenticationSession(
-                requestUrl = initiation.requestUrl,
-                prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession,
-                additionalHeaderFields = additionalHeaderFields,
-            )
-
-        when (responseUri) {
-            null -> responseHandler.onCancel(key = initiation.clientKey, state = initiation.state)
-            else -> {
-                // Recorded first so the response survives a failure while it is being processed,
-                // which is what the Android and Compose launchers rely on for recovery.
-                responseHandler.onResponse(
-                    key = initiation.clientKey,
-                    responseUri = responseUri,
+    val responseUri =
+        try {
+            val uri =
+                startAuthenticationSession(
+                    requestUrl = initiation.requestUrl,
+                    prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession,
+                    additionalHeaderFields = additionalHeaderFields,
                 )
-                // Recording alone never completes the flow: nothing in the library reads
-                // `ephemeralFlowState.responseUri` back. On iOS the browser result arrives in the
-                // same process that started the flow, so the exchange is driven straight from here,
-                // the way `WebExtensions` does it.
-                AuthFlowStateResponseHandler(this@launchAuthFlow).onResponse(responseUri)
+
+            when (uri) {
+                null -> {
+                    responseHandler.onCancel(key = initiation.clientKey, state = initiation.state)
+                    null
+                }
+
+                else -> {
+                    responseHandler.onResponse(key = initiation.clientKey, responseUri = uri)
+                    uri
+                }
             }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            responseHandler.onError(
+                key = initiation.clientKey,
+                state = initiation.state,
+                message = e.message,
+            )
+            null
         }
+
+    // Recording the response does not complete the flow: nothing in the library reads
+    // `ephemeralFlowState.responseUri` back. A caller that has its own watcher for it - the Compose
+    // launcher does, and drives `AuthFlowStateResponseHandler` from there - leaves this off, or the
+    // same response is handled twice and the code is redeemed twice.
+    if (!completeFlow || responseUri == null) return
+
+    try {
+        AuthFlowStateResponseHandler(this).onResponse(responseUri)
     } catch (e: CancellationException) {
         throw e
-    } catch (e: Exception) {
-        responseHandler.onError(
-            key = initiation.clientKey,
-            state = initiation.state,
-            message = e.message,
-        )
+    } catch (_: Exception) {
+        // Deliberately not recorded again: `AbstractAuthFlowResponseHandler` already stored a typed
+        // result before rethrowing, and recording here would replace an OAuth error - with its code
+        // - by a generic one.
     }
 }
 
