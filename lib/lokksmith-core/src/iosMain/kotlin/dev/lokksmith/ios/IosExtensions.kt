@@ -17,6 +17,7 @@ package dev.lokksmith.ios
 
 import dev.lokksmith.Lokksmith
 import dev.lokksmith.client.request.flow.AuthFlow.Initiation
+import dev.lokksmith.client.request.flow.AuthFlowStateResponseHandler
 import dev.lokksmith.client.request.flow.AuthFlowUserAgentResponseHandler
 import dev.lokksmith.client.request.parameter.Parameter
 import io.ktor.http.Url
@@ -38,31 +39,56 @@ public suspend fun Lokksmith.launchAuthFlow(
     initiation: Initiation,
     prefersEphemeralWebBrowserSession: Boolean = false,
     additionalHeaderFields: Map<Any?, *>? = null,
+    completeFlow: Boolean = true,
 ) {
     val responseHandler = AuthFlowUserAgentResponseHandler(this)
 
-    try {
-        val responseUri =
-            startAuthenticationSession(
-                requestUrl = initiation.requestUrl,
-                prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession,
-                additionalHeaderFields = additionalHeaderFields,
-            )
+    val responseUri =
+        try {
+            val uri =
+                startAuthenticationSession(
+                    requestUrl = initiation.requestUrl,
+                    prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession,
+                    additionalHeaderFields = additionalHeaderFields,
+                )
 
-        with(responseHandler) {
-            when (responseUri) {
-                null -> onCancel(key = initiation.clientKey, state = initiation.state)
-                else -> onResponse(key = initiation.clientKey, responseUri = responseUri)
+            when (uri) {
+                null -> {
+                    responseHandler.onCancel(key = initiation.clientKey, state = initiation.state)
+                    null
+                }
+
+                else -> {
+                    responseHandler.onResponse(key = initiation.clientKey, responseUri = uri)
+                    uri
+                }
             }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            responseHandler.onError(
+                key = initiation.clientKey,
+                state = initiation.state,
+                message = e.message,
+            )
+            null
         }
+
+    // Recording the response does not complete the flow: nothing in the library reads
+    // `ephemeralFlowState.responseUri` back, so this has to drive the exchange for it to finish.
+    // Only a caller that has its own watcher for that field, as the Compose launcher does, passes
+    // `completeFlow = false`; otherwise the same response is handled twice and the code is redeemed
+    // twice.
+    if (!completeFlow || responseUri == null) return
+
+    try {
+        AuthFlowStateResponseHandler(this).onResponse(responseUri)
     } catch (e: CancellationException) {
         throw e
-    } catch (e: Exception) {
-        responseHandler.onError(
-            key = initiation.clientKey,
-            state = initiation.state,
-            message = e.message,
-        )
+    } catch (_: Exception) {
+        // Deliberately not recorded again: `AbstractAuthFlowResponseHandler` already stored a typed
+        // result before rethrowing, and recording here would replace an OAuth error - with its code
+        // - by a generic one.
     }
 }
 

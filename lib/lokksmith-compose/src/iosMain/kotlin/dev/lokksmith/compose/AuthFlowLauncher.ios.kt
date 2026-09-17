@@ -39,6 +39,10 @@ private class IosPlatformLauncher : PlatformLauncher {
             initiation = initiation,
             additionalHeaderFields = headers as Map<Any?, *>,
             prefersEphemeralWebBrowserSession = options.iOS.prefersEphemeralWebBrowserSession,
+            // `watchClientState` collects `ephemeralFlowState.responseUri` and runs
+            // `AuthFlowStateResponseHandler` from there, so completing it here too would handle
+            // the same response twice.
+            completeFlow = false,
         )
     }
 
