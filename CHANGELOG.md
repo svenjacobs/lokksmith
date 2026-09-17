@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/svenjacobs/lokksmith/compare/v2.3.0...v2.4.0) (2026-09-17)
+
+
+### Features
+
+* add support for OAuth extension grants ([#542](https://github.com/svenjacobs/lokksmith/issues/542)) ([da86deb](https://github.com/svenjacobs/lokksmith/commit/da86deba40c39f16eadde5372785530f02964218))
+
+
+### Bug Fixes
+
+* **ios:** complete the auth flow after the browser returns ([#544](https://github.com/svenjacobs/lokksmith/issues/544)) ([a63e0cb](https://github.com/svenjacobs/lokksmith/commit/a63e0cbdef9e36261615ead8140a2fec61aabbd9))
+
 ## [2.3.0](https://github.com/svenjacobs/lokksmith/compare/v2.2.0...v2.3.0) (2026-09-14)
 
 
