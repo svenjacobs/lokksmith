@@ -100,6 +100,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                     .setEphemeralBrowsingEnabled(
                         intent.getBooleanExtra(EXTRA_LOKKSMITH_EPHEMERAL_BROWSING, false)
                     )
+                    .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
                     .build()
 
             // https://developer.chrome.com/docs/android/custom-tabs/howto-custom-tab-request-headers
