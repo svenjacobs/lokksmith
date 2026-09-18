@@ -91,8 +91,8 @@ public final class dev/lokksmith/android/LokksmithAuthFlowActivity : androidx/ac
 }
 
 public final class dev/lokksmith/android/LokksmithAuthFlowActivity$Companion {
-	public final fun createCustomTabsIntent (Landroid/content/Context;Ldev/lokksmith/client/request/flow/AuthFlow$Initiation;Ljava/util/Map;Z)Landroid/content/Intent;
-	public static synthetic fun createCustomTabsIntent$default (Ldev/lokksmith/android/LokksmithAuthFlowActivity$Companion;Landroid/content/Context;Ldev/lokksmith/client/request/flow/AuthFlow$Initiation;Ljava/util/Map;ZILjava/lang/Object;)Landroid/content/Intent;
+	public final fun createCustomTabsIntent (Landroid/content/Context;Ldev/lokksmith/client/request/flow/AuthFlow$Initiation;Ljava/util/Map;ZLjava/lang/String;)Landroid/content/Intent;
+	public static synthetic fun createCustomTabsIntent$default (Ldev/lokksmith/android/LokksmithAuthFlowActivity$Companion;Landroid/content/Context;Ldev/lokksmith/client/request/flow/AuthFlow$Initiation;Ljava/util/Map;ZLjava/lang/String;ILjava/lang/Object;)Landroid/content/Intent;
 	public final fun getErrorMessageFromIntent (Landroid/content/Intent;)Ljava/lang/String;
 }
 

@@ -135,6 +135,7 @@ private class AndroidPlatformLauncher(
                             initiation = initiation,
                             headers = headers,
                             ephemeralBrowsing = options.android.ephemeralBrowsing,
+                            browserPackage = options.android.browserPackage,
                         )
 
                     options.android.onIntentCreated(intent)
@@ -146,6 +147,8 @@ private class AndroidPlatformLauncher(
                         AuthTabIntent.Builder()
                             .setEphemeralBrowsingEnabled(options.android.ephemeralBrowsing)
                             .build()
+
+                    options.android.browserPackage?.let { authTabIntent.intent.setPackage(it) }
 
                     options.android.onIntentCreated(authTabIntent.intent)
                     val url = initiation.requestUrl.toUri()

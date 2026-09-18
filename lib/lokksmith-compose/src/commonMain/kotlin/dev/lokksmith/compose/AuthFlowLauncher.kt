@@ -70,6 +70,14 @@ internal constructor(
             public val ephemeralBrowsing: Boolean = false,
 
             /**
+             * Package of the browser that should present the tab, typically the result of
+             * `CustomTabsClient.getPackageName`. When null the intent carries no package and the
+             * system routes it to the default browser, which may not support Custom Tabs and may
+             * not hand the redirect back to the app.
+             */
+            public val browserPackage: String? = null,
+
+            /**
              * Called after the `Intent` for launching the Auth / Custom Tab is created and before
              * it is executed. Allows customization of the `Intent` if needed. The parameter is
              * [Any] due to multiplatform constraints and must be cast to `Intent` on Android.
