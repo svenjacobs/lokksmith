@@ -78,7 +78,7 @@ import kotlin.time.Instant
 @OptIn(ExperimentalMaterial3Api::class)
 fun App(
     viewModel: AppViewModel = viewModel { AppViewModel() },
-    onIntentCreated: (Any) -> Unit = {},
+    browserPackage: String? = null,
     onCopyToClipboard: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -100,7 +100,7 @@ fun App(
                 initiation = it.initiation,
                 options = PlatformOptions(
                     android = PlatformOptions.Android(
-                        onIntentCreated = onIntentCreated,
+                        browserPackage = browserPackage,
                         method = PlatformOptions.Android.Method.AuthTab(),
                     ),
                 )
