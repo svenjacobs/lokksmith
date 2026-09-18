@@ -112,6 +112,16 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                 customTabsIntent.launchUrl(this, uri.toUri())
             } catch (e: ActivityNotFoundException) {
                 Log.e(TAG, "No browser available", e)
+
+                val clientKey = intent.getStringExtra(EXTRA_LOKKSMITH_CLIENT_KEY)
+                val state = intent.getStringExtra(EXTRA_LOKKSMITH_STATE)
+                if (clientKey != null && state != null) {
+                    coroutineScope.launch(exceptionHandler { "Error recording failed flow" }) {
+                        AuthFlowUserAgentResponseHandler(lokksmith)
+                            .onError(key = clientKey, state = state, message = e.message)
+                    }
+                }
+
                 setResult(
                     RESULT_CANCELED,
                     createErrorResultIntent("[$TAG] No browser available: ${e.message.orEmpty()}"),
@@ -176,9 +186,10 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
          * Creates [Intent] for opening a Custom Tab for authentication via
          * [LokksmithAuthFlowActivity].
          *
-         * When no browser is installed, the launched Activity finishes with `RESULT_CANCELED` and
-         * an error message readable through [getErrorMessageFromIntent]. Callers therefore do not
-         * have to check for an available browser beforehand.
+         * When no browser is available to open the Custom Tab, the flow is finalised as an error
+         * and the launched Activity finishes with `RESULT_CANCELED` and a message readable through
+         * [getErrorMessageFromIntent]. Callers do not have to check for an available browser
+         * beforehand, nor record the failure themselves.
          *
          * @param initiation Initiation object of auth flow
          * @param headers Extra headers that are passed to Custom Tab. See documentation of Custom
