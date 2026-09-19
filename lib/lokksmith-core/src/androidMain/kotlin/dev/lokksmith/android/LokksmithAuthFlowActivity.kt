@@ -109,6 +109,10 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                 customTabsIntent.intent.putExtra(Browser.EXTRA_HEADERS, headers)
             }
 
+            intent.getStringExtra(EXTRA_LOKKSMITH_BROWSER_PACKAGE)?.let {
+                customTabsIntent.intent.setPackage(it)
+            }
+
             try {
                 customTabsIntent.launchUrl(this, uri.toUri())
             } catch (e: ActivityNotFoundException) {
@@ -187,8 +191,9 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
          * Creates [Intent] for opening a Custom Tab for authentication via
          * [LokksmithAuthFlowActivity].
          *
-         * When no browser is available to open the Custom Tab, the flow is finalised as an error
-         * and the launched Activity finishes with `RESULT_CANCELED` and a message readable through
+         * When no browser is available to open the Custom Tab, or when [browserPackage] names a
+         * browser that is not installed or has been disabled, the flow is finalised as an error and
+         * the launched Activity finishes with `RESULT_CANCELED` and a message readable through
          * [getErrorMessageFromIntent]. Callers do not have to check for an available browser
          * beforehand, nor record the failure themselves.
          *
@@ -197,12 +202,17 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
          *   Tabs, especially regarding CORS.
          * @param ephemeralBrowsing Whether ephemeral browsing should be used. See documentation of
          *   Custom Tab.
+         * @param browserPackage Package of the browser that should open the Custom Tab, typically
+         *   the result of `CustomTabsClient.getPackageName`. When null the intent carries no
+         *   package and the system routes it to the default browser, which may not support Custom
+         *   Tabs and may not return to the app.
          */
         public fun createCustomTabsIntent(
             context: Context,
             initiation: Initiation,
             headers: Map<String, String> = emptyMap(),
             ephemeralBrowsing: Boolean = false,
+            browserPackage: String? = null,
         ): Intent =
             Intent(context, LokksmithAuthFlowActivity::class.java).apply {
                 putExtra(EXTRA_LOKKSMITH_CLIENT_KEY, initiation.clientKey)
@@ -215,6 +225,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
                     },
                 )
                 putExtra(EXTRA_LOKKSMITH_EPHEMERAL_BROWSING, ephemeralBrowsing)
+                putExtra(EXTRA_LOKKSMITH_BROWSER_PACKAGE, browserPackage)
             }
 
         internal fun createRedirectIntent(context: Context, intentData: Uri?): Intent =
@@ -234,6 +245,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
         private const val EXTRA_LOKKSMITH_STATE = "EXTRA_LOKKSMITH_STATE"
         private const val EXTRA_LOKKSMITH_HEADERS = "EXTRA_LOKKSMITH_HEADERS"
         private const val EXTRA_LOKKSMITH_EPHEMERAL_BROWSING = "EXTRA_LOKKSMITH_EPHEMERAL_BROWSING"
+        private const val EXTRA_LOKKSMITH_BROWSER_PACKAGE = "EXTRA_LOKKSMITH_BROWSER_PACKAGE"
 
         private const val RESULT_EXTRA_ERROR_MESSAGE = "RESULT_EXTRA_ERROR_MESSAGE"
 

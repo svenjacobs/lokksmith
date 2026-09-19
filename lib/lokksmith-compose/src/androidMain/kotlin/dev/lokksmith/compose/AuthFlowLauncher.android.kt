@@ -16,6 +16,7 @@
 package dev.lokksmith.compose
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -44,6 +45,7 @@ import dev.lokksmith.internal.getRedirectScheme
 import dev.lokksmith.internal.getRedirectUri
 import io.ktor.http.fullPath
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -135,10 +137,11 @@ private class AndroidPlatformLauncher(
                             initiation = initiation,
                             headers = headers,
                             ephemeralBrowsing = options.android.ephemeralBrowsing,
+                            browserPackage = options.android.browserPackage,
                         )
 
                     options.android.onIntentCreated(intent)
-                    activityLauncher.launch(intent)
+                    launchOrRecordError(initiation) { activityLauncher.launch(intent) }
                 }
 
                 is Method.AuthTab -> {
@@ -147,30 +150,56 @@ private class AndroidPlatformLauncher(
                             .setEphemeralBrowsingEnabled(options.android.ephemeralBrowsing)
                             .build()
 
+                    options.android.browserPackage?.let { authTabIntent.intent.setPackage(it) }
+
                     options.android.onIntentCreated(authTabIntent.intent)
                     val url = initiation.requestUrl.toUri()
 
-                    when (method.redirect) {
-                        Method.AuthTab.Redirect.CustomScheme -> {
-                            authTabIntent.launch(
-                                activityLauncher,
-                                url,
-                                getRedirectScheme(initiation.requestUrl),
-                            )
-                        }
+                    launchOrRecordError(initiation) {
+                        when (method.redirect) {
+                            Method.AuthTab.Redirect.CustomScheme -> {
+                                authTabIntent.launch(
+                                    activityLauncher,
+                                    url,
+                                    getRedirectScheme(initiation.requestUrl),
+                                )
+                            }
 
-                        Method.AuthTab.Redirect.Https -> {
-                            val redirectUri = getRedirectUri(initiation.requestUrl)
-                            authTabIntent.launch(
-                                activityLauncher,
-                                url,
-                                redirectUri.host,
-                                redirectUri.fullPath,
-                            )
+                            Method.AuthTab.Redirect.Https -> {
+                                val redirectUri = getRedirectUri(initiation.requestUrl)
+                                authTabIntent.launch(
+                                    activityLauncher,
+                                    url,
+                                    redirectUri.host,
+                                    redirectUri.fullPath,
+                                )
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Records the flow as failed before rethrowing, so a browser that cannot be launched does not
+     * leave the client snapshot stuck mid flow. Mirrors the JVM launcher.
+     */
+    private suspend fun launchOrRecordError(initiation: Initiation, launch: () -> Unit) {
+        try {
+            launch()
+        } catch (e: ActivityNotFoundException) {
+            withContext(NonCancellable) {
+                runCatching {
+                    AuthFlowUserAgentResponseHandler(lokksmith)
+                        .onError(
+                            key = initiation.clientKey,
+                            state = initiation.state,
+                            message = e.message,
+                        )
+                }
+            }
+            throw e
         }
     }
 

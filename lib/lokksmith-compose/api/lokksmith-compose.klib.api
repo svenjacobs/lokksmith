@@ -28,8 +28,10 @@ final class dev.lokksmith.compose/AuthFlowLauncher { // dev.lokksmith.compose/Au
         final fun toString(): kotlin/String // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.toString|toString(){}[0]
 
         final class Android { // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android|null[0]
-            constructor <init>(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method = ..., kotlin/Boolean = ..., kotlin/Function1<kotlin/Any, kotlin/Unit> = ...) // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.<init>|<init>(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method;kotlin.Boolean;kotlin.Function1<kotlin.Any,kotlin.Unit>){}[0]
+            constructor <init>(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method = ..., kotlin/Boolean = ..., kotlin/String? = ..., kotlin/Function1<kotlin/Any, kotlin/Unit> = ...) // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.<init>|<init>(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method;kotlin.Boolean;kotlin.String?;kotlin.Function1<kotlin.Any,kotlin.Unit>){}[0]
 
+            final val browserPackage // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.browserPackage|{}browserPackage[0]
+                final fun <get-browserPackage>(): kotlin/String? // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.browserPackage.<get-browserPackage>|<get-browserPackage>(){}[0]
             final val ephemeralBrowsing // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.ephemeralBrowsing|{}ephemeralBrowsing[0]
                 final fun <get-ephemeralBrowsing>(): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.ephemeralBrowsing.<get-ephemeralBrowsing>|<get-ephemeralBrowsing>(){}[0]
             final val method // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.method|{}method[0]
@@ -39,8 +41,9 @@ final class dev.lokksmith.compose/AuthFlowLauncher { // dev.lokksmith.compose/Au
 
             final fun component1(): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component1|component1(){}[0]
             final fun component2(): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component2|component2(){}[0]
-            final fun component3(): kotlin/Function1<kotlin/Any, kotlin/Unit> // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component3|component3(){}[0]
-            final fun copy(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method = ..., kotlin/Boolean = ..., kotlin/Function1<kotlin/Any, kotlin/Unit> = ...): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.copy|copy(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method;kotlin.Boolean;kotlin.Function1<kotlin.Any,kotlin.Unit>){}[0]
+            final fun component3(): kotlin/String? // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component3|component3(){}[0]
+            final fun component4(): kotlin/Function1<kotlin/Any, kotlin/Unit> // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.component4|component4(){}[0]
+            final fun copy(dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.Method = ..., kotlin/Boolean = ..., kotlin/String? = ..., kotlin/Function1<kotlin/Any, kotlin/Unit> = ...): dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.copy|copy(dev.lokksmith.compose.AuthFlowLauncher.PlatformOptions.Android.Method;kotlin.Boolean;kotlin.String?;kotlin.Function1<kotlin.Any,kotlin.Unit>){}[0]
             final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.equals|equals(kotlin.Any?){}[0]
             final fun hashCode(): kotlin/Int // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.hashCode|hashCode(){}[0]
             final fun toString(): kotlin/String // dev.lokksmith.compose/AuthFlowLauncher.PlatformOptions.Android.toString|toString(){}[0]
