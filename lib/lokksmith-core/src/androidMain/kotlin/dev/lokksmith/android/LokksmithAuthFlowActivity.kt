@@ -191,8 +191,9 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
          * Creates [Intent] for opening a Custom Tab for authentication via
          * [LokksmithAuthFlowActivity].
          *
-         * When no browser is available to open the Custom Tab, the flow is finalised as an error
-         * and the launched Activity finishes with `RESULT_CANCELED` and a message readable through
+         * When no browser is available to open the Custom Tab, or when [browserPackage] names a
+         * browser that is not installed or has been disabled, the flow is finalised as an error and
+         * the launched Activity finishes with `RESULT_CANCELED` and a message readable through
          * [getErrorMessageFromIntent]. Callers do not have to check for an available browser
          * beforehand, nor record the failure themselves.
          *
