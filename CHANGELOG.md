@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.5.0](https://github.com/svenjacobs/lokksmith/compare/v2.4.0...v2.5.0) (2026-09-20)
+
+
+### Features
+
+* **android:** allow choosing the browser that presents the tab ([#551](https://github.com/svenjacobs/lokksmith/issues/551)) ([895198c](https://github.com/svenjacobs/lokksmith/commit/895198c4d2b76e6a65f72c88974f5a8d5e7c9efb))
+
+
+### Bug Fixes
+
+* **android:** do not offer sharing from the auth Custom Tab ([#552](https://github.com/svenjacobs/lokksmith/issues/552)) ([b66f7ef](https://github.com/svenjacobs/lokksmith/commit/b66f7ef80f677771ef3ed66ecaf3619fee26be44)), closes [#549](https://github.com/svenjacobs/lokksmith/issues/549)
+* **android:** return an error result when no browser can open the auth flow ([#550](https://github.com/svenjacobs/lokksmith/issues/550)) ([b2dffde](https://github.com/svenjacobs/lokksmith/commit/b2dffdee94c30f7ca9f5a9c5123f8fda024a8aa6))
+* **deps:** update agp to v9.4.1 ([#560](https://github.com/svenjacobs/lokksmith/issues/560)) ([57b7b20](https://github.com/svenjacobs/lokksmith/commit/57b7b207f48d50c4ef65b50868769c649ee83e3a))
+* **deps:** update ktor monorepo to v3.6.0 ([#555](https://github.com/svenjacobs/lokksmith/issues/555)) ([45725f2](https://github.com/svenjacobs/lokksmith/commit/45725f2707917c5b5bf4de219bf72870572c7352))
+
 ## [2.4.0](https://github.com/svenjacobs/lokksmith/compare/v2.3.0...v2.4.0) (2026-09-17)
 
 
