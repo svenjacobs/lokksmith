@@ -31,7 +31,7 @@ All library commands run **inside the `lib` folder**:
 CI verifies both code style (`spotlessCheck`) and the committed ABI dumps, so run `spotlessApply`
 and `updateKotlinAbi` before committing — otherwise the build will fail.
 
-The library build requires **JDK 21** (CI uses Temurin 21).
+The library and demo builds require **JDK 25** (CI uses Temurin 25).
 
 Git commit hooks (commitlint + spotless via husky) are installed by running `npm install` in the
 repository root.
