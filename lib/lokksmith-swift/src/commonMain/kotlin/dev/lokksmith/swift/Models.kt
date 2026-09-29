@@ -282,7 +282,10 @@ public class LokksmithAuthorizationRequest(public val redirectUri: String) {
      */
     public var prefersEphemeralWebBrowserSession: Boolean = false
 
-    /** Forwarded to `ASWebAuthenticationSession.additionalHeaderFields`. */
+    /**
+     * Forwarded to `ASWebAuthenticationSession.additionalHeaderFields`. Ignored below iOS 17.4,
+     * where that property does not exist.
+     */
     public var additionalHeaderFields: Map<String, String> = emptyMap()
 
     internal fun toCore(): AuthorizationCodeFlow.Request =

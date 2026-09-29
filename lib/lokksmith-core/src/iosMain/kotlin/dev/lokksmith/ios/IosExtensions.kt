@@ -24,6 +24,7 @@ import io.ktor.http.Url
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlinx.atomicfu.atomic
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import platform.AuthenticationServices.ASPresentationAnchor
@@ -34,6 +35,7 @@ import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 import platform.UIKit.UIWindow
 import platform.darwin.NSObject
+import platform.objc.sel_registerName
 
 public suspend fun Lokksmith.launchAuthFlow(
     initiation: Initiation,
@@ -92,6 +94,7 @@ public suspend fun Lokksmith.launchAuthFlow(
     }
 }
 
+@OptIn(ExperimentalForeignApi::class)
 private suspend fun startAuthenticationSession(
     requestUrl: String,
     prefersEphemeralWebBrowserSession: Boolean,
@@ -132,13 +135,28 @@ private suspend fun startAuthenticationSession(
 
     session.presentationContextProvider = PresentationContextProvider()
     session.prefersEphemeralWebBrowserSession = prefersEphemeralWebBrowserSession
-    session.additionalHeaderFields = additionalHeaderFields
+    headerFieldsToApply(
+            fields = additionalHeaderFields,
+            isSupported =
+                session.respondsToSelector(sel_registerName("setAdditionalHeaderFields:")),
+        )
+        ?.let { session.additionalHeaderFields = it }
 
     // Cleanly cancel the iOS session if the coroutine is cancelled
     cont.invokeOnCancellation { session.cancel() }
 
     session.start()
 }
+
+/**
+ * `ASWebAuthenticationSession.additionalHeaderFields` only exists from iOS 17.4, and Kotlin/Native
+ * does not check availability, so setting it on an earlier version crashes with an unrecognized
+ * selector, even when the value is `null`.
+ */
+internal fun headerFieldsToApply(fields: Map<Any?, *>?, isSupported: Boolean): Map<Any?, *>? =
+    fields?.takeIf {
+        isSupported && it.isNotEmpty()
+    }
 
 private fun getRedirectScheme(requestUrl: String): String {
     val url = Url(requestUrl)
