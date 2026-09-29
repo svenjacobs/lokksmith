@@ -66,8 +66,10 @@ internal class LocalStoragePreferenceDataStore(
 
     private fun readFromStorage(): Preferences {
         val raw = localStorage.getItem(name) ?: return mutablePreferencesOf()
-        val map =
-            runCatching { json.decodeFromString<Map<String, String>>(raw) }.getOrDefault(emptyMap())
+        val map = runCatching {
+            json.decodeFromString<Map<String, String>>(raw)
+        }
+            .getOrDefault(emptyMap())
         return mutablePreferencesOf().apply {
             map.forEach { (key, value) -> set(stringPreferencesKey(key), value) }
         }

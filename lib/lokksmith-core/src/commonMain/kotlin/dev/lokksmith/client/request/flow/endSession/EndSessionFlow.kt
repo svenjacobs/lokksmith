@@ -94,17 +94,17 @@ internal constructor(
 
         return try {
             buildUrl {
-                    takeFrom(endpoint)
+                takeFrom(endpoint)
 
-                    parameters[Parameter.STATE] = state
-                    parameters[Parameter.POST_LOGOUT_REDIRECT_URI] = redirectUri
-                    parameters[Parameter.CLIENT_ID] = client.id.value
+                parameters[Parameter.STATE] = state
+                parameters[Parameter.POST_LOGOUT_REDIRECT_URI] = redirectUri
+                parameters[Parameter.CLIENT_ID] = client.id.value
 
-                    addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
-                    addOptionalParameter(Parameter.ID_TOKEN_HINT, idTokenHint)
-                    addOptionalParameter(Parameter.LOGOUT_HINT, request.logoutHint)
-                    addAdditionalParameters(request.additionalParameters)
-                }
+                addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
+                addOptionalParameter(Parameter.ID_TOKEN_HINT, idTokenHint)
+                addOptionalParameter(Parameter.LOGOUT_HINT, request.logoutHint)
+                addAdditionalParameters(request.additionalParameters)
+            }
                 .toString()
         } catch (e: IllegalArgumentException) {
             throw e

@@ -179,25 +179,25 @@ private constructor(
 
         return try {
             buildUrl {
-                    takeFrom(client.metadata.authorizationEndpoint)
+                takeFrom(client.metadata.authorizationEndpoint)
 
-                    parameters[Parameter.SCOPE] = scopes
-                    parameters[Parameter.RESPONSE_TYPE] = ResponseType.Code.value
-                    parameters[Parameter.CLIENT_ID] = client.id.value
-                    parameters[Parameter.REDIRECT_URI] = redirectUri
+                parameters[Parameter.SCOPE] = scopes
+                parameters[Parameter.RESPONSE_TYPE] = ResponseType.Code.value
+                parameters[Parameter.CLIENT_ID] = client.id.value
+                parameters[Parameter.REDIRECT_URI] = redirectUri
 
-                    stateVerifierStrategy.addParameter()
-                    nonceVerifierStrategy.addParameter()
-                    codeChallengeStrategy.addParameters()
+                stateVerifierStrategy.addParameter()
+                nonceVerifierStrategy.addParameter()
+                codeChallengeStrategy.addParameters()
 
-                    addOptionalParameter(Parameter.DISPLAY, request.display)
-                    addOptionalParameter(Parameter.PROMPT, request.prompt)
-                    addOptionalParameter(Parameter.MAX_AGE, request.maxAge)
-                    addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
-                    addOptionalParameter(Parameter.ID_TOKEN_HINT, idTokenHint)
-                    addOptionalParameter(Parameter.LOGIN_HINT, request.loginHint)
-                    addAdditionalParameters(request.additionalParameters)
-                }
+                addOptionalParameter(Parameter.DISPLAY, request.display)
+                addOptionalParameter(Parameter.PROMPT, request.prompt)
+                addOptionalParameter(Parameter.MAX_AGE, request.maxAge)
+                addOptionalParameter(Parameter.UI_LOCALES, request.uiLocales)
+                addOptionalParameter(Parameter.ID_TOKEN_HINT, idTokenHint)
+                addOptionalParameter(Parameter.LOGIN_HINT, request.loginHint)
+                addAdditionalParameters(request.additionalParameters)
+            }
                 .toString()
         } catch (e: IllegalArgumentException) {
             throw e
