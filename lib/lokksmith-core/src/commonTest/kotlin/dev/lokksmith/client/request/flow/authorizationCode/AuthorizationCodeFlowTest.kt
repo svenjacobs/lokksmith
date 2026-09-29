@@ -352,13 +352,12 @@ class AuthorizationCodeFlowTest {
         testState.codeVerifier = flow.codeVerifier
         testState.nonce = flow.nonce
 
-        val responseUrl =
-            buildUrl {
-                    takeFrom("https://example.com/app/redirect")
-                    parameters[Parameter.STATE] = flow.state
-                    parameters[Parameter.CODE] = "s7FBqWPnG2"
-                }
-                .toString()
+        val responseUrl = buildUrl {
+            takeFrom("https://example.com/app/redirect")
+            parameters[Parameter.STATE] = flow.state
+            parameters[Parameter.CODE] = "s7FBqWPnG2"
+        }
+            .toString()
 
         flow.onResponse(responseUrl)
         runCurrent()
@@ -447,13 +446,12 @@ class AuthorizationCodeFlowTest {
         testState.codeVerifier = flow.codeVerifier
         testState.nonce = flow.nonce
 
-        val responseUrl =
-            buildUrl {
-                    takeFrom("https://example.com/app/redirect")
-                    parameters[Parameter.STATE] = flow.state
-                    parameters[Parameter.CODE] = "s7FBqWPnG2"
-                }
-                .toString()
+        val responseUrl = buildUrl {
+            takeFrom("https://example.com/app/redirect")
+            parameters[Parameter.STATE] = flow.state
+            parameters[Parameter.CODE] = "s7FBqWPnG2"
+        }
+            .toString()
 
         flow.onResponse(responseUrl)
         runCurrent()
@@ -469,15 +467,14 @@ class AuthorizationCodeFlowTest {
         flow.prepare()
         runCurrent()
 
-        val responseUrl =
-            buildUrl {
-                    takeFrom("https://example.com/app/redirect")
-                    parameters[Parameter.STATE] = flow.state
-                    parameters[Parameter.ERROR] = OAuthError.InvalidGrant.code
-                    parameters[Parameter.ERROR_DESCRIPTION] = "error description"
-                    parameters[Parameter.ERROR_URI] = "error URI"
-                }
-                .toString()
+        val responseUrl = buildUrl {
+            takeFrom("https://example.com/app/redirect")
+            parameters[Parameter.STATE] = flow.state
+            parameters[Parameter.ERROR] = OAuthError.InvalidGrant.code
+            parameters[Parameter.ERROR_DESCRIPTION] = "error description"
+            parameters[Parameter.ERROR_URI] = "error URI"
+        }
+            .toString()
 
         val exception = assertFailsWith<OAuthResponseException> { flow.onResponse(responseUrl) }
 
@@ -526,13 +523,12 @@ class AuthorizationCodeFlowTest {
         flow.prepare()
         runCurrent()
 
-        val responseUrl =
-            buildUrl {
-                    takeFrom("https://example.com/app/redirect")
-                    parameters[Parameter.STATE] = flow.state
-                    parameters[Parameter.CODE] = "s7FBqWPnG2"
-                }
-                .toString()
+        val responseUrl = buildUrl {
+            takeFrom("https://example.com/app/redirect")
+            parameters[Parameter.STATE] = flow.state
+            parameters[Parameter.CODE] = "s7FBqWPnG2"
+        }
+            .toString()
 
         val exception = assertFailsWith<OAuthResponseException> { flow.onResponse(responseUrl) }
 

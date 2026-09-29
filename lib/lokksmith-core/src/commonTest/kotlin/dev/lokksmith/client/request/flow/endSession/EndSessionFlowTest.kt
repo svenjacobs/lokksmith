@@ -158,12 +158,11 @@ class EndSessionFlowTest {
         flow.prepare()
         runCurrent()
 
-        val responseUrl =
-            buildUrl {
-                    takeFrom("https://example.com/app/redirect")
-                    parameters[Parameter.STATE] = flow.state
-                }
-                .toString()
+        val responseUrl = buildUrl {
+            takeFrom("https://example.com/app/redirect")
+            parameters[Parameter.STATE] = flow.state
+        }
+            .toString()
 
         flow.onResponse(responseUrl)
         runCurrent()
@@ -179,15 +178,14 @@ class EndSessionFlowTest {
         flow.prepare()
         runCurrent()
 
-        val responseUrl =
-            buildUrl {
-                    takeFrom("https://example.com/app/redirect")
-                    parameters[Parameter.STATE] = flow.state
-                    parameters[Parameter.ERROR] = OAuthError.InvalidClient.code
-                    parameters[Parameter.ERROR_DESCRIPTION] = "error description"
-                    parameters[Parameter.ERROR_URI] = "error URI"
-                }
-                .toString()
+        val responseUrl = buildUrl {
+            takeFrom("https://example.com/app/redirect")
+            parameters[Parameter.STATE] = flow.state
+            parameters[Parameter.ERROR] = OAuthError.InvalidClient.code
+            parameters[Parameter.ERROR_DESCRIPTION] = "error description"
+            parameters[Parameter.ERROR_URI] = "error URI"
+        }
+            .toString()
 
         val exception = assertFailsWith<OAuthResponseException> { flow.onResponse(responseUrl) }
 

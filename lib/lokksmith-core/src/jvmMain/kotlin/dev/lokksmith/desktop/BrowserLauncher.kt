@@ -62,12 +62,11 @@ private class SystemBrowserLauncher : BrowserLauncher {
     }
 }
 
-private fun systemDesktop(): Desktop? =
-    runCatching {
-            when {
-                GraphicsEnvironment.isHeadless() -> null
-                !Desktop.isDesktopSupported() -> null
-                else -> Desktop.getDesktop().takeIf { it.isSupported(Desktop.Action.BROWSE) }
-            }
-        }
-        .getOrNull()
+private fun systemDesktop(): Desktop? = runCatching {
+    when {
+        GraphicsEnvironment.isHeadless() -> null
+        !Desktop.isDesktopSupported() -> null
+        else -> Desktop.getDesktop().takeIf { it.isSupported(Desktop.Action.BROWSE) }
+    }
+}
+    .getOrNull()
