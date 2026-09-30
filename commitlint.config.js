@@ -4,7 +4,7 @@ export default {
   ignores: [
     (commit) => ['input: Initial plan', 'Initial plan'].includes(commit.trim()),
     // release-please squash merges carry bot Co-authored-by trailers longer than footer-max-line-length
-    (commit) => /^chore\(main\): release \d/.test(commit),
+    (commit) => commit.includes('Co-authored-by: lokksmith-release-please[bot]'),
   ],
   rules: {
     'header-max-length': [1, 'always', 100],
