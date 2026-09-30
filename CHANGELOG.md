@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.5.1](https://github.com/svenjacobs/lokksmith/compare/v2.5.0...v2.5.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* **deps:** update compose.multiplatform to v1.12.1 ([#564](https://github.com/svenjacobs/lokksmith/issues/564)) ([9574bd2](https://github.com/svenjacobs/lokksmith/commit/9574bd23619204f387ff5943cb9c0a454fdf7fb4))
+* **deps:** update dependency androidx.core:core-ktx to v1.19.1 ([#565](https://github.com/svenjacobs/lokksmith/issues/565)) ([663388f](https://github.com/svenjacobs/lokksmith/commit/663388fe8dab93f469db164f0ba893aeb25b6c38))
+* **deps:** update spotless to v8.10.3 ([#568](https://github.com/svenjacobs/lokksmith/issues/568)) ([4522529](https://github.com/svenjacobs/lokksmith/commit/4522529aaf2ceb5c92402ea55b5b3da58061a5f5))
+* **ios:** only set additionalHeaderFields where the session supports it ([#569](https://github.com/svenjacobs/lokksmith/issues/569)) ([bcc473c](https://github.com/svenjacobs/lokksmith/commit/bcc473c67584ce99630f00fd232bdefbd50e0e05))
+
 ## [2.5.0](https://github.com/svenjacobs/lokksmith/compare/v2.4.0...v2.5.0) (2026-09-20)
 
 
