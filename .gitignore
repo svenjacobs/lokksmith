@@ -1,1 +1,4 @@
 node_modules
+
+# Nix dev shell cache (direnv)
+.direnv/
