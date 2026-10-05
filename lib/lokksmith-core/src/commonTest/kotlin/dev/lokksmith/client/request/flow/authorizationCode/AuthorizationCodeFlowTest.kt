@@ -39,6 +39,7 @@ import dev.lokksmith.client.request.parameter.Prompt
 import dev.lokksmith.client.request.parameter.Scope
 import dev.lokksmith.client.request.token.TokenErrorResponse
 import dev.lokksmith.client.request.token.TokenResponse
+import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.client.snapshot.Snapshot.EphemeralAuthorizationCodeFlowState
 import dev.lokksmith.client.snapshot.Snapshot.FlowResult
 import dev.lokksmith.createHttpClient
@@ -123,7 +124,21 @@ class AuthorizationCodeFlowTest {
             assertIs<EphemeralAuthorizationCodeFlowState>(client.snapshots.value.ephemeralFlowState)
         assertEquals(flow.state, flowState.state)
         assertEquals(flow.codeVerifier, flowState.codeVerifier)
+        assertEquals(flow.nonce, flowState.nonce)
         assertEquals("https://example.com/app/redirect", flowState.redirectUri)
+    }
+
+    @Test
+    fun `prepare should keep the nonce of the current session`() = runTest {
+        val (flow, client) = createFlow(initialSnapshot = { copy(nonce = "session-nonce") })
+
+        flow.prepare()
+        runCurrent()
+
+        val flowState =
+            assertIs<EphemeralAuthorizationCodeFlowState>(client.snapshots.value.ephemeralFlowState)
+        assertEquals(flow.nonce, flowState.nonce)
+        assertEquals("session-nonce", client.snapshots.value.nonce)
     }
 
     @Test
@@ -344,7 +359,7 @@ class AuthorizationCodeFlowTest {
             client.snapshots.value.ephemeralFlowState,
             "ephemeralFlowState must not be null",
         )
-        assertNotNull(client.snapshots.value.nonce, "nonce must not be null")
+        assertNull(client.snapshots.value.nonce, "nonce must not be set before the code exchange")
         assertNull(client.snapshots.value.flowResult, "flowResult must be null")
 
         // values that we require in the mock request lambda above which however can't access the
@@ -373,6 +388,7 @@ class AuthorizationCodeFlowTest {
         assertEquals(tokens.idToken.expiration, TEST_INSTANT + 600)
         assertEquals(tokens.idToken.issuedAt, TEST_INSTANT)
         assertEquals(tokens.idToken.nonce, flow.nonce)
+        assertEquals(flow.nonce, client.snapshots.value.nonce)
 
         assertEquals(FlowResult.Success(state = flow.state), client.snapshots.value.flowResult)
     }
@@ -501,7 +517,7 @@ class AuthorizationCodeFlowTest {
     @Test
     fun `onResponse should handle error in token response`() = runTest {
         val (flow, client) =
-            createFlow { testState ->
+            createFlow(initialSnapshot = { copy(nonce = "session-nonce") }) { testState ->
                 {
                     val response =
                         httpJson.encodeToString(
@@ -550,12 +566,13 @@ class AuthorizationCodeFlowTest {
         )
 
         assertNull(client.snapshots.value.ephemeralFlowState)
+        assertEquals("session-nonce", client.snapshots.value.nonce)
     }
 
     @Test
     fun `cancel should cancel flow`() = runTest {
         val (flow, client) =
-            createFlow { testState ->
+            createFlow(initialSnapshot = { copy(nonce = "session-nonce") }) { testState ->
                 {
                     respond(
                         content = "",
@@ -572,16 +589,15 @@ class AuthorizationCodeFlowTest {
             client.snapshots.value.ephemeralFlowState,
             "ephemeralFlowState must not be null",
         )
-        val nonce = assertNotNull(client.snapshots.value.nonce, "nonce must not be null")
         assertNull(client.snapshots.value.flowResult, "flowResult must be null")
 
         flow.cancel()
         runCurrent()
 
         assertNull(client.snapshots.value.ephemeralFlowState)
-        // The nonce must not be nulled. If a user aborts an Authorization Code Flow the nonce must
-        // persist because the user is still authenticated.
-        assertEquals(nonce, client.snapshots.value.nonce)
+        // If a user aborts an Authorization Code Flow the nonce of the session must persist because
+        // the user is still authenticated and refresh responses echo it.
+        assertEquals("session-nonce", client.snapshots.value.nonce)
         assertEquals(FlowResult.Cancelled(state = flow.state), client.snapshots.value.flowResult)
     }
 
@@ -647,6 +663,7 @@ private suspend fun TestScope.createFlow(
         AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect"),
     redirectUriHandler: RedirectUriHandler = IdentityRedirectUriHandler,
     options: Client.Options = Client.Options(),
+    initialSnapshot: Snapshot.() -> Snapshot = { this },
     requestHandler: (TestState) -> MockRequestHandleScope.(HttpRequestData) -> HttpResponseData = {
         { respondBadRequest() }
     },
@@ -662,6 +679,7 @@ private suspend fun TestScope.createFlow(
             provider =
                 TestProvider(httpClient = httpClient, redirectUriHandler = { redirectUriHandler }),
             options = options,
+            initialSnapshot = initialSnapshot,
         )
 
     return Triple(

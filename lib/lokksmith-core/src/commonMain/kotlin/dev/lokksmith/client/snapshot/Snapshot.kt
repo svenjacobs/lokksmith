@@ -38,8 +38,9 @@ public data class Snapshot(
     val tokens: Client.Tokens? = null,
 
     /**
-     * nonce needs to be remembered beyond authorization code flow because it may be also required
-     * for every refresh response validation.
+     * The nonce of the authentication that issued [tokens]. It needs to be remembered beyond the
+     * authorization code flow because refresh responses may echo it. A flow in progress keeps its
+     * own nonce in [EphemeralAuthorizationCodeFlowState.nonce] until its code exchange succeeds.
      */
     val nonce: String? = null,
 
@@ -115,6 +116,14 @@ public data class Snapshot(
          * versions.
          */
         val clientOptions: Client.Options? = null,
+
+        /**
+         * The nonce sent with the authorization request, `null` if none was sent. It replaces
+         * [Snapshot.nonce] only when the code exchange of this flow succeeds. `null` for flows
+         * prepared by older versions, which then fail the nonce validation if the ID Token carries
+         * a nonce.
+         */
+        val nonce: String? = null,
     ) : EphemeralFlowState
 
     @Serializable
