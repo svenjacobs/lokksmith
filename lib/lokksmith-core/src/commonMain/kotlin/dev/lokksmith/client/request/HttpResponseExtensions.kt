@@ -25,5 +25,9 @@ internal suspend inline fun <reified T> HttpResponse.bodyOrThrow() =
     } catch (e: CancellationException) {
         throw e
     } catch (e: Exception) {
-        throw ResponseException(cause = e, reason = ResponseException.Reason.HttpError)
+        throw ResponseException(
+            cause = e,
+            reason = ResponseException.Reason.HttpError,
+            statusCode = status.value,
+        )
     }

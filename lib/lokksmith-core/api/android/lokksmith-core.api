@@ -725,6 +725,7 @@ public final class dev/lokksmith/client/request/RequestException$Reason : java/l
 
 public class dev/lokksmith/client/request/ResponseException : dev/lokksmith/LokksmithException {
 	public final fun getReason ()Ldev/lokksmith/client/request/ResponseException$Reason;
+	public final fun getStatusCode ()Ljava/lang/Integer;
 }
 
 public final class dev/lokksmith/client/request/ResponseException$Reason : java/lang/Enum {
