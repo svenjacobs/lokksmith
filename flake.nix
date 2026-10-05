@@ -17,8 +17,10 @@
     in
     {
       # Node.js LTS with npm, like CI (lts/*). Loaded by direnv (.envrc) or `nix develop`.
+      # mkShellNoCC because mkShell's darwin stdenv sets DEVELOPER_DIR/SDKROOT to a macOS-only
+      # Nix SDK and puts xcbuild's xcrun on PATH, which hides Xcode's iOS SDKs from Kotlin/Native.
       devShells = forAllSystems (pkgs: {
-        default = pkgs.mkShell {
+        default = pkgs.mkShellNoCC {
           packages = [ pkgs.nodejs ];
         };
       });
