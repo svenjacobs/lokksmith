@@ -45,16 +45,12 @@ internal constructor(
      */
     internal abstract fun createEphemeralFlowState(redirectUri: String): Snapshot.EphemeralFlowState
 
-    internal open fun onPrepareUpdateSnapshot(snapshot: Snapshot): Snapshot = snapshot
-
     override suspend fun prepare(): Initiation {
         val redirectUri = redirectUriHandler.resolve(rawRedirectUri, state, redirectPurpose)
         val requestUrl = onPrepare(redirectUri)
 
         client.updateSnapshot {
-            onPrepareUpdateSnapshot(
-                copy(flowResult = null, ephemeralFlowState = createEphemeralFlowState(redirectUri))
-            )
+            copy(flowResult = null, ephemeralFlowState = createEphemeralFlowState(redirectUri))
         }
 
         return Initiation(state = state, requestUrl = requestUrl, clientKey = client.key.value)

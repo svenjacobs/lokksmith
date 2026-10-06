@@ -834,6 +834,43 @@ class ClientTest {
     }
 
     @Test
+    fun `refresh should succeed after an Authorization Code Flow was abandoned`() = runTest {
+        val engine =
+            extensionGrantEngine(
+                extensionGrantType = "custom_grant",
+                nonce = "n0nc3",
+                epochSeconds = 1748706999,
+            )
+
+        val client =
+            createTestClient(
+                provider =
+                    TestProvider(
+                        httpClient = createHttpClient(engine),
+                        timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
+                    )
+            )
+
+        client.requestTokens("custom_grant")
+        runCurrent()
+
+        val flow =
+            client.authorizationCodeFlow(
+                AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect")
+            )
+        flow.prepare()
+        runCurrent()
+        flow.cancel()
+        runCurrent()
+
+        // The refresh response echoes the nonce of the session, not the one of the abandoned flow.
+        val refreshed = client.refresh()
+        runCurrent()
+
+        assertEquals("refreshed-access-token", refreshed.accessToken.token)
+    }
+
+    @Test
     fun `runWithTokens should work after requestTokens`() = runTest {
         val engine =
             extensionGrantEngine(

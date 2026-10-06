@@ -40,6 +40,12 @@ public class AuthorizationCodeFlowTokenResponseValidator(
      * determines too much time has elapsed since the last End-User authentication."
      */
     private val maxAge: Int? = null,
+
+    /**
+     * The nonce sent with the authorization request, `null` if none was sent. The ID Token must
+     * carry exactly this value.
+     */
+    private val nonce: String? = null,
 ) : TokenResponseValidator<IdToken>(serializer = serializer, client = client) {
 
     override fun getIdToken(response: TokenResponse): IdToken {
@@ -48,7 +54,7 @@ public class AuthorizationCodeFlowTokenResponseValidator(
     }
 
     override suspend fun validateIdTokenNonce(idToken: IdToken) {
-        require(idToken.nonce == client.currentSnapshot().nonce) { "nonce mismatch" }
+        require(idToken.nonce == nonce) { "nonce mismatch" }
     }
 
     override suspend fun validateAuthTime(idToken: IdToken) {

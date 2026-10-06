@@ -168,9 +168,8 @@ private constructor(
             responseUri = null,
             maxAge = request.maxAge,
             clientOptions = client.options,
+            nonce = nonce,
         )
-
-    override fun onPrepareUpdateSnapshot(snapshot: Snapshot) = snapshot.copy(nonce = nonce)
 
     override suspend fun onPrepare(redirectUri: String): String {
         val codeChallengeStrategy =
@@ -254,6 +253,7 @@ private constructor(
                     httpClient = httpClient,
                     codeVerifier = codeVerifier,
                     maxAge = request.maxAge,
+                    nonce = nonce,
                 )
 
             return AuthorizationCodeFlow(

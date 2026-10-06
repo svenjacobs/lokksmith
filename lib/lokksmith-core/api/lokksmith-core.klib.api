@@ -841,11 +841,11 @@ final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCod
 }
 
 final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler : dev.lokksmith.client.request.flow/AbstractAuthFlowResponseHandler { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler|null[0]
-    constructor <init>(kotlinx.serialization.json/Json, kotlin/String, dev.lokksmith.client/InternalClient, io.ktor.client/HttpClient, kotlin/String?, kotlin/Int? = ..., dev.lokksmith.client.request.token/TokenRequest = ..., dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler.<init>|<init>(kotlinx.serialization.json.Json;kotlin.String;dev.lokksmith.client.InternalClient;io.ktor.client.HttpClient;kotlin.String?;kotlin.Int?;dev.lokksmith.client.request.token.TokenRequest;dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowTokenResponseValidator){}[0]
+    constructor <init>(kotlinx.serialization.json/Json, kotlin/String, dev.lokksmith.client/InternalClient, io.ktor.client/HttpClient, kotlin/String?, kotlin/Int? = ..., kotlin/String? = ..., dev.lokksmith.client.request.token/TokenRequest = ..., dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowResponseHandler.<init>|<init>(kotlinx.serialization.json.Json;kotlin.String;dev.lokksmith.client.InternalClient;io.ktor.client.HttpClient;kotlin.String?;kotlin.Int?;kotlin.String?;dev.lokksmith.client.request.token.TokenRequest;dev.lokksmith.client.request.flow.authorizationCode.AuthorizationCodeFlowTokenResponseValidator){}[0]
 }
 
 final class dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator : dev.lokksmith.client.request.token/TokenResponseValidator<dev.lokksmith.client/Client.Tokens.IdToken> { // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator|null[0]
-    constructor <init>(kotlinx.serialization.json/Json, dev.lokksmith.client/InternalClient, kotlin/Int? = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator.<init>|<init>(kotlinx.serialization.json.Json;dev.lokksmith.client.InternalClient;kotlin.Int?){}[0]
+    constructor <init>(kotlinx.serialization.json/Json, dev.lokksmith.client/InternalClient, kotlin/Int? = ..., kotlin/String? = ...) // dev.lokksmith.client.request.flow.authorizationCode/AuthorizationCodeFlowTokenResponseValidator.<init>|<init>(kotlinx.serialization.json.Json;dev.lokksmith.client.InternalClient;kotlin.Int?;kotlin.String?){}[0]
 }
 
 final class dev.lokksmith.client.request.flow.endSession/EndSessionFlow : dev.lokksmith.client.request.flow/AbstractAuthFlow { // dev.lokksmith.client.request.flow.endSession/EndSessionFlow|null[0]
@@ -1129,7 +1129,7 @@ final class dev.lokksmith.client.snapshot/Snapshot { // dev.lokksmith.client.sna
     }
 
     final class EphemeralAuthorizationCodeFlowState : dev.lokksmith.client.snapshot/Snapshot.EphemeralFlowState { // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState|null[0]
-        constructor <init>(kotlin/String, kotlin/String?, kotlin/String, kotlin/String?, kotlin/Int? = ..., dev.lokksmith.client/Client.Options? = ...) // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?;dev.lokksmith.client.Client.Options?){}[0]
+        constructor <init>(kotlin/String, kotlin/String?, kotlin/String, kotlin/String?, kotlin/Int? = ..., dev.lokksmith.client/Client.Options? = ..., kotlin/String? = ...) // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.<init>|<init>(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?;dev.lokksmith.client.Client.Options?;kotlin.String?){}[0]
 
         final val clientOptions // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.clientOptions|{}clientOptions[0]
             final fun <get-clientOptions>(): dev.lokksmith.client/Client.Options? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.clientOptions.<get-clientOptions>|<get-clientOptions>(){}[0]
@@ -1137,6 +1137,8 @@ final class dev.lokksmith.client.snapshot/Snapshot { // dev.lokksmith.client.sna
             final fun <get-codeVerifier>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.codeVerifier.<get-codeVerifier>|<get-codeVerifier>(){}[0]
         final val maxAge // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.maxAge|{}maxAge[0]
             final fun <get-maxAge>(): kotlin/Int? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.maxAge.<get-maxAge>|<get-maxAge>(){}[0]
+        final val nonce // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.nonce|{}nonce[0]
+            final fun <get-nonce>(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.nonce.<get-nonce>|<get-nonce>(){}[0]
         final val redirectUri // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.redirectUri|{}redirectUri[0]
             final fun <get-redirectUri>(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.redirectUri.<get-redirectUri>|<get-redirectUri>(){}[0]
         final val responseUri // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.responseUri|{}responseUri[0]
@@ -1150,7 +1152,8 @@ final class dev.lokksmith.client.snapshot/Snapshot { // dev.lokksmith.client.sna
         final fun component4(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component4|component4(){}[0]
         final fun component5(): kotlin/Int? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component5|component5(){}[0]
         final fun component6(): dev.lokksmith.client/Client.Options? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component6|component6(){}[0]
-        final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/Int? = ..., dev.lokksmith.client/Client.Options? = ...): dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.copy|copy(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?;dev.lokksmith.client.Client.Options?){}[0]
+        final fun component7(): kotlin/String? // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.component7|component7(){}[0]
+        final fun copy(kotlin/String = ..., kotlin/String? = ..., kotlin/String = ..., kotlin/String? = ..., kotlin/Int? = ..., dev.lokksmith.client/Client.Options? = ..., kotlin/String? = ...): dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.copy|copy(kotlin.String;kotlin.String?;kotlin.String;kotlin.String?;kotlin.Int?;dev.lokksmith.client.Client.Options?;kotlin.String?){}[0]
         final fun equals(kotlin/Any?): kotlin/Boolean // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.equals|equals(kotlin.Any?){}[0]
         final fun hashCode(): kotlin/Int // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.hashCode|hashCode(){}[0]
         final fun toString(): kotlin/String // dev.lokksmith.client.snapshot/Snapshot.EphemeralAuthorizationCodeFlowState.toString|toString(){}[0]

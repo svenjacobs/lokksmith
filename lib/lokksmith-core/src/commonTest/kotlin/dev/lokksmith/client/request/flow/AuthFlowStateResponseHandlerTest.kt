@@ -16,22 +16,33 @@
 package dev.lokksmith.client.request.flow
 
 import dev.lokksmith.client.Client
+import dev.lokksmith.client.TEST_INSTANT
 import dev.lokksmith.client.asId
 import dev.lokksmith.client.asKey
+import dev.lokksmith.client.jwt.Jwt
+import dev.lokksmith.client.jwt.JwtEncoder
+import dev.lokksmith.client.request.token.TokenResponse
 import dev.lokksmith.client.snapshot.Snapshot
 import dev.lokksmith.createHttpClient
 import dev.lokksmith.createTestLokksmith
 import dev.lokksmith.mockMetadata
 import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.MockRequestHandleScope
+import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondBadRequest
 import io.ktor.client.request.forms.FormDataContent
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.Parameters
+import io.ktor.http.headersOf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonPrimitive
 
 class AuthFlowStateResponseHandlerTest {
 
@@ -50,6 +61,74 @@ class AuthFlowStateResponseHandlerTest {
 
         assertNull(formData["httpStatusCodes"])
     }
+
+    @Test
+    fun `onResponse should validate against the persisted nonce of the flow and store it`() =
+        runTest {
+            val (lokksmith, snapshotStore) =
+                createTestLokksmith { container ->
+                    container.copy(
+                        httpClient =
+                            createHttpClient(MockEngine { respondWithTokens(nonce = "flow-nonce") })
+                    )
+                }
+            val key = "key".asKey()
+            snapshotStore.set(
+                key = key,
+                snapshot =
+                    Snapshot(
+                        key = key,
+                        id = "clientId".asId(),
+                        metadata = mockMetadata,
+                        nonce = "session-nonce",
+                        ephemeralFlowState =
+                            Snapshot.EphemeralAuthorizationCodeFlowState(
+                                state = "i0aMAY0V",
+                                redirectUri = "https://example.com/redirect",
+                                codeVerifier = "2XCBMopbO8",
+                                responseUri = null,
+                                nonce = "flow-nonce",
+                            ),
+                    ),
+            )
+
+            AuthFlowStateResponseHandler(lokksmith)
+                .onResponse("https://example.com/redirect?code=B5ueWoUdeT&state=i0aMAY0V")
+
+            val snapshot = assertNotNull(snapshotStore.observe(key).first())
+            assertEquals("flow-nonce", snapshot.nonce)
+            assertEquals("flow-nonce", snapshot.tokens?.idToken?.nonce)
+        }
+
+    private fun MockRequestHandleScope.respondWithTokens(nonce: String) =
+        respond(
+            content =
+                Json.encodeToString(
+                    TokenResponse(
+                        tokenType = "Bearer",
+                        accessToken = "Lh0rP8vrtQH",
+                        expiresIn = 600,
+                        idToken =
+                            JwtEncoder(Json)
+                                .encode(
+                                    Jwt(
+                                        header = Jwt.Header(alg = "none"),
+                                        payload =
+                                            Jwt.Payload(
+                                                iss = "issuer",
+                                                sub = "8582ce26-3994-42e7-afb0-39d42e18fd1f",
+                                                aud = listOf("clientId"),
+                                                exp = TEST_INSTANT + 600,
+                                                iat = TEST_INSTANT,
+                                                extra = mapOf("nonce" to JsonPrimitive(nonce)),
+                                            ),
+                                    )
+                                ),
+                    )
+                ),
+            status = HttpStatusCode.OK,
+            headers = headersOf("Content-Type", "application/json"),
+        )
 
     private suspend fun TestScope.exchangeCode(clientOptions: Client.Options?): Parameters {
         var formData: Parameters? = null

@@ -36,8 +36,13 @@ import kotlinx.serialization.json.JsonPrimitive
 class AuthorizationCodeFlowTokenResponseValidatorTest :
     AbstractTokenResponseValidatorTest<IdToken>() {
 
+    // The shared tests configure the expected nonce on the snapshot
     override fun newValidator(client: InternalClient) =
-        AuthorizationCodeFlowTokenResponseValidator(serializer = Json, client = client)
+        AuthorizationCodeFlowTokenResponseValidator(
+            serializer = Json,
+            client = client,
+            nonce = client.snapshots.value.nonce,
+        )
 
     private val jwtEncoder = JwtEncoder(Json)
 
@@ -67,6 +72,18 @@ class AuthorizationCodeFlowTokenResponseValidatorTest :
         )
     }
 
+    @Test
+    fun `validate should compare the nonce of the flow instead of the session nonce`() = runTest {
+        val validator =
+            AuthorizationCodeFlowTokenResponseValidator(
+                serializer = Json,
+                client = createTestClient { copy(nonce = "session-nonce") },
+                nonce = "0D1ck61",
+            )
+
+        validator.validate(buildTokenResponse(nonce = "0D1ck61"))
+    }
+
     // auth_time / max_age validation tests
     // Per OIDC Core 1.0, Section 3.1.3.7, item 12:
     // "If a max_age request parameter was provided, the Client MUST check the auth_time Claim
@@ -78,7 +95,8 @@ class AuthorizationCodeFlowTokenResponseValidatorTest :
         val validator =
             AuthorizationCodeFlowTokenResponseValidator(
                 serializer = Json,
-                client = createTestClient { copy(nonce = "0D1ck61") },
+                client = createTestClient(),
+                nonce = "0D1ck61",
                 maxAge = 600,
             )
         // auth_time = TEST_INSTANT, now = TEST_INSTANT, elapsed = 0 -> within max_age of 600
@@ -90,7 +108,8 @@ class AuthorizationCodeFlowTokenResponseValidatorTest :
         val validator =
             AuthorizationCodeFlowTokenResponseValidator(
                 serializer = Json,
-                client = createTestClient { copy(nonce = "0D1ck61") },
+                client = createTestClient(),
+                nonce = "0D1ck61",
                 maxAge = 300,
             )
         // auth_time = TEST_INSTANT - 400, elapsed = 400s, max_age = 300s (with leeway 10s ->
@@ -107,7 +126,8 @@ class AuthorizationCodeFlowTokenResponseValidatorTest :
         val validator =
             AuthorizationCodeFlowTokenResponseValidator(
                 serializer = Json,
-                client = createTestClient { copy(nonce = "0D1ck61") },
+                client = createTestClient(),
+                nonce = "0D1ck61",
                 maxAge = 600,
             )
         // No auth_time in the token
@@ -123,7 +143,8 @@ class AuthorizationCodeFlowTokenResponseValidatorTest :
         val validator =
             AuthorizationCodeFlowTokenResponseValidator(
                 serializer = Json,
-                client = createTestClient { copy(nonce = "0D1ck61") },
+                client = createTestClient(),
+                nonce = "0D1ck61",
                 maxAge = null,
             )
         // No max_age -> no auth_time check required

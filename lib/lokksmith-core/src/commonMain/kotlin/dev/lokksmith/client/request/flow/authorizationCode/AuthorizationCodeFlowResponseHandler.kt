@@ -36,12 +36,15 @@ public class AuthorizationCodeFlowResponseHandler(
     httpClient: HttpClient,
     private val codeVerifier: String?,
     private val maxAge: Int? = null,
+    /** The nonce sent with the authorization request, `null` if none was sent. */
+    private val nonce: String? = null,
     private val tokenRequest: TokenRequest = TokenRequest(client, httpClient),
     private val tokenResponseValidator: AuthorizationCodeFlowTokenResponseValidator =
         AuthorizationCodeFlowTokenResponseValidator(
             serializer = serializer,
             client = client,
             maxAge = maxAge,
+            nonce = nonce,
         ),
 ) : AbstractAuthFlowResponseHandler(state, client) {
 
@@ -74,6 +77,9 @@ public class AuthorizationCodeFlowResponseHandler(
                 throw TokenValidationException(cause = e)
             }
 
+        // The nonce becomes the session's only together with its tokens, so an abandoned flow
+        // cannot replace the nonce that refresh responses of the current session echo
+        val flowNonce = nonce
         client.updateSnapshot {
             copy(
                 tokens =
@@ -81,7 +87,8 @@ public class AuthorizationCodeFlowResponseHandler(
                         accessToken = result.accessToken,
                         refreshToken = result.refreshToken,
                         idToken = result.idToken,
-                    )
+                    ),
+                nonce = flowNonce,
             )
         }
     }
