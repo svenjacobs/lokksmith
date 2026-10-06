@@ -22,6 +22,12 @@ internal constructor(
     message: String? = null,
     cause: Throwable? = null,
     public val reason: Reason? = null,
+
+    /**
+     * HTTP status code of the response the failure belongs to, `null` if the failure did not come
+     * from an HTTP response.
+     */
+    public val statusCode: Int? = null,
 ) : LokksmithException(message, cause) {
 
     public enum class Reason {

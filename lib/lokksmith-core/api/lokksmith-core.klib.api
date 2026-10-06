@@ -1412,6 +1412,8 @@ open class dev.lokksmith.client.request.token/TokenValidationException : dev.lok
 open class dev.lokksmith.client.request/ResponseException : dev.lokksmith/LokksmithException { // dev.lokksmith.client.request/ResponseException|null[0]
     final val reason // dev.lokksmith.client.request/ResponseException.reason|{}reason[0]
         final fun <get-reason>(): dev.lokksmith.client.request/ResponseException.Reason? // dev.lokksmith.client.request/ResponseException.reason.<get-reason>|<get-reason>(){}[0]
+    final val statusCode // dev.lokksmith.client.request/ResponseException.statusCode|{}statusCode[0]
+        final fun <get-statusCode>(): kotlin/Int? // dev.lokksmith.client.request/ResponseException.statusCode.<get-statusCode>|<get-statusCode>(){}[0]
 
     final enum class Reason : kotlin/Enum<dev.lokksmith.client.request/ResponseException.Reason> { // dev.lokksmith.client.request/ResponseException.Reason|null[0]
         enum entry HttpError // dev.lokksmith.client.request/ResponseException.Reason.HttpError|null[0]

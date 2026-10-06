@@ -66,6 +66,7 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
                     message =
                         "error status code ${response.status.value} received from token endpoint",
                     reason = ResponseException.Reason.HttpError,
+                    statusCode = response.status.value,
                 )
         }
 
@@ -75,6 +76,7 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
             throw ResponseException(
                 message = "token type must be \"Bearer\" in token response",
                 reason = ResponseException.Reason.InvalidResponse,
+                statusCode = response.status.value,
             )
         }
 
