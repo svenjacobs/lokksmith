@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Browser
+import android.util.AndroidRuntimeException
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
@@ -116,26 +117,34 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
             try {
                 customTabsIntent.launchUrl(this, uri.toUri())
             } catch (e: ActivityNotFoundException) {
-                Log.e(TAG, "No browser available", e)
-
-                val clientKey = intent.getStringExtra(EXTRA_LOKKSMITH_CLIENT_KEY)
-                val state = intent.getStringExtra(EXTRA_LOKKSMITH_STATE)
-                if (clientKey != null && state != null) {
-                    coroutineScope.launch(exceptionHandler { "Error recording failed flow" }) {
-                        AuthFlowUserAgentResponseHandler(lokksmith)
-                            .onError(key = clientKey, state = state, message = e.message)
-                    }
-                }
-
-                setResult(
-                    RESULT_CANCELED,
-                    createErrorResultIntent("[$TAG] No browser available: ${e.message.orEmpty()}"),
-                )
-                finish()
+                finishWithLaunchError(intent, "No browser available", e)
+            } catch (e: AndroidRuntimeException) {
+                // Thrown when the system refuses to start a browser that is installed, for example
+                // because of a vendor restriction on starting activities
+                finishWithLaunchError(intent, "Browser could not be started", e)
             }
         } else {
             handleFlowResponse(intent)
         }
+    }
+
+    private fun finishWithLaunchError(intent: Intent, reason: String, e: RuntimeException) {
+        Log.e(TAG, reason, e)
+
+        val clientKey = intent.getStringExtra(EXTRA_LOKKSMITH_CLIENT_KEY)
+        val state = intent.getStringExtra(EXTRA_LOKKSMITH_STATE)
+        if (clientKey != null && state != null) {
+            coroutineScope.launch(exceptionHandler { "Error recording failed flow" }) {
+                AuthFlowUserAgentResponseHandler(lokksmith)
+                    .onError(key = clientKey, state = state, message = e.message)
+            }
+        }
+
+        setResult(
+            RESULT_CANCELED,
+            createErrorResultIntent("[$TAG] $reason: ${e.message.orEmpty()}"),
+        )
+        finish()
     }
 
     private fun handleFlowResponse(intent: Intent) {
