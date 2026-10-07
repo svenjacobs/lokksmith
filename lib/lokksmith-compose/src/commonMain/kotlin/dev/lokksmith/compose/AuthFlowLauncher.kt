@@ -75,9 +75,10 @@ internal constructor(
              * system routes it to the default browser, which may not support Custom Tabs and may
              * not hand the redirect back to the app.
              *
-             * When the named browser is not installed or has been disabled, the flow is finalised
-             * as an error and reported through [AuthFlowLauncher.result]. With [Method.AuthTab] the
-             * `ActivityNotFoundException` is additionally rethrown from [AuthFlowLauncher.launch]
+             * When the named browser is not installed or has been disabled, or the system refuses
+             * to start it, the flow is finalised as an error and reported through
+             * [AuthFlowLauncher.result]. With [Method.AuthTab] the `ActivityNotFoundException` or
+             * `AndroidRuntimeException` is additionally rethrown from [AuthFlowLauncher.launch]
              * once the error has been recorded.
              */
             public val browserPackage: String? = null,

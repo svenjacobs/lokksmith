@@ -19,6 +19,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.util.AndroidRuntimeException
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -183,24 +184,35 @@ private class AndroidPlatformLauncher(
 
     /**
      * Records the flow as failed before rethrowing, so a browser that cannot be launched does not
-     * leave the client snapshot stuck mid flow. Mirrors the JVM launcher.
+     * leave the client snapshot stuck mid flow. Mirrors the JVM launcher. Covers a missing browser
+     * (`ActivityNotFoundException`) and a browser the system refuses to start
+     * (`AndroidRuntimeException`, thrown by `Instrumentation.checkStartActivityResult`).
      */
     private suspend fun launchOrRecordError(initiation: Initiation, launch: () -> Unit) {
         try {
             launch()
         } catch (e: ActivityNotFoundException) {
-            withContext(NonCancellable) {
-                runCatching {
-                    AuthFlowUserAgentResponseHandler(lokksmith)
-                        .onError(
-                            key = initiation.clientKey,
-                            state = initiation.state,
-                            message = e.message,
-                        )
-                }
-            }
-            throw e
+            recordErrorAndRethrow(initiation, e)
+        } catch (e: AndroidRuntimeException) {
+            recordErrorAndRethrow(initiation, e)
         }
+    }
+
+    private suspend fun recordErrorAndRethrow(
+        initiation: Initiation,
+        e: RuntimeException,
+    ): Nothing {
+        withContext(NonCancellable) {
+            runCatching {
+                AuthFlowUserAgentResponseHandler(lokksmith)
+                    .onError(
+                        key = initiation.clientKey,
+                        state = initiation.state,
+                        message = e.message,
+                    )
+            }
+        }
+        throw e
     }
 
     override fun logException(msg: String, e: Exception) {
