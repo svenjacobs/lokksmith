@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.6.0](https://github.com/svenjacobs/lokksmith/compare/v2.5.1...v2.6.0) (2026-10-10)
+
+
+### Features
+
+* **core:** expose the HTTP status code on ResponseException ([#591](https://github.com/svenjacobs/lokksmith/issues/591)) ([11363f4](https://github.com/svenjacobs/lokksmith/commit/11363f4f6e0cf9ba15b51a6e28006b48d1841e51)), closes [#587](https://github.com/svenjacobs/lokksmith/issues/587)
+
+
+### Bug Fixes
+
+* **android:** return an error result when the system refuses to start the browser ([#590](https://github.com/svenjacobs/lokksmith/issues/590)) ([d4b5d8d](https://github.com/svenjacobs/lokksmith/commit/d4b5d8dd8f11a3cc3d38c6dede4a889de180ead1))
+* **core:** keep the session nonce until the code exchange succeeds ([#589](https://github.com/svenjacobs/lokksmith/issues/589)) ([404bd54](https://github.com/svenjacobs/lokksmith/commit/404bd54daae8aa19630eff32e4aa995d08498a49)), closes [#585](https://github.com/svenjacobs/lokksmith/issues/585)
+* **core:** replace compose-stable-marker with runtime-annotation ([#582](https://github.com/svenjacobs/lokksmith/issues/582)) ([1d4c985](https://github.com/svenjacobs/lokksmith/commit/1d4c9854f6029d196755285afa519dfb2bd2b23e)), closes [#581](https://github.com/svenjacobs/lokksmith/issues/581)
+* **dev:** use mkShellNoCC for the Nix dev shell ([#583](https://github.com/svenjacobs/lokksmith/issues/583)) ([999f310](https://github.com/svenjacobs/lokksmith/commit/999f310ce252475376674d0d30f4f2594bc3e386))
+
 ## [2.5.1](https://github.com/svenjacobs/lokksmith/compare/v2.5.0...v2.5.1) (2026-09-30)
 
 
