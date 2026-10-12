@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.1](https://github.com/svenjacobs/lokksmith/compare/v2.6.0...v2.6.1) (2026-10-12)
+
+
+### Bug Fixes
+
+* **deps:** update spotless to v8.10.4 ([#604](https://github.com/svenjacobs/lokksmith/issues/604)) ([1598c71](https://github.com/svenjacobs/lokksmith/commit/1598c71ee4d24d941b1e804b11df9070c2a5554d))
+
 ## [2.6.0](https://github.com/svenjacobs/lokksmith/compare/v2.5.1...v2.6.0) (2026-10-11)
 
 
