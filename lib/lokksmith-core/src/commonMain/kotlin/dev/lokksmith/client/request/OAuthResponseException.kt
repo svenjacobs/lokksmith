@@ -31,7 +31,7 @@ internal constructor(
                 errorDescription = errorDescription,
                 errorUri = errorUri,
                 statusCode = statusCode,
-            )
+            ),
     ) {
 
     internal constructor(

@@ -45,15 +45,15 @@ class RefreshTokensOrResetUseCaseTest {
                             RefreshTokenRequest {
                                 throw OAuthResponseException(error = OAuthError.InvalidGrant)
                             }
-                        }
+                        },
                     ),
                 initialSnapshot = {
                     copy(
                         tokens =
                             SAMPLE_TOKENS.copy(
                                 accessToken =
-                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60)
-                            )
+                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60),
+                            ),
                     )
                 },
             )
@@ -73,15 +73,15 @@ class RefreshTokensOrResetUseCaseTest {
                             RefreshTokenRequest {
                                 throw OAuthResponseException(error = OAuthError.ServerError)
                             }
-                        }
+                        },
                     ),
                 initialSnapshot = {
                     copy(
                         tokens =
                             SAMPLE_TOKENS.copy(
                                 accessToken =
-                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60)
-                            )
+                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60),
+                            ),
                     )
                 },
             )
@@ -108,7 +108,7 @@ class RefreshTokensOrResetUseCaseTest {
                                     idToken = SAMPLE_TOKENS.idToken,
                                 )
                             }
-                        }
+                        },
                     ),
                 initialSnapshot = { copy(tokens = SAMPLE_TOKENS) },
             )

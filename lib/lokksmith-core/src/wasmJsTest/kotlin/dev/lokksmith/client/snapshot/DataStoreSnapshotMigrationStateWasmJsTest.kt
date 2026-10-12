@@ -82,7 +82,7 @@ class DataStoreSnapshotMigrationStateWasmJsTest {
 
         assertFalse(state.isMigrated())
         assertFalse(
-            DataStoreSnapshotMigrationState(LocalStoragePreferenceDataStore(name)).isMigrated()
+            DataStoreSnapshotMigrationState(LocalStoragePreferenceDataStore(name)).isMigrated(),
         )
     }
 

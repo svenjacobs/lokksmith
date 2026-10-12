@@ -69,13 +69,17 @@ public abstract class AbstractAuthFlowResponseHandler(
                     type = Type.OAuth,
                     message = e.message,
                     code = e.error.code,
-                )
+                ),
             )
 
             throw e
         } catch (e: TokenTemporalValidationException) {
             setResult(
-                FlowResult.Error(state = state, type = Type.TemporalValidation, message = e.message)
+                FlowResult.Error(
+                    state = state,
+                    type = Type.TemporalValidation,
+                    message = e.message,
+                ),
             )
 
             throw e

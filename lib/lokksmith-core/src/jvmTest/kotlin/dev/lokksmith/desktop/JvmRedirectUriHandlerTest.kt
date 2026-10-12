@@ -239,7 +239,7 @@ class JvmRedirectUriHandlerTest {
                     redirectUri = "https://example.com/redirect",
                     codeVerifier = "code-verifier",
                     responseUri = null,
-                )
+                ),
         )
     }
 

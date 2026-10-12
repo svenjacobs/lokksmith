@@ -165,7 +165,7 @@ class ClientTest {
                             tokens =
                                 SAMPLE_TOKENS.copy(
                                     refreshToken =
-                                        Tokens.RefreshToken(token = "token-0", expiresAt = null)
+                                        Tokens.RefreshToken(token = "token-0", expiresAt = null),
                                 ),
                             nonce = "0D1ck61",
                         )
@@ -217,7 +217,7 @@ class ClientTest {
                             tokens =
                                 SAMPLE_TOKENS.copy(
                                     refreshToken =
-                                        Tokens.RefreshToken(token = "token-0", expiresAt = null)
+                                        Tokens.RefreshToken(token = "token-0", expiresAt = null),
                                 ),
                             nonce = "0D1ck61",
                         )
@@ -274,7 +274,7 @@ class ClientTest {
                         tokens =
                             SAMPLE_TOKENS.copy(
                                 refreshToken =
-                                    Tokens.RefreshToken(token = "token-0", expiresAt = null)
+                                    Tokens.RefreshToken(token = "token-0", expiresAt = null),
                             ),
                         nonce = "0D1ck61",
                     )
@@ -502,7 +502,7 @@ class ClientTest {
                         nonce = "0D1ck61",
                         flowResult = FlowResult.Success(state = "f3SSmdwW"),
                     )
-                }
+                },
             )
 
         assertEquals(SAMPLE_TOKENS, client.snapshots.value.tokens)
@@ -525,7 +525,7 @@ class ClientTest {
                     TestProvider(
                         refreshTokenRequest = {
                             RefreshTokenRequest { fail("RefreshTokenRequest was called") }
-                        }
+                        },
                     ),
                 initialSnapshot = { copy(tokens = SAMPLE_TOKENS) },
             )
@@ -549,7 +549,7 @@ class ClientTest {
                                     idToken = SAMPLE_TOKENS.idToken,
                                 )
                             }
-                        }
+                        },
                     ),
                 initialSnapshot = {
                     copy(
@@ -567,7 +567,7 @@ class ClientTest {
                                         expiration = TEST_INSTANT - 60,
                                         issuedAt = TEST_INSTANT - 120,
                                     ),
-                            )
+                            ),
                     )
                 },
             )
@@ -583,7 +583,7 @@ class ClientTest {
 
         assertTrue {
             client.isExpired(
-                Tokens.AccessToken(token = "xaneJeBElWQ", expiresAt = TEST_INSTANT - 60)
+                Tokens.AccessToken(token = "xaneJeBElWQ", expiresAt = TEST_INSTANT - 60),
             )
         }
 
@@ -596,7 +596,7 @@ class ClientTest {
 
         assertFalse {
             client.isExpired(
-                Tokens.AccessToken(token = "xaneJeBElWQ", expiresAt = TEST_INSTANT + 120)
+                Tokens.AccessToken(token = "xaneJeBElWQ", expiresAt = TEST_INSTANT + 120),
             )
         }
 
@@ -675,7 +675,7 @@ class ClientTest {
                 options =
                     Client.Options(
                         additionalTokenRequestParameters =
-                            mapOf("httpStatusCodes" to "true", "vendorParam" to "value")
+                            mapOf("httpStatusCodes" to "true", "vendorParam" to "value"),
                     ),
                 initialSnapshot = { copy(tokens = SAMPLE_TOKENS, nonce = "0D1ck61") },
             )
@@ -720,9 +720,9 @@ class ClientTest {
                                                 iat = epochSeconds,
                                                 extra = mapOf("nonce" to JsonPrimitive(nonce)),
                                             ),
-                                    )
+                                    ),
                                 ),
-                        )
+                        ),
                     ),
                 status = HttpStatusCode.OK,
                 headers = headersOf("Content-Type", "application/json"),
@@ -769,7 +769,7 @@ class ClientTest {
                     TestProvider(
                         httpClient = createHttpClient(engine),
                         timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
-                    )
+                    ),
             )
 
         val tokens = client.requestTokens("custom_grant")
@@ -794,7 +794,7 @@ class ClientTest {
                     TestProvider(
                         httpClient = createHttpClient(engine),
                         timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
-                    )
+                    ),
             )
 
         client.requestTokens("custom_grant")
@@ -818,7 +818,7 @@ class ClientTest {
                     TestProvider(
                         httpClient = createHttpClient(engine),
                         timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
-                    )
+                    ),
             )
 
         client.requestTokens("custom_grant")
@@ -848,7 +848,7 @@ class ClientTest {
                     TestProvider(
                         httpClient = createHttpClient(engine),
                         timeProvider = { Instant.fromEpochSeconds(1748706999, 0) },
-                    )
+                    ),
             )
 
         client.requestTokens("custom_grant")
@@ -856,7 +856,7 @@ class ClientTest {
 
         val flow =
             client.authorizationCodeFlow(
-                AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect")
+                AuthorizationCodeFlow.Request(redirectUri = "https://example.com/app/redirect"),
             )
         flow.prepare()
         runCurrent()
@@ -888,7 +888,7 @@ class ClientTest {
                         refreshTokenRequest = {
                             RefreshTokenRequest { fail("RefreshTokenRequest was called") }
                         },
-                    )
+                    ),
             )
 
         val tokens = client.requestTokens("custom_grant")
@@ -927,7 +927,7 @@ class ClientTest {
 
             val client =
                 createTestClient(
-                    options = Client.Options(additionalTokenRequestParameters = parameters)
+                    options = Client.Options(additionalTokenRequestParameters = parameters),
                 )
 
             // Passed validation as a legitimate map, then mutated to smuggle in a protocol

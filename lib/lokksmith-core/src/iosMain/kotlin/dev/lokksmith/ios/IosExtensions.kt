@@ -127,8 +127,8 @@ private suspend fun startAuthenticationSession(
 
                 cont.resumeWithException(
                     RuntimeException(
-                        message = error?.localizedDescription ?: "No responseUri received"
-                    )
+                        message = error?.localizedDescription ?: "No responseUri received",
+                    ),
                 )
             },
         )
@@ -164,7 +164,7 @@ private fun getRedirectScheme(requestUrl: String): String {
     val redirectUri =
         checkNotNull(
             url.parameters[Parameter.REDIRECT_URI]
-                ?: url.parameters[Parameter.POST_LOGOUT_REDIRECT_URI]
+                ?: url.parameters[Parameter.POST_LOGOUT_REDIRECT_URI],
         ) {
             "Could not determine redirect URI"
         }
@@ -176,6 +176,6 @@ private class PresentationContextProvider :
     NSObject(), ASWebAuthenticationPresentationContextProvidingProtocol {
 
     override fun presentationAnchorForWebAuthenticationSession(
-        session: ASWebAuthenticationSession
+        session: ASWebAuthenticationSession,
     ) = UIApplication.sharedApplication.windows.firstOrNull() as? UIWindow ?: ASPresentationAnchor()
 }

@@ -52,7 +52,7 @@ private class SystemBrowserLauncher : BrowserLauncher {
             systemDesktop()
                 ?: throw IllegalStateException(
                     "java.awt.Desktop.browse is not available (headless or unsupported). " +
-                        "Provide a custom BrowserLauncher to launch the browser via another mechanism."
+                        "Provide a custom BrowserLauncher to launch the browser via another mechanism.",
                 )
         try {
             desktop.browse(URI(url))

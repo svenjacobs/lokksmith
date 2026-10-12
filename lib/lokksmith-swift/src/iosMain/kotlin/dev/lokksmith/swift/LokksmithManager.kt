@@ -70,7 +70,7 @@ public constructor(persistenceFileBaseName: String, userAgent: String?) {
                     // "%@" placeholder rather than interpolating into the format string, so a '%'
                     // in the message cannot be misread as a format specifier.
                     NSLog("%@", "Lokksmith: unhandled error in coroutine scope: $throwable")
-                }
+                },
         )
 
     private val lokksmith: Lokksmith =
@@ -79,7 +79,7 @@ public constructor(persistenceFileBaseName: String, userAgent: String?) {
                 persistenceFileBaseName = persistenceFileBaseName,
                 coroutineScope = coroutineScope,
                 userAgent = userAgent,
-            )
+            ),
         )
 
     /** Migrates tokens from another OIDC library into a client. */
@@ -161,7 +161,7 @@ public constructor(persistenceFileBaseName: String, userAgent: String?) {
                 key,
                 options = options.toCore(),
                 builder = configuration.builder(),
-            )
+            ),
         )
     }
 

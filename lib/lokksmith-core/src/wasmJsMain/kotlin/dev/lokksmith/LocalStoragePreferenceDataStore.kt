@@ -56,7 +56,7 @@ internal class LocalStoragePreferenceDataStore(
     override val data: Flow<Preferences> = state.asStateFlow()
 
     override suspend fun updateData(
-        transform: suspend (t: Preferences) -> Preferences
+        transform: suspend (t: Preferences) -> Preferences,
     ): Preferences = writeMutex.withLock {
         val updated = transform(state.value)
         writeToStorage(updated)

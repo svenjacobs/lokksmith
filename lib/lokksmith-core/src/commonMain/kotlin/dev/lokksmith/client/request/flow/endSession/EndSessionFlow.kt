@@ -130,7 +130,7 @@ internal constructor(
 
                         else ->
                             throw IllegalArgumentException(
-                                "stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}"
+                                "stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}",
                             )
                     }
 

@@ -223,7 +223,7 @@ private constructor(
 
                     else ->
                         throw IllegalArgumentException(
-                            "stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}"
+                            "stateLength must not be less than ${Defaults.STATE_MIN_LENGTH}",
                         )
                 }
 
@@ -235,7 +235,7 @@ private constructor(
 
                     else ->
                         throw IllegalArgumentException(
-                            "nonceLength must not be less than ${Defaults.NONCE_MIN_LENGTH}"
+                            "nonceLength must not be less than ${Defaults.NONCE_MIN_LENGTH}",
                         )
                 }
 

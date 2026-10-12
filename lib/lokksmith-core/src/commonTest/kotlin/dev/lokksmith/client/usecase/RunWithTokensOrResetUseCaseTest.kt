@@ -46,15 +46,15 @@ class RunWithTokensOrResetUseCaseTest {
                             RefreshTokenRequest {
                                 throw OAuthResponseException(error = OAuthError.InvalidGrant)
                             }
-                        }
+                        },
                     ),
                 initialSnapshot = {
                     copy(
                         tokens =
                             SAMPLE_TOKENS.copy(
                                 accessToken =
-                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60)
-                            )
+                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60),
+                            ),
                     )
                 },
             )
@@ -74,15 +74,15 @@ class RunWithTokensOrResetUseCaseTest {
                             RefreshTokenRequest {
                                 throw OAuthResponseException(error = OAuthError.ServerError)
                             }
-                        }
+                        },
                     ),
                 initialSnapshot = {
                     copy(
                         tokens =
                             SAMPLE_TOKENS.copy(
                                 accessToken =
-                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60)
-                            )
+                                    SAMPLE_TOKENS.accessToken.copy(expiresAt = TEST_INSTANT - 60),
+                            ),
                     )
                 },
             )
@@ -133,7 +133,7 @@ class RunWithTokensOrResetUseCaseTest {
                                     idToken = SAMPLE_TOKENS.idToken,
                                 )
                             }
-                        }
+                        },
                     ),
                 initialSnapshot = {
                     copy(
@@ -143,8 +143,8 @@ class RunWithTokensOrResetUseCaseTest {
                                     SAMPLE_TOKENS.accessToken.copy(
                                         token = "iQUiRkB",
                                         expiresAt = TEST_INSTANT - 60,
-                                    )
-                            )
+                                    ),
+                            ),
                     )
                 },
             )

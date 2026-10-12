@@ -99,7 +99,7 @@ public class TokenRequest(private val client: Client, private val httpClient: Ht
  * parameters.
  */
 internal fun ParametersBuilder.appendAdditionalParameters(
-    additionalParameters: Map<String, String>
+    additionalParameters: Map<String, String>,
 ) {
     additionalParameters.forEach { (name, value) ->
         require(!contains(name)) { "Parameter \"$name\" is already present" }

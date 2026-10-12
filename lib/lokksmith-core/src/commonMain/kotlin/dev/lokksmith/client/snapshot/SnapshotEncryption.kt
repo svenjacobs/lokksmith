@@ -120,7 +120,7 @@ internal class AesGcmSnapshotCipher(
 
     override suspend fun encrypt(entryId: String, plaintext: String): String =
         Base64.encode(
-            key().cipher().encrypt(plaintext.encodeToByteArray(), entryId.encodeToByteArray())
+            key().cipher().encrypt(plaintext.encodeToByteArray(), entryId.encodeToByteArray()),
         )
 
     override suspend fun decrypt(entryId: String, value: String): String {
@@ -269,7 +269,7 @@ internal class EncryptingPersistence(
                         readable(entryId, value)?.let { result[entryId] = it }
                     }
                     result
-                }
+                },
             )
         }
 

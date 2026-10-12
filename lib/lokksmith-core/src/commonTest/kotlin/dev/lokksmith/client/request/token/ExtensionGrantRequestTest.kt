@@ -70,9 +70,9 @@ class ExtensionGrantRequestTest {
                                         iat = 1748706999,
                                         extra = mapOf("nonce" to JsonPrimitive(nonce)),
                                     ),
-                            )
+                            ),
                         ),
-            )
+            ),
         )
 
     private suspend fun TestScope.newExtensionGrantRequest(
@@ -149,7 +149,7 @@ class ExtensionGrantRequestTest {
                 engine = engine,
                 options =
                     Client.Options(
-                        additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true")
+                        additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true"),
                     ),
             )("custom_grant", mapOf("foo" to "bar"))
         }
@@ -182,7 +182,7 @@ class ExtensionGrantRequestTest {
                     engine = engine,
                     options =
                         Client.Options(
-                            additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true")
+                            additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true"),
                         ),
                 )("custom_grant", mapOf("httpStatusCodes" to "false"))
             }

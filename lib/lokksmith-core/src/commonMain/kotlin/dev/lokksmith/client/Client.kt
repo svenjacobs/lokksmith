@@ -649,7 +649,7 @@ private constructor(
                 CoroutineScope(
                     coroutineScope.coroutineContext +
                         Job(coroutineScope.coroutineContext.job) +
-                        CoroutineName("LokksmithClient(${key.value})")
+                        CoroutineName("LokksmithClient(${key.value})"),
                 )
 
             val snapshotContract =

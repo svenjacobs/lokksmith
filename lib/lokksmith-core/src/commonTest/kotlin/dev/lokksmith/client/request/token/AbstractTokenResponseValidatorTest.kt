@@ -114,7 +114,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
                     client =
                         createTestClient {
                             copy(metadata = metadata.copy(issuer = "another issuer"))
-                        }
+                        },
                 )
             }
 
@@ -139,7 +139,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
                     client = createTestClient { copy(nonce = "0D1ck61") },
                     idTokenPayload =
                         idTokenPayload(
-                            iat = TEST_INSTANT + 60 // iat in the future
+                            iat = TEST_INSTANT + 60, // iat in the future
                         ),
                 )
             }
@@ -155,7 +155,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
                     client = createTestClient { copy(nonce = "0D1ck61") },
                     idTokenPayload =
                         idTokenPayload(
-                            exp = TEST_INSTANT - 60 // exp in the past
+                            exp = TEST_INSTANT - 60, // exp in the past
                         ),
                 )
             }
@@ -171,7 +171,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
                     client = createTestClient { copy(nonce = "0D1ck61") },
                     idTokenPayload =
                         idTokenPayload(
-                            nbf = TEST_INSTANT + 60 // nbf in the future
+                            nbf = TEST_INSTANT + 60, // nbf in the future
                         ),
                 )
             }
@@ -258,7 +258,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
                         mapOf(
                             "nonce" to JsonPrimitive("0D1ck61"),
                             "azp" to JsonPrimitive("clientId"),
-                        )
+                        ),
                 ),
         )
     }
@@ -292,7 +292,7 @@ abstract class AbstractTokenResponseValidatorTest<T : IdToken?> {
                                 mapOf(
                                     "nonce" to JsonPrimitive("0D1ck61"),
                                     "azp" to JsonPrimitive("someOtherClientId"),
-                                )
+                                ),
                         ),
                 )
             }

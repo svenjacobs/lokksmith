@@ -326,7 +326,7 @@ internal val mockMetadata =
     )
 
 internal fun TestScope.createTestLokksmith(
-    onTestContainerCreated: TestScope.(TestContainer) -> TestContainer = { it }
+    onTestContainerCreated: TestScope.(TestContainer) -> TestContainer = { it },
 ): Pair<Lokksmith, SnapshotStoreSpy> {
     val container =
         TestContainer(

@@ -44,7 +44,7 @@ class AuthFlowUserAgentResponseHandlerTest {
                     redirectUri = "https://example.com/redirect",
                     codeVerifier = "2XCBMopbO8",
                     responseUri = null,
-                )
+                ),
             )
         val handler = AuthFlowUserAgentResponseHandler(lokksmith)
 
@@ -67,7 +67,7 @@ class AuthFlowUserAgentResponseHandlerTest {
     fun `onResponse should set response URI for End Session Flow`() = runTest {
         val (lokksmith, snapshotStore) =
             createTestLokksmithWithEphemeralFlowState(
-                Snapshot.EphemeralEndSessionFlowState(state = "i0aMAY0V", responseUri = null)
+                Snapshot.EphemeralEndSessionFlowState(state = "i0aMAY0V", responseUri = null),
             )
         val handler = AuthFlowUserAgentResponseHandler(lokksmith)
 
@@ -101,7 +101,7 @@ class AuthFlowUserAgentResponseHandlerTest {
                     redirectUri = "https://example.com/redirect",
                     codeVerifier = "2XCBMopbO8",
                     responseUri = null,
-                )
+                ),
             )
         val handler = AuthFlowUserAgentResponseHandler(lokksmith)
 
@@ -122,7 +122,7 @@ class AuthFlowUserAgentResponseHandlerTest {
                     redirectUri = "https://example.com/redirect",
                     codeVerifier = "2XCBMopbO8",
                     responseUri = null,
-                )
+                ),
             )
         val handler = AuthFlowUserAgentResponseHandler(lokksmith)
 
@@ -147,7 +147,7 @@ class AuthFlowUserAgentResponseHandlerTest {
     }
 
     private suspend fun TestScope.createTestLokksmithWithEphemeralFlowState(
-        ephemeralFlowState: Snapshot.EphemeralFlowState?
+        ephemeralFlowState: Snapshot.EphemeralFlowState?,
     ): Pair<Lokksmith, SnapshotStoreSpy> {
         val (lokksmith, snapshotStore) = createTestLokksmith()
 

@@ -30,7 +30,7 @@ class JwtDecoderTest {
     fun `decode should decode encoded raw string into JWT`() {
         val jwt =
             decoder.decode(
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
             )
 
         // Header
@@ -47,7 +47,7 @@ class JwtDecoderTest {
     fun `decode should decode an unsecured JWT`() {
         val jwt =
             decoder.decode(
-                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTczNjI5MjEyNH0."
+                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTczNjI5MjEyNH0.",
             )
 
         // Header
@@ -64,7 +64,7 @@ class JwtDecoderTest {
     fun `decode should decode a JWT with a single 'aud' value`() {
         val jwt =
             decoder.decode(
-                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjoiYXVkMSJ9."
+                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjoiYXVkMSJ9.",
             )
 
         assertEquals(listOf("aud1"), jwt.payload.aud)
@@ -74,7 +74,7 @@ class JwtDecoderTest {
     fun `decode should decode a JWT with multiple 'aud' values`() {
         val jwt =
             decoder.decode(
-                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjpbImF1ZDEiLCJhdWQyIl19."
+                "eyJhbGciOiJub25lIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTc0NzczNDUyNywiYXVkIjpbImF1ZDEiLCJhdWQyIl19.",
             )
 
         assertEquals(listOf("aud1", "aud2"), jwt.payload.aud)
