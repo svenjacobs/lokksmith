@@ -89,7 +89,7 @@ class AuthorizationCodeFlowTest {
                                 Scope.Custom("api://my-custom-scope"),
                             ),
                         prompt = setOf(Prompt.Login),
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -166,7 +166,7 @@ class AuthorizationCodeFlowTest {
                     AuthorizationCodeFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         codeChallengeMethod = null,
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -191,7 +191,7 @@ class AuthorizationCodeFlowTest {
                     AuthorizationCodeFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         display = Display.Page,
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -208,7 +208,7 @@ class AuthorizationCodeFlowTest {
                     AuthorizationCodeFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         maxAge = 600,
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -225,7 +225,7 @@ class AuthorizationCodeFlowTest {
                     AuthorizationCodeFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         uiLocales = listOf("de-DE", "de", "en-GB"),
-                    )
+                    ),
             )
         val initiation = flow.prepare()
         val requestUrl = Url(initiation.requestUrl)
@@ -241,7 +241,7 @@ class AuthorizationCodeFlowTest {
                     AuthorizationCodeFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         loginHint = "loginHint",
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -258,7 +258,7 @@ class AuthorizationCodeFlowTest {
                     AuthorizationCodeFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         additionalParameters = mapOf("param1" to "value 1", "param2" to "value 2"),
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -278,7 +278,7 @@ class AuthorizationCodeFlowTest {
                         AuthorizationCodeFlow.Request(
                             redirectUri = "https://example.com/app/redirect",
                             additionalParameters = mapOf(Parameter.CLIENT_ID to "clientId"),
-                        )
+                        ),
                 )
 
             val e = assertFailsWith<IllegalArgumentException> { flow.prepare() }
@@ -401,8 +401,8 @@ class AuthorizationCodeFlowTest {
             createFlow(
                 options =
                     Client.Options(
-                        additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true")
-                    )
+                        additionalTokenRequestParameters = mapOf("httpStatusCodes" to "true"),
+                    ),
             ) { testState ->
                 { request ->
                     when (request.url.toString()) {
@@ -525,7 +525,7 @@ class AuthorizationCodeFlowTest {
                                 error = OAuthError.InvalidGrant.code,
                                 errorDescription = "error description",
                                 errorUri = "error URI",
-                            )
+                            ),
                         )
 
                     respond(
@@ -625,7 +625,7 @@ class AuthorizationCodeFlowTest {
                     requestRedirectUri = "https://example.com/app/redirect",
                     state = flow.state,
                     purpose = RedirectUriHandler.Purpose.Authorization,
-                )
+                ),
             ),
             handler.resolveCalls,
         )

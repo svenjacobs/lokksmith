@@ -40,7 +40,7 @@ public fun createLokksmith(
     val platformContext = PlatformContext(dataDirectory = dir.resolve(LOKKSMITH_DIR))
     val baseContainer = ContainerImpl(platformContext = platformContext, options = options)
     return Lokksmith(
-        container = JvmContainerImpl(delegate = baseContainer, desktopOptions = desktop)
+        container = JvmContainerImpl(delegate = baseContainer, desktopOptions = desktop),
     )
 }
 

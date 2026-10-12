@@ -81,7 +81,7 @@ class EndSessionFlowTest {
                     EndSessionFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         uiLocales = listOf("de-DE", "de", "en-GB"),
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -98,7 +98,7 @@ class EndSessionFlowTest {
                     EndSessionFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         logoutHint = "logoutHint",
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -115,7 +115,7 @@ class EndSessionFlowTest {
                     EndSessionFlow.Request(
                         redirectUri = "https://example.com/app/redirect",
                         additionalParameters = mapOf("param1" to "value 1", "param2" to "value 2"),
-                    )
+                    ),
             )
 
         val initiation = flow.prepare()
@@ -136,9 +136,9 @@ class EndSessionFlowTest {
                             redirectUri = "https://example.com/app/redirect",
                             additionalParameters =
                                 mapOf(
-                                    Parameter.POST_LOGOUT_REDIRECT_URI to "postLogoutRedirectUri"
+                                    Parameter.POST_LOGOUT_REDIRECT_URI to "postLogoutRedirectUri",
                                 ),
-                        )
+                        ),
                 )
 
             val e = assertFailsWith<IllegalArgumentException> { flow.prepare() }

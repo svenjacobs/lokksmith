@@ -79,7 +79,7 @@ public class RunWithTokensOrResetUseCase(
      * @see RunWithTokensOrResetUseCase
      */
     public suspend operator fun invoke(
-        body: suspend RunWithTokensOrResetScope.(Tokens) -> Unit
+        body: suspend RunWithTokensOrResetScope.(Tokens) -> Unit,
     ): Boolean {
         val scope = RunWithTokensOrResetScopeImpl()
 

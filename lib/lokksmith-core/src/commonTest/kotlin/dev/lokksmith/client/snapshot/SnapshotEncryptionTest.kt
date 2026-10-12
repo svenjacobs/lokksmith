@@ -178,7 +178,7 @@ class SnapshotEncryptionTest {
                 mapOf(
                     read.value to Json.encodeToString(newSnapshot(read)),
                     untouched.value to Json.encodeToString(newSnapshot(untouched)),
-                )
+                ),
             )
         val store = encryptingStore(persistence)
 
@@ -563,7 +563,7 @@ class SnapshotMigrationSweepTest {
                 mapOf(
                     first.value to Json.encodeToString(newSnapshot(first)),
                     second.value to Json.encodeToString(newSnapshot(second)),
-                )
+                ),
             )
         val migrationState = CountingMigrationState()
         // Holds the first sweep open, so the second caller is guaranteed to arrive while it runs.
@@ -604,7 +604,7 @@ class SnapshotMigrationSweepTest {
                 mapOf(
                     converted.value to Json.encodeToString(newSnapshot(converted)),
                     failing.value to Json.encodeToString(newSnapshot(failing)),
-                )
+                ),
             )
         val migrationState = SnapshotMigrationStateFake()
         var failOn: String? = failing.value

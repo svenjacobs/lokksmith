@@ -106,8 +106,8 @@ class ModelsTest {
                                 "loyalty_id" to JsonPrimitive(42),
                                 "address" to
                                     buildJsonObject { put("city", JsonPrimitive("Krefeld")) },
-                            )
-                    )
+                            ),
+                    ),
                 )
                 .toSwift()
 

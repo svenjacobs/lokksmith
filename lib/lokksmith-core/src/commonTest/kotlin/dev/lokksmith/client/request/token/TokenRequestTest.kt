@@ -105,7 +105,7 @@ class TokenRequestTest {
                         status = status,
                         headers = headersOf("Content-Type", contentType),
                     )
-                }
+                },
             )
         val client = createTestClient(provider = TestProvider(httpClient = httpClient))
 

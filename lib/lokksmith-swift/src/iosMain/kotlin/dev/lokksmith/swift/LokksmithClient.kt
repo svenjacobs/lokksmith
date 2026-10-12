@@ -189,7 +189,7 @@ internal constructor(
     @Throws(LokksmithFailure::class, kotlinx.coroutines.CancellationException::class)
     public suspend fun isExpired(token: LokksmithToken): Boolean = mapFailures {
         client.isExpired(
-            Client.Tokens.AccessToken(token = token.token, expiresAt = token.expiresAt)
+            Client.Tokens.AccessToken(token = token.token, expiresAt = token.expiresAt),
         )
     }
 

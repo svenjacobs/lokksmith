@@ -63,7 +63,7 @@ internal constructor(
      * access from other Lokksmith modules. Application code must not interact with the container
      * directly.
      */
-    public val container: Container
+    public val container: Container,
 ) {
 
     internal constructor(
@@ -108,7 +108,7 @@ internal constructor(
                         // The library has no logging abstraction, so this is deliberately crude. It
                         // exists to stop an unhandled failure from reaching the platform handler.
                         println("Lokksmith: unhandled error in coroutine scope: $throwable")
-                    }
+                    },
             ),
 
         /**

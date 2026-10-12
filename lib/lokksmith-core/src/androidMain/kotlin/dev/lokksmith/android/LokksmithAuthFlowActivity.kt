@@ -99,7 +99,7 @@ public class LokksmithAuthFlowActivity : ComponentActivity() {
             val customTabsIntent =
                 CustomTabsIntent.Builder()
                     .setEphemeralBrowsingEnabled(
-                        intent.getBooleanExtra(EXTRA_LOKKSMITH_EPHEMERAL_BROWSING, false)
+                        intent.getBooleanExtra(EXTRA_LOKKSMITH_EPHEMERAL_BROWSING, false),
                     )
                     .setShareState(CustomTabsIntent.SHARE_STATE_OFF)
                     .build()

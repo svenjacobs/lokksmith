@@ -69,7 +69,9 @@ class AuthFlowStateResponseHandlerTest {
                 createTestLokksmith { container ->
                     container.copy(
                         httpClient =
-                            createHttpClient(MockEngine { respondWithTokens(nonce = "flow-nonce") })
+                            createHttpClient(
+                                MockEngine { respondWithTokens(nonce = "flow-nonce") },
+                            ),
                     )
                 }
             val key = "key".asKey()
@@ -122,9 +124,9 @@ class AuthFlowStateResponseHandlerTest {
                                                 iat = TEST_INSTANT,
                                                 extra = mapOf("nonce" to JsonPrimitive(nonce)),
                                             ),
-                                    )
+                                    ),
                                 ),
-                    )
+                    ),
                 ),
             status = HttpStatusCode.OK,
             headers = headersOf("Content-Type", "application/json"),
@@ -140,8 +142,8 @@ class AuthFlowStateResponseHandlerTest {
                             MockEngine { request ->
                                 formData = (request.body as FormDataContent).formData
                                 respondBadRequest()
-                            }
-                        )
+                            },
+                        ),
                 )
             }
 

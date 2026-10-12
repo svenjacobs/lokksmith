@@ -49,7 +49,7 @@ internal constructor(
 ) {
     private val scope =
         CoroutineScope(
-            parentScope.coroutineContext + SupervisorJob(parentScope.coroutineContext.job)
+            parentScope.coroutineContext + SupervisorJob(parentScope.coroutineContext.job),
         )
 
     public data class PlatformOptions(val android: Android = Android(), val iOS: Ios = Ios()) {
@@ -121,7 +121,7 @@ internal constructor(
              * isolated web browser within the app, which doesn't retain any data (cookies) and does
              * not sync them with the system browser. Just like a private browsing session.
              */
-            public val prefersEphemeralWebBrowserSession: Boolean = false
+            public val prefersEphemeralWebBrowserSession: Boolean = false,
         )
     }
 
@@ -261,7 +261,7 @@ internal fun rememberAuthFlowLauncher(platformLauncher: PlatformLauncher): AuthF
                     platformLauncher = platformLauncher,
                     resultState =
                         mutableStateOf(
-                            serializer.decodeFromString<Result>(it[resultKey] as String)
+                            serializer.decodeFromString<Result>(it[resultKey] as String),
                         ),
                     initiation = initiation,
                     parentScope = scope,

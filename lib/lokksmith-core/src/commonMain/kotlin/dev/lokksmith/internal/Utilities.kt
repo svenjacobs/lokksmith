@@ -23,7 +23,7 @@ public fun getRedirectUri(requestUrl: String): Url {
     val redirectUri =
         checkNotNull(
             url.parameters[Parameter.REDIRECT_URI]
-                ?: url.parameters[Parameter.POST_LOGOUT_REDIRECT_URI]
+                ?: url.parameters[Parameter.POST_LOGOUT_REDIRECT_URI],
         ) {
             "Could not determine redirect URI"
         }
