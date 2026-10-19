@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.6.1](https://github.com/svenjacobs/lokksmith/compare/v2.6.0...v2.6.1) (2026-10-19)
+
+
+### Bug Fixes
+
+* **deps:** update compose.multiplatform to v1.12.2 ([#607](https://github.com/svenjacobs/lokksmith/issues/607)) ([1264df8](https://github.com/svenjacobs/lokksmith/commit/1264df889d3e18ffd6ee9efea07a5832352e918c))
+* **deps:** update spotless to v8.10.4 ([#604](https://github.com/svenjacobs/lokksmith/issues/604)) ([1598c71](https://github.com/svenjacobs/lokksmith/commit/1598c71ee4d24d941b1e804b11df9070c2a5554d))
+
 ## [2.6.0](https://github.com/svenjacobs/lokksmith/compare/v2.5.1...v2.6.0) (2026-10-11)
 
 
