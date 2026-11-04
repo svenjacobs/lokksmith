@@ -21,7 +21,13 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 
-/** TODO: Signature verification */
+/**
+ * Decodes a JWT into its header and payload without verifying the signature.
+ *
+ * Lokksmith only receives ID tokens directly from the token endpoint over TLS, where OpenID Connect
+ * Core 1.0, Section 3.1.3.7, step 6 permits TLS server validation in place of checking the token
+ * signature.
+ */
 public class JwtDecoder(private val json: Json) {
 
     public fun decode(raw: String): Jwt {
